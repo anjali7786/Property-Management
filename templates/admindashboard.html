@@ -19,7 +19,7 @@
           <i class="fa fa-bars" aria-hidden="true"></i>
         </div>
         <div class="navbar__left">
-          <a href="#">Registered Users</a>
+          <a href="{{ url_for('registeredusers') }}">Registered Users</a>
           <a href="#">Complaints</a>
         </div>
         <div class="navbar__right">
@@ -105,7 +105,7 @@
               <div class="charts__right__cards">
                 <div class="card1">
                   <h1>Apartments</h1>
-                  <p>75,300</p>
+                  <p>{{counta}}</p>
                 </div>
 
                 <div class="card2">
@@ -157,7 +157,7 @@
           <h2>USER DETAILS</h2>
           <div class="sidebar__link">
             <i class="fa fa-user"></i>
-            <a href="#">Registered Users</a>
+            <a href="{{ url_for('registeredusers') }}">Registered Users</a>
           </div>
           <div class="sidebar__link">
             <i class="fa fa-user"></i>

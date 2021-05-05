@@ -18,7 +18,10 @@ mysql = MySQL(app)
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    return render_template('home.html')
+    if 'loggedin' in session:
+        return render_template('home.html', username=session['username'],
+                               email1=session['email1'])
+    return render_template('home.html',username="",email1="")
 
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
@@ -118,9 +121,11 @@ def admindashboard():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM accounts')
         count = cursor.fetchall()
+        cursor.execute('SELECT * FROM apartmentdetail')
+        counta = cursor.fetchall()
         mysql.connection.commit()
         cursor.close()
-        return render_template('admindashboard.html', count=len(count), username='admin', email1=session['email1'])
+        return render_template('admindashboard.html', count=len(count)-1, counta= len(counta), username='admin', email1=session['email1'])
     return redirect(url_for('login'))
 
 
@@ -186,5 +191,29 @@ def apmt_reg():
         return render_template('Apmt_reg.html', msg=msg, username=session['username'], email1=session['email1'])
     else:
         return redirect(url_for('login'))
+
+@app.route("/registeredusers/")
+def registeredusers():
+    if 'loggedin' in session:
+        if session['username']=='admin':
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM accounts where username <> 'admin' ")
+            userDetails = cur.fetchall()
+            mysql.connection.commit()
+            cur.close()
+            return render_template('registeredusers.html', userDetails=userDetails, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            return render_template('home.html')
+    else:
+        return render_template('login.html')
+
+@app.route("/deleteuser/<string:id>")
+def deleteuser(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM accounts where ID=%s", [id, ])
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('registeredusers'))
 
 app.run(debug=True)
