@@ -46,7 +46,7 @@ def login():
                     session['username'] = account['username']
                     session['email1'] = account['email']
                     session['mobile'] = account['mobile']
-                    return redirect(url_for('home'))
+                    return redirect(url_for('dashboard'))
             else:
                 msg = 'Incorrect username/password!'
         else:
@@ -122,5 +122,69 @@ def admindashboard():
         cursor.close()
         return render_template('admindashboard.html', count=len(count), username='admin', email1=session['email1'])
     return redirect(url_for('login'))
+
+
+@app.route("/dashboard", methods=['GET', 'POST'])
+def dashboard():
+    if 'loggedin' in session:
+        return render_template('userdashboard.html', username=session['username'], email1=session['email1'])
+    return redirect(url_for('login'))
+
+
+@app.route("/apmt_reg/", methods=['GET', 'POST'])
+def apmt_reg():
+    msg = ''
+    if request.method == 'POST':
+        # fetch data
+        details = request.form
+        apmtname = details['name']
+        plot_no = details['Plot']
+        area = details['Area']
+        address = details['Address']
+        landmark = details['Landmark']
+        city = details['City']
+        pin = details['Pincode']
+        state = details['State']
+        country = details['Country']
+        atype = details['Atype']
+        rs = details['Rent/Sale']
+        availability = details['Availability']
+        Price = details['Price']
+        facilities = details['Facilities']
+        description = details['Description']
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        extension = os.path.splitext(filename)
+        allowed_extensions = {'.jpg', '.png', '.jpeg'}
+        if extension[1] in allowed_extensions:
+            f_name = str(uuid.uuid4()) + str(extension[1])
+            app.config['UPLOAD_FOLDER'] = 'static/Uploads'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+            if len(apmtname) > 0 and len(plot_no) > 0 and len(address) > 0 and len(landmark) > 0 and len(
+                city) > 0 and len(pin) > 0 and len(state) > 0 and len(country) > 0 and len(
+                atype) > 0 and len(area)>0 and len(facilities) > 0 and len(description) > 0:
+
+                if len(pin) != 6:
+                    msg = 'Enter 6 digit Pincode !'
+                elif not apmtname or not plot_no or not address or not landmark or not city or not pin or not state or not country or not atype or not area or not facilities or not description or not file:
+                    msg = 'Please fill out the form !'
+                else:
+                    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor.execute(
+                        "INSERT INTO apartmentdetail VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (
+                            session['id'] , apmtname, plot_no, area, address, landmark, city, pin, state, country, atype, rs, availability,
+                            Price, facilities, description, f_name))
+                    mysql.connection.commit()
+                    cursor.close()
+                    msg = 'Registration Successful! Thank You !'
+            else:
+                msg = 'Please fill out the form !'
+        else:
+            msg = 'Upload image in jpg/png/jpeg format only!'
+    if 'loggedin' in session:
+        return render_template('Apmt_reg.html', msg=msg, username=session['username'], email1=session['email1'])
+    else:
+        return redirect(url_for('login'))
 
 app.run(debug=True)
