@@ -18,7 +18,10 @@ mysql = MySQL(app)
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    return render_template('home.html')
+    if 'loggedin' in session:
+        return render_template('home.html', username=session['username'],
+                               email1=session['email1'])
+    return render_template('home.html',username="",email1="")
 
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
@@ -46,7 +49,7 @@ def login():
                     session['username'] = account['username']
                     session['email1'] = account['email']
                     session['mobile'] = account['mobile']
-                    return redirect(url_for('home'))
+                    return redirect(url_for('dashboard'))
             else:
                 msg = 'Incorrect username/password!'
         else:
@@ -118,9 +121,215 @@ def admindashboard():
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM accounts')
         count = cursor.fetchall()
+        cursor.execute('SELECT * FROM apartmentdetail')
+        counta = cursor.fetchall()
         mysql.connection.commit()
         cursor.close()
-        return render_template('admindashboard.html', count=len(count), username='admin', email1=session['email1'])
+        return render_template('admindashboard.html', count=len(count)-1, counta= len(counta), username='admin', email1=session['email1'])
     return redirect(url_for('login'))
+
+
+@app.route("/dashboard", methods=['GET', 'POST'])
+def dashboard():
+    if 'loggedin' in session:
+        return render_template('userdashboard.html', username=session['username'], email1=session['email1'])
+    return redirect(url_for('login'))
+
+
+@app.route("/apmt_reg/", methods=['GET', 'POST'])
+def apmt_reg():
+    msg = ''
+    if request.method == 'POST':
+        # fetch data
+        details = request.form
+        apmtname = details['name']
+        plot_no = details['Plot']
+        area = details['Area']
+        address = details['Address']
+        landmark = details['Landmark']
+        city = details['City']
+        pin = details['Pincode']
+        state = details['State']
+        country = details['Country']
+        atype = details['Atype']
+        rs = details['Rent/Sale']
+        availability = details['Availability']
+        Price = details['Price']
+        facilities = details['Facilities']
+        description = details['Description']
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        extension = os.path.splitext(filename)
+        allowed_extensions = {'.jpg', '.png', '.jpeg'}
+        if extension[1] in allowed_extensions:
+            f_name = str(uuid.uuid4()) + str(extension[1])
+            app.config['UPLOAD_FOLDER'] = 'static/Uploads'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+            if len(apmtname) > 0 and len(plot_no) > 0 and len(address) > 0 and len(landmark) > 0 and len(availability) and len(
+                city) > 0 and len(pin) > 0 and len(state) > 0 and len(country) > 0 and len(rs)>0 and len(
+                atype) > 0 and len(area)>0 and len(facilities) > 0 and len(description) > 0 and len(Price)>0:
+
+                if len(pin) != 6:
+                    msg = 'Enter 6 digit Pincode !'
+                elif not apmtname or not plot_no or not area or not address or not landmark or not city or not pin or not state or not country or not atype or not rs or not availability or not Price or not facilities or not description or not file:
+                    msg = 'Please fill out the form !'
+                else:
+                    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor.execute(
+                        "INSERT INTO apartmentdetail VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (
+                            session['id'] , apmtname, plot_no, area, address, landmark, city, pin, state, country, atype, rs, availability,
+                            Price, facilities, description, f_name))
+                    mysql.connection.commit()
+                    cursor.close()
+                    msg = 'Registration Successful! Thank You !'
+            else:
+                msg = 'Please fill out the form !'
+        else:
+            msg = 'Upload image in jpg/png/jpeg format only!'
+    if 'loggedin' in session:
+        return render_template('Apmt_reg.html', msg=msg, username=session['username'], email1=session['email1'])
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route("/roomreg/", methods=['GET', 'POST'])
+def roomreg():
+    msg = ''
+    if request.method == 'POST':
+        # fetch data
+        details = request.form
+        bname = details['name']
+        room_no = details['room']
+        area = details['Area']
+        address = details['Address']
+        landmark = details['Landmark']
+        city = details['City']
+        pin = details['Pincode']
+        state = details['State']
+        country = details['Country']
+        availability = details['Availability']
+        Rent = details['Price']
+        facilities = details['Facilities']
+        description = details['Description']
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        extension = os.path.splitext(filename)
+        allowed_extensions = {'.jpg', '.png', '.jpeg'}
+        if extension[1] in allowed_extensions:
+            f_name = str(uuid.uuid4()) + str(extension[1])
+            app.config['UPLOAD_FOLDER'] = 'static/Uploads'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+            if len(bname) > 0 and len(room_no) > 0 and len(area) and len(address) > 0 and len(landmark) > 0 and len(
+                city) > 0 and len(pin) > 0 and len(state) > 0 and len(country) > 0 and len(availability) and len(
+                Rent)>0 and len(facilities) > 0 and len(description) > 0:
+
+                if len(pin) != 6:
+                    msg = 'Enter 6 digit Pincode !'
+                elif not bname or not room_no or not area or not address or not landmark or not city or not pin or not state or not country or not availability or not Rent or not facilities or not description or not file:
+                    msg = 'Please fill out the form !'
+                else:
+                    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor.execute(
+                        "INSERT INTO roomdetail VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (
+                            session['id'], bname, room_no, area, address, landmark, city, pin, state, country, availability,
+                            Rent, facilities, description, f_name))
+                    mysql.connection.commit()
+                    cursor.close()
+                    msg = 'Registration Successful! Thank You !'
+            else:
+                msg = 'Please fill out the form !'
+        else:
+            msg = 'Upload image in jpg/png/jpeg format only!'
+    if 'loggedin' in session:
+        return render_template('roomreg.html', msg=msg, username=session['username'], email1=session['email1'])
+    else:
+        return redirect(url_for('login'))
+
+
+
+@app.route("/projectreg/", methods=['GET', 'POST'])
+def projectreg():
+    msg = ''
+    if request.method == 'POST':
+        # fetch data
+        details = request.form
+        pname = details['name']
+        flat = details.getlist('flattype')
+        print(flat)
+        flattype = ', '.join(flat)
+        address = details['Address']
+        city = details['City']
+        pin = details['Pincode']
+        state = details['State']
+        country = details['Country']
+        facility = details.getlist('Facilities')
+        facilities = ', '.join(facility)
+        feature = details.getlist('features')
+        features = ', '.join(feature)
+        availability = details['Availability']
+        description = details['Description']
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        extension = os.path.splitext(filename)
+        allowed_extensions = {'.jpg', '.png', '.jpeg'}
+        if extension[1] in allowed_extensions:
+            f_name = str(uuid.uuid4()) + str(extension[1])
+            app.config['UPLOAD_FOLDER'] = 'static/Uploads'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+            if len(pname) > 0 and len(flattype) > 0 and len(address) > 0 and len(features) > 0 and len(
+                city) > 0 and len(pin) > 0 and len(state) > 0 and len(country) > 0 and len(
+                availability) > 0 and len(facilities) > 0 and len(description) > 0:
+
+                if len(pin) != 6:
+                    msg = 'Enter 6 digit Pincode !'
+                elif not pname or not flattype or not features or not address or not city or not pin or not state or not country or not availability or not facilities or not description or not file:
+                    msg = 'Please fill out the form !'
+                else:
+                    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                    cursor.execute(
+                        "INSERT INTO projectdetail VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (
+                            session['id'], pname, flattype, address, features, city, pin, state, country, availability,
+                            facilities, description, f_name))
+                    mysql.connection.commit()
+                    cursor.close()
+                    msg = 'Registration Successful! Thank You !'
+            else:
+                msg = 'Please fill out the form !'
+        else:
+            msg = 'Upload image in jpg/png/jpeg format only!'
+    if 'loggedin' in session:
+        return render_template('projectreg.html', msg=msg, username=session['username'], email1=session['email1'])
+    else:
+        return redirect(url_for('login'))
+
+
+
+
+@app.route("/registeredusers/")
+def registeredusers():
+    if 'loggedin' in session:
+        if session['username']=='admin':
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM accounts where username <> 'admin' ")
+            userDetails = cur.fetchall()
+            mysql.connection.commit()
+            cur.close()
+            return render_template('registeredusers.html', userDetails=userDetails, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            return render_template('home.html')
+    else:
+        return render_template('login.html')
+
+@app.route("/deleteuser/<string:id>")
+def deleteuser(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM accounts where ID=%s", [id, ])
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('registeredusers'))
 
 app.run(debug=True)

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>LMS</title>
+    <title>Property Management</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -46,7 +46,7 @@
 
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto py-4 py-md-0">
-
+                {% if username %}
                   <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
                     <a
                       class="nav-link dropdown-toggle"
@@ -58,32 +58,27 @@
                       ><h6>Profile</h6></a
                     >
                     <div class="dropdown-menu">
-                      <a class="dropdown-item"><h6>abc</h6></a>
-                      <a class="dropdown-item"><h6>abc</h6></a>
-                        <a class="dropdown-item" href="#"><h6>Update Profile</h6></a>
-                      <a class="dropdown-item" href="#"><h6>Logout</h6></a>
+                      <a class="dropdown-item"><h6>{{username}}</h6></a>
+                      <a class="dropdown-item"><h6>{{email1}}</h6></a>
+                      <a class="dropdown-item" href="{{ url_for('logout') }}"><h6>Logout</h6></a>
                     </div>
                   </li>
-                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                       <a class="nav-link" href="#"><h6>Members List</h6></a>
-                   </li>
-
+                {% endif %}
+                {% if username=="" %}
                   <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
                     <a class="nav-link" href="{{ url_for('login') }}"><h6>Login/SignUp</h6></a>
                   </li>
-
-                  <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                    <a class="nav-link" href="#"><h6>abc</h6></a>
-                  </li>
-
+                {% endif %}
+                  {% if username!="" and username!='admin' %}
                     <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                        <a class="nav-link" href="#"><h6>Dashboard</h6></a>
+                        <a class="nav-link" href="{{ url_for('dashboard') }}"><h6>Dashboard</h6></a>
                      </li>
-
+                  {% endif %}
+                  {% if username=='admin' %}
                     <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                        <a class="nav-link" href="#"><h6>Dashboard</h6></a>
+                        <a class="nav-link" href="{{ url_for('admindashboard') }}"><h6>Dashboard</h6></a>
                      </li>
-
+                  {% endif %}
 
                 </ul>
               </div>
@@ -131,6 +126,7 @@
           <span class="sr-only">Next</span>
         </a>
   </div>
+    </header>
         <!--Guide-->
         <div class="container">
       <div class="row py-5 mt-4 align-items-center">
