@@ -83,11 +83,11 @@
 
         <div class="col-md-6 order-md-2">
           <img
-            src="{{url_for('static', filename='./images/bgapmt.png')}}"
+            src="{{url_for('static', filename='./images/bgprojet.png')}}"
             alt="Img"
             class="img-fluid"
           />
-          <h1>Apartment Registration</h1>
+          <h1>Project Registration</h1>
         </div>
 
         <!-- Registration Form -->
@@ -99,10 +99,10 @@
               </div>
             {%endif%}
 
-          <form action="{{ url_for('apmt_reg') }}" method="post"  enctype="multipart/form-data">
+          <form action="{{ url_for('projectreg') }}" method="post"  enctype="multipart/form-data">
             <div class="row">
-              <!-- Apartment name -->
-              <div class="input-group col-lg-6 mb-4">
+              <!-- Project name -->
+              <div class="input-group col-lg-12 mb-4">
                 <div class="input-group-prepend">
                   <span
                     class="input-group-text bg-white px-4 border-md border-right-0"
@@ -114,25 +114,7 @@
                   id="name"
                   type="text"
                   name="name"
-                  placeholder="Apartment Name"
-                  required
-                  class="form-control bg-white border-left-0 border-md"
-                />
-              </div>
-
-              <!-- Plot Number  -->
-              <div class="input-group col-lg-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0">
-                    <i class="fa fa-building text-muted"></i>
-                  </span>
-                </div>
-                <input
-                  id="Plot"
-                  type="number"
-                  name="Plot"
-                  placeholder="Plot number"
+                  placeholder="Project Name"
                   required
                   class="form-control bg-white border-left-0 border-md"
                 />
@@ -152,25 +134,6 @@
                   type="text"
                   name="Address"
                   placeholder="Address"
-                  required
-                  class="form-control bg-white border-left-0 border-md"
-                />
-              </div>
-
-              <!-- Landmark  -->
-              <div class="input-group col-lg-12 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-address-book text-muted"></i>
-                  </span>
-                </div>
-                <input
-                  id="Landmark"
-                  type="text"
-                  name="Landmark"
-                  placeholder="Landmark"
                   required
                   class="form-control bg-white border-left-0 border-md"
                 />
@@ -254,125 +217,138 @@
                 />
               </div>
 
+              <!-- flattype -->
 
-              <!-- Rent/Sale -->
-               <div class="input-group col-6 mb-4">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="Rent/Sale" id="rent" value="Rent">
-                    <label class="form-check-label" for="rent">Rent</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Rent/Sale" id="sale" value="Sale">
-                  <label class="form-check-label" for="sale">Sale</label>
-                </div>
-               </div>
-
-                <!-- Availability -->
-               <div class="input-group col-6 mb-4">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="Availability" id="vacant" value="Vacant">
-                    <label class="form-check-label" for="vacant">Vacant</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Availability" id="occupied" value="Occupied">
-                  <label class="form-check-label" for="occupied">Occupied</label>
-                </div>
-               </div>
-
-              <!-- Area -->
-              <div class="input-group col-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-square text-muted"></i>
-                  </span>
-                </div>
-                <input
-                  id="Area"
-                  type="number"
-                  name="Area"
-                  placeholder="Area(in sqft)"
-                  required
-                  class="form-control bg-white border-left-0 border-md"
-                />
-              </div>
-
-              <!-- Price -->
-              <div class="input-group col-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-tag text-muted"></i>
-                  </span>
-                </div>
-                <input
-                  id="Price"
-                  type="number"
-                  name="Price"
-                  placeholder="Price"
-                  required
-                  class="form-control bg-white border-left-0 border-md"
-                />
-              </div>
-
-              <!-- Apartment Type -->
               <div class="input-group col-12">
                 <div>
-                      <h6><strong>Apartment Type</strong></h6>
+                      <h6><strong>Flat Types</strong></h6>
                   </div>
               </div>
 
+
+                <div class="input-group col-lg-12 mb-4">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "flattype" class="get_value" value="1BHK(starting from 20 lac)">1BHK(starting from 20 lac)</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "flattype" class="get_value" value="2BHK(starting from 35 lac)">2BHK(starting from 35 lac)</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "flattype" class="get_value" value="3BHK(starting from 60 lac)">3BHK(starting from 60 lac)</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "flattype" class="get_value" value="4BHK(starting from 80 lac)">4BHK(starting from 80 lac)</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "flattype" class="get_value" value="Others">Others</label>
+                    </div>
+
+                </div>
+
+
+                <!-- Availability -->
+                <div class="input-group col-12">
+                <div>
+                      <h6><strong>Available</strong></h6>
+                  </div>
+              </div>
+
+               <div class="input-group col-12 mb-4">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="Availability" id="vacant" value="Yes">
+                    <label class="form-check-label" for="vacant">Yes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="Availability" id="occupied" value="No">
+                  <label class="form-check-label" for="occupied">No</label>
+                </div>
+               </div>
+
+
+
+              <!-- features  -->
+
               <div class="input-group col-12">
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="Atype" id="studio" value="Studio">
-                    <label class="form-check-label" for="studio">Studio</label>
+                <div>
+                      <h6><strong>Features(Near to)</strong></h6>
+                  </div>
+              </div>
+
+
+            <div class="input-group col-lg-12 mb-4">
+                <div class="form-check form-check-inline">
+                  <input ;class="form-check-input" type="checkbox" name = "features" class="get_value" value="Hospital">Hospital</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Atype" id="alcovestudio" value="Alcovestudio">
-                  <label class="form-check-label" for="alcovestudio">Alcove studio</label>
+                  <input class="form-check-input" type="checkbox" name = "features" class="get_value" value="Mall">Mall</label>
                 </div>
 
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Atype" id="loft" value="Loft">
-                  <label class="form-check-label" for="loft">Loft</label>
+                  <input class="form-check-input" type="checkbox" name = "features" class="get_value" value="School">School</label>
                 </div>
 
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Atype" id="duplex" value="Duplex">
-                  <label class="form-check-label" for="duplex">Duplex</label>
+                  <input class="form-check-input" type="checkbox" name = "features" class="get_value" value="Market">Market</label>
                 </div>
 
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Atype" id="triplex" value="Triplex">
-                  <label class="form-check-label" for="triplex">Triplex</label>
+                  <input class="form-check-input" type="checkbox" name = "features" class="get_value" value="Park">Park</label>
                 </div>
+
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Atype" id="other" value="Other">
-                  <label class="form-check-label" for="other">Other</label>
+                  <input class="form-check-input" type="checkbox" name = "features" class="get_value" value="Airport">Airport</label>
                 </div>
-              </div>  `
+
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name = "features" class="get_value" value="Others">Others</label>
+                </div>
+
+            </div>
+
 
 
                <!-- Facilities  -->
-              <div class="input-group col-lg-12 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-sticky-note text-muted"></i>
-                  </span>
-                </div>
-                <input
-                  id="Facilities"
-                  type="text"
-                  name="Facilities"
-                  placeholder="Facilities"
-                  required
-                  class="form-control bg-white border-left-0 border-md"
-                />
+
+
+              <div class="input-group col-12">
+                <div>
+                      <h6><strong>Top Facilities</strong></h6>
+                  </div>
               </div>
+
+              <div class="input-group col-lg-12 mb-4">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "Facilities" class="get_value" value="Yoga Area">Yoga Area</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "Facilities" class="get_value" value="Indoor Games">Indoor Games</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "Facilities" class="get_value" value="Jogging Track">Jogging Track</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "Facilities" class="get_value" value="Club House">Club House</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "Facilities" class="get_value" value="Gym">Gym</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "Facilities" class="get_value" value="Swimming Pool">Swimming Pool</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "Facilities" class="get_value" value="Others">Others</label>
+                    </div>
+
+                </div>
+
 
                <!-- Description  -->
               <div class="input-group col-lg-12 mb-4">

@@ -83,11 +83,11 @@
 
         <div class="col-md-6 order-md-2">
           <img
-            src="{{url_for('static', filename='./images/bgapmt.png')}}"
+            src="{{url_for('static', filename='./images/bgroom.png')}}"
             alt="Img"
             class="img-fluid"
           />
-          <h1>Apartment Registration</h1>
+          <h1>Room Registration</h1>
         </div>
 
         <!-- Registration Form -->
@@ -99,9 +99,9 @@
               </div>
             {%endif%}
 
-          <form action="{{ url_for('apmt_reg') }}" method="post"  enctype="multipart/form-data">
+          <form action="{{ url_for('roomreg') }}" method="post"  enctype="multipart/form-data">
             <div class="row">
-              <!-- Apartment name -->
+              <!-- Building name -->
               <div class="input-group col-lg-6 mb-4">
                 <div class="input-group-prepend">
                   <span
@@ -114,13 +114,13 @@
                   id="name"
                   type="text"
                   name="name"
-                  placeholder="Apartment Name"
+                  placeholder="Building Name"
                   required
                   class="form-control bg-white border-left-0 border-md"
                 />
               </div>
 
-              <!-- Plot Number  -->
+              <!-- Room Number  -->
               <div class="input-group col-lg-6 mb-4">
                 <div class="input-group-prepend">
                   <span
@@ -129,10 +129,10 @@
                   </span>
                 </div>
                 <input
-                  id="Plot"
+                  id="room"
                   type="number"
-                  name="Plot"
-                  placeholder="Plot number"
+                  name="room"
+                  placeholder="Room number"
                   required
                   class="form-control bg-white border-left-0 border-md"
                 />
@@ -254,31 +254,6 @@
                 />
               </div>
 
-
-              <!-- Rent/Sale -->
-               <div class="input-group col-6 mb-4">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="Rent/Sale" id="rent" value="Rent">
-                    <label class="form-check-label" for="rent">Rent</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Rent/Sale" id="sale" value="Sale">
-                  <label class="form-check-label" for="sale">Sale</label>
-                </div>
-               </div>
-
-                <!-- Availability -->
-               <div class="input-group col-6 mb-4">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="Availability" id="vacant" value="Vacant">
-                    <label class="form-check-label" for="vacant">Vacant</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Availability" id="occupied" value="Occupied">
-                  <label class="form-check-label" for="occupied">Occupied</label>
-                </div>
-               </div>
-
               <!-- Area -->
               <div class="input-group col-6 mb-4">
                 <div class="input-group-prepend">
@@ -311,50 +286,24 @@
                   id="Price"
                   type="number"
                   name="Price"
-                  placeholder="Price"
+                  placeholder="Rent/month"
                   required
                   class="form-control bg-white border-left-0 border-md"
                 />
               </div>
 
-              <!-- Apartment Type -->
-              <div class="input-group col-12">
-                <div>
-                      <h6><strong>Apartment Type</strong></h6>
-                  </div>
-              </div>
 
-              <div class="input-group col-12">
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="Atype" id="studio" value="Studio">
-                    <label class="form-check-label" for="studio">Studio</label>
+                <!-- Availability -->
+               <div class="input-group col-12 mb-4">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="Availability" id="vacant" value="Vacant">
+                    <label class="form-check-label" for="vacant">Vacant</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Atype" id="alcovestudio" value="Alcovestudio">
-                  <label class="form-check-label" for="alcovestudio">Alcove studio</label>
+                  <input class="form-check-input" type="radio" name="Availability" id="occupied" value="Occupied">
+                  <label class="form-check-label" for="occupied">Occupied</label>
                 </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Atype" id="loft" value="Loft">
-                  <label class="form-check-label" for="loft">Loft</label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Atype" id="duplex" value="Duplex">
-                  <label class="form-check-label" for="duplex">Duplex</label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Atype" id="triplex" value="Triplex">
-                  <label class="form-check-label" for="triplex">Triplex</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Atype" id="other" value="Other">
-                  <label class="form-check-label" for="other">Other</label>
-                </div>
-              </div>  `
-
-
+               </div>
                <!-- Facilities  -->
               <div class="input-group col-lg-12 mb-4">
                 <div class="input-group-prepend">
