@@ -30,6 +30,7 @@ CREATE TABLE apartmentdetail (
  	Facilities varchar(250) NOT NULL,
  	Descr varchar(500) NOT NULL,
  	image varchar(10000) NOT NULL,
+	rating decimal NOT NULL,
     PRIMARY KEY (A_ID),
 	FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -51,6 +52,7 @@ CREATE TABLE roomdetail(
 	Facilities varchar(250) NOT NULL,
  	Descr varchar(500) NOT NULL,
     image varchar(10000) NOT NULL,
+	rating decimal NOT NULL,
  	PRIMARY KEY (R_ID),
     FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
  );
@@ -70,6 +72,7 @@ CREATE TABLE projectdetail(
  	Facilities varchar(250) NOT NULL,
  	Descr varchar(500) NOT NULL,
     image varchar(10000) NOT NULL,
+	rating decimal NOT NULL,
  	PRIMARY KEY (P_ID),
     FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
  );

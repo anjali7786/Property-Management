@@ -79,7 +79,9 @@
                         <a class="nav-link" href="{{ url_for('admindashboard') }}"><h6>Dashboard</h6></a>
                      </li>
                   {% endif %}
-
+                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="/search/"><h6>Search</h6></a>
+                    </li>
                 </ul>
               </div>
             </nav>
@@ -127,10 +129,9 @@
         </a>
   </div>
     </header>
-        <!--Guide-->
+     <!--Guide-->
         <div class="container">
       <div class="row py-5 mt-4 align-items-center">
-        <!-- For Demo Purpose -->
         <div class="col-md-5 pr-lg-5 mb-5 mb-md-0">
           <img
             src="{{url_for('static', filename='./images/guide.png')}}"
@@ -139,55 +140,25 @@
           />
         </div>
 
-
-        <div class="col-md-7 col-lg-6 ml-auto">
-          <div class="card shadow p-3 mb-5 bg-white rounded" style="border:none;">
+        <div class="col-md-7 col-lg-6 ml-auto" >
+          <div class="guide_card_home card shadow-lg p-3 mb-5 rounded" style="border:none;">
              <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="card-link">Another link</a>
+                <h2 class="card-title"><i class="fa fa-question-circle"></i> Guide Manual</h2>
+                <p class="card-text">How to register properties? How to apply for any property? and so more...Answers for all your quentions can be found here.</p>
+                <a href="#" class="card-link">Guide</a>
              </div>
           </div>
         </div>
       </div>
     </div>
-    <!--footer-->
-    <footer class="footer" id="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-5">
-                <h5><i class="fa fa-home"></i>PROPERTY MANAGEMENT</h5>
-                <br>
+        <br>
 
-                <ul class="nav">
-                    <li class="nav-item"><a href="" class="nav-link pl-0"><i class="fa fa-facebook fa-lg"></i></a></li>
-                    <li class="nav-item"><a href="" class="nav-link"><i class="fa fa-twitter fa-lg"></i></a></li>
-                    <li class="nav-item"><a href="" class="nav-link"><i class="fa fa-github fa-lg"></i></a></li>
-                    <li class="nav-item"><a href="" class="nav-link"><i class="fa fa-instagram fa-lg"></i></a></li>
-                </ul>
-                <br>
+        <footer class="bg-dark text-center text-lg-start">
+            <div class="text-center text-light p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+                 © 2021 Copyright:
+                <a class="text-light" href="#"><i class="fa fa-home"></i>PROPERTY MANAGEMENT</a>
             </div>
-            <div class="col-md-2">
-                <h5 class="text-md-right">Contact Us</h5>
-                <hr>
-            </div>
-            <div class="col-md-5">
-                <form>
-                    <fieldset class="form-group">
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <textarea class="form-control" id="exampleMessage" placeholder="Message"></textarea>
-                    </fieldset>
-                    <fieldset class="form-group text-xs-right">
-                        <button type="button" class="btn btn-primary btn-lg">Send</button>
-                    </fieldset>
-                </form>
-            </div>
-        </div>
-    </div>
-</footer>
+        </footer>
     <script src="{{url_for('static', filename='./js/script.js')}}"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
