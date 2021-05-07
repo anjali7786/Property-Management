@@ -176,10 +176,10 @@ def apmt_reg():
                 else:
                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                     cursor.execute(
-                        "INSERT INTO apartmentdetail VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        "INSERT INTO apartmentdetail VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                         (
                             session['id'] , apmtname, plot_no, area, address, landmark, city, pin, state, country, atype, rs, availability,
-                            Price, facilities, description, f_name))
+                            Price, facilities, description, f_name,'0'))
                     mysql.connection.commit()
                     cursor.close()
                     msg = 'Registration Successful! Thank You !'
@@ -231,10 +231,10 @@ def roomreg():
                 else:
                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                     cursor.execute(
-                        "INSERT INTO roomdetail VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        "INSERT INTO roomdetail VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                         (
                             session['id'], bname, room_no, area, address, landmark, city, pin, state, country, availability,
-                            Rent, facilities, description, f_name))
+                            Rent, facilities, description, f_name,'0'))
                     mysql.connection.commit()
                     cursor.close()
                     msg = 'Registration Successful! Thank You !'
@@ -289,10 +289,10 @@ def projectreg():
                 else:
                     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                     cursor.execute(
-                        "INSERT INTO projectdetail VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        "INSERT INTO projectdetail VALUES(NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                         (
                             session['id'], pname, flattype, address, features, city, pin, state, country, availability,
-                            facilities, description, f_name))
+                            facilities, description, f_name,'0'))
                     mysql.connection.commit()
                     cursor.close()
                     msg = 'Registration Successful! Thank You !'
@@ -331,5 +331,708 @@ def deleteuser(id):
     mysql.connection.commit()
     cursor.close()
     return redirect(url_for('registeredusers'))
+
+@app.route("/search/", methods=['GET', 'POST'])
+def search():
+    op = ""
+    result=[]
+    result1=[]
+    result2=[]
+    if request.method == 'POST':
+        loc = request.form['location']
+        city = request.form['city']
+        option = request.form.get('opt')
+        minprice = request.form['minprice']
+        maxprice = request.form['maxprice']
+        area = request.form['area']
+        atype= request.form.get('atypeo')
+        flattype = request.form.getlist('flattype')
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        if option == "choose" :
+            op="n"
+            #apartments
+            if loc == "" and city == "" :
+                cur.execute(
+                    'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id')
+                result = cur.fetchall()
+            elif loc != "":
+                if city == "" :
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s',
+                        [loc])
+                    result = cur.fetchall()
+                elif city != "" :
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s',
+                        ([loc], [city]))
+                    result = cur.fetchall()
+            elif city != "" and loc == "":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s',
+                        [city])
+                    result = cur.fetchall()
+
+            #rooms
+            
+            if loc == "" and city == "" :
+                cur.execute(
+                    'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id')
+                result1 = cur.fetchall()
+            elif loc != "":
+                if city == "" :
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s',
+                        [loc])
+                    result1 = cur.fetchall()
+                elif city != "" :
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and City = %s',
+                        ([loc], [city]))
+                    result1 = cur.fetchall()
+            elif city != "" and loc == "":
+                if minprice == "" and maxprice == "":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where City = % s',
+                        [city])
+                    result1 = cur.fetchall()
+
+            #projects
+            if loc == "" and city == "":
+                cur.execute(
+                    'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id')
+                result2 = cur.fetchall()
+            elif loc != "":
+                if city == "":
+                    cur.execute(
+                        'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where State = % s',
+                        [loc])
+                    result2 = cur.fetchall()
+                elif city != "":
+                    cur.execute(
+                        'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where State = % s and City = %s',
+                        ([loc], [city]))
+                    result2 = cur.fetchall()
+            elif city != "" and loc == "" :
+                cur.execute(
+                    'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where City = % s',
+                    [city])
+                result2 = cur.fetchall()
+
+
+        if option == "apartments":
+            op = "a"
+            if loc == "" and city == "" and minprice == "" and maxprice == "" and area== "" and atype=="" :
+                cur.execute(
+                    'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id')
+                result = cur.fetchall()
+                print(1)
+            elif loc == "" and city == "" and minprice == "" and maxprice == "" and area!= "" and atype=="" :
+                cur.execute(
+                    'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Area=%s',[area])
+                result = cur.fetchall()
+            elif loc == "" and city == "" and minprice == "" and maxprice == "" and area== "" and atype!="" :
+                cur.execute(
+                    'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Atype=%s',[atype])
+                result = cur.fetchall()
+            elif loc == "" and city == "" and minprice == "" and maxprice == "" and area!= "" and atype!="" :
+                cur.execute(
+                    'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Area=%s and Atype=%s',([area], [atype]))
+                result = cur.fetchall()
+
+            elif loc != "":
+                if city == "" and minprice == "" and maxprice == "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s',
+                        [loc])
+                    result = cur.fetchall()
+                elif city == "" and minprice == "" and maxprice == "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Area=%s',
+                        ([loc],[area]))
+                    result = cur.fetchall()
+                elif city == "" and minprice == "" and maxprice == "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Atype=%s',
+                        ([loc],[atype]))
+                    result = cur.fetchall()
+                elif city == "" and minprice == "" and maxprice == "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Atype=%s and Area=%s',
+                        ([loc],[atype],[area]))
+                    result = cur.fetchall()
+
+                elif city != "" and minprice == "" and maxprice == "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s',
+                        ([loc], [city]))
+                    result = cur.fetchall()
+                elif city != "" and minprice == "" and maxprice == "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s and Area=%s',
+                        ([loc], [city], [area]))
+                    result = cur.fetchall()
+                elif city != "" and minprice == "" and maxprice == "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s and Atype=%s',
+                        ([loc], [city], [atype]))
+                    result = cur.fetchall()
+                elif city != "" and minprice == "" and maxprice == "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s and Atype=%s and Area=%s' ,
+                        ([loc], [city], [atype], [area]))
+                    result = cur.fetchall()
+
+
+                elif city != "" and minprice != "" and maxprice == "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s and Price>=%s',
+                        ([loc], [city], [minprice]))
+                    result = cur.fetchall()
+                elif city != "" and minprice != "" and maxprice == "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s and Price>=%s and Area=%s',
+                        ([loc], [city], [minprice],[area]))
+                    result = cur.fetchall()
+                elif city != "" and minprice != "" and maxprice == "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s and Price>=%s and Area=%s and Atype=%s',
+                        ([loc], [city], [minprice],[area],[atype]))
+                    result = cur.fetchall()
+                elif city != "" and minprice != "" and maxprice == "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s and Price>=%s and Atype=%s',
+                        ([loc], [city], [minprice],[atype]))
+                    result = cur.fetchall()
+
+
+                elif city != "" and minprice == "" and maxprice != "" and area=="" and atype=="":
+                    cur.execute(
+                        'A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s and Price<=%s',
+                        ([loc], [city], [maxprice]))
+                    result = cur.fetchall()
+                elif city != "" and minprice == "" and maxprice != "" and area!="" and atype=="":
+                    cur.execute(
+                        'A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s and Price<=%s and Area=%s',
+                        ([loc], [city], [maxprice],[area]))
+                    result = cur.fetchall()
+                elif city != "" and minprice == "" and maxprice != "" and area=="" and atype!="":
+                    cur.execute(
+                        'A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s and Price<=%s and atype=%s',
+                        ([loc], [city], [maxprice],[atype]))
+                    result = cur.fetchall()
+                elif city != "" and minprice == "" and maxprice != "" and area!="" and atype!="":
+                    cur.execute(
+                        'A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City = %s and Price<=%s and Area=%s and Atype=%s',
+                        ([loc], [city], [maxprice],[area],[atype]))
+                    result = cur.fetchall()
+
+
+                elif city == "" and minprice == "" and maxprice != "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price<=%s',
+                        ([loc], [maxprice]))
+                    result = cur.fetchall()
+                elif city == "" and minprice == "" and maxprice != "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price<=%s and Area=%s',
+                        ([loc], [maxprice],[area]))
+                    result = cur.fetchall()
+                elif city == "" and minprice == "" and maxprice != "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price<=%s and Atype=%s',
+                        ([loc], [maxprice],[atype]))
+                    result = cur.fetchall()
+                elif city == "" and minprice == "" and maxprice != "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price<=%s and Area=%s and Atype=%s',
+                        ([loc], [maxprice],[area],[atype]))
+                    result = cur.fetchall()
+
+
+                elif city == "" and minprice != "" and maxprice == "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price<=%s',
+                        ([loc], [maxprice]))
+                    result = cur.fetchall()
+                elif city == "" and minprice != "" and maxprice == "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price<=%s and Area=%s',
+                        ([loc], [maxprice],[area]))
+                    result = cur.fetchall()
+                elif city == "" and minprice != "" and maxprice == "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price<=%s and Atype="%s',
+                        ([loc], [maxprice],[atype]))
+                    result = cur.fetchall()
+                elif city == "" and minprice != "" and maxprice == "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price<=%s ans Area=%s and Atype=%s',
+                        ([loc], [maxprice],[area],[atype]))
+                    result = cur.fetchall()
+
+
+                elif city == "" and minprice != "" and maxprice != "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price>=%s and Price<=%s',
+                        ([loc], [minprice], [maxprice]))
+                    result = cur.fetchall()
+                elif city == "" and minprice != "" and maxprice != "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price>=%s and Price<=%s and Area=%s',
+                        ([loc], [minprice], [maxprice],[area]))
+                    result = cur.fetchall()
+                elif city == "" and minprice != "" and maxprice != "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price>=%s and Price<=%s and Atype=%s',
+                        ([loc], [minprice], [maxprice],[atype]))
+                    result = cur.fetchall()
+                elif city == "" and minprice != "" and maxprice != "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and Price>=%s and Price<=%s and Area=%s and Atype=%s',
+                        ([loc], [minprice], [maxprice],[area],[atype]))
+                    result = cur.fetchall()
+
+
+                elif city != "" and minprice != "" and maxprice != "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City=%s and Price>=%s and Price<=%s',
+                        ([loc], [city], [minprice], [maxprice]))
+                    result = cur.fetchall()
+                elif city != "" and minprice != "" and maxprice != "" and area != "" and atype == "":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City=%s and Price>=%s and Price<=%s and Area=%s',
+                        ([loc], [city], [minprice], [maxprice],[area]))
+                    result = cur.fetchall()
+                elif city != "" and minprice != "" and maxprice != "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City=%s and Price>=%s and Price<=%s and Atype=%s',
+                        ([loc], [city], [minprice], [maxprice],[atype]))
+                    result = cur.fetchall()
+                elif city != "" and minprice != "" and maxprice != "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where State = % s and City=%s and Price>=%s and Price<=%s and Area=%s and Atype=%s',
+                        ([loc], [city], [minprice], [maxprice],[area],[atype]))
+                    result = cur.fetchall()
+
+
+            elif city != "" and loc == "":
+                if minprice == "" and maxprice == "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s',
+                        [city])
+                    result = cur.fetchall()
+                elif minprice == "" and maxprice == "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Area=%s',
+                        ([city],[area]))
+                    result = cur.fetchall()
+                elif minprice == "" and maxprice == "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Atype=%s',
+                        ([city],[atype]))
+                    result = cur.fetchall()
+                elif minprice == "" and maxprice == "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Area=%s and Atype=%s',
+                        ([city],[area],[atype]))
+                    result = cur.fetchall()
+
+
+                elif minprice == "" and maxprice != "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price<=%s',
+                        ([city], [maxprice]))
+                    result = cur.fetchall()
+                elif minprice == "" and maxprice != "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price<=%s and Area=%s',
+                        ([city], [maxprice],[area]))
+                    result = cur.fetchall()
+                elif minprice == "" and maxprice != "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price<=%s and Atype=%s',
+                        ([city], [maxprice],[atype]))
+                    result = cur.fetchall()
+                elif minprice == "" and maxprice != "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price<=%s and Area=%s and Atype=%s',
+                        ([city], [maxprice],[area],[atype]))
+                    result = cur.fetchall()
+
+
+                elif minprice != "" and maxprice == "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price<=%s',
+                        ([city], [maxprice]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice == "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price<=%s and Area=%s',
+                        ([city], [maxprice],[area]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice == "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price<=%s and Atype=%s',
+                        ([city], [maxprice],[atype]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice == "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price<=%s and Area=%s andAtype=%s',
+                        ([city], [maxprice],[area],[atype]))
+                    result = cur.fetchall()
+
+
+                elif minprice != "" and maxprice != "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price>=%s and Price<=%s',
+                        ([city], [minprice], [maxprice]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice != "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price>=%s and Price<=%s and Area=%s',
+                        ([city], [minprice], [maxprice],[area]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice != "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price>=%s and Price<=%s and Atype=%s',
+                        ([city], [minprice], [maxprice],[atype]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice != "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where City = % s and Price>=%s and Price<=%s and Area=%s and Atype=%s',
+                        ([city], [minprice], [maxprice],[area],[atype]))
+                    result = cur.fetchall()
+
+
+            elif city == "" and loc == "":
+                if minprice == "" and maxprice != "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price<=%s',
+                        ([maxprice]))
+                    result = cur.fetchall()
+                elif minprice == "" and maxprice != "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price<=%s and Area=%s',
+                        ([maxprice],[area]))
+                    result = cur.fetchall()
+                elif minprice == "" and maxprice != "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price<=%s and Atype=%s',
+                        ([maxprice],[atype]))
+                    result = cur.fetchall()
+                elif minprice == "" and maxprice != "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price<=%s and Area=%s and Atype=%s',
+                        ([maxprice],[area],[atype]))
+                    result = cur.fetchall()
+
+
+                elif minprice != "" and maxprice == "" and area=="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price>=%s',
+                        ([minprice]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice == "" and area!="" and atype=="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price>=%s and Area=%s',
+                        ([minprice],[area]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice == "" and area=="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price>=%s and Atype=%s',
+                        ([minprice],[atype]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice == "" and area!="" and atype!="":
+                    cur.execute(
+                        'SELECT A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price>=%s and Area=%s and Atype=%s',
+                        ([minprice],[area],[atype]))
+                    result = cur.fetchall()
+
+
+                elif minprice != "" and maxprice != "" and area=="" and atype=="":
+                    cur.execute(
+                        'A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price>=%s and Price<=%s',
+                        ([minprice], [maxprice]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice != "" and area!="" and atype=="":
+                    cur.execute(
+                        'A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price>=%s and Price<=%s and Area=%s',
+                        ([minprice], [maxprice],[area]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice != "" and area=="" and atype!="":
+                    cur.execute(
+                        'A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price>=%s and Price<=%s and Atype=%s',
+                        ([minprice], [maxprice],[atype]))
+                    result = cur.fetchall()
+                elif minprice != "" and maxprice != "" and area!="" and atype!="":
+                    cur.execute(
+                        'A_ID,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where Price>=%s and Price<=%s and Area=%s and Atype=%s',
+                        ([minprice], [maxprice],[area],[atype]))
+                    result = cur.fetchall()
+
+
+        elif option == "rooms":
+            op = "r"
+            if loc == "" and city == "" and minprice == "" and maxprice == "" and area=="":
+                cur.execute(
+                    'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id')
+                result1 = cur.fetchall()
+            elif loc == "" and city == "" and minprice == "" and maxprice == "" and area!="":
+                cur.execute(
+                    'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where Area=%s',([area]))
+                result1 = cur.fetchall()
+
+            elif loc != "":
+                if city == "" and minprice == "" and maxprice == "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s',
+                        [loc])
+                    result1 = cur.fetchall()
+                elif city == "" and minprice == "" and maxprice == "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and Area=%s',
+                        ([loc],[area]))
+                    result1 = cur.fetchall()
+
+                elif city != "" and minprice == "" and maxprice == "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and City = %s',
+                        ([loc], [city]))
+                    result1 = cur.fetchall()
+                elif city != "" and minprice == "" and maxprice == "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and City = %s and Area=%s',
+                        ([loc], [city],[area]))
+                    result1 = cur.fetchall()
+
+                elif city != "" and minprice != "" and maxprice == "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and City = %s and Rent>=%s',
+                        ([loc], [city], [minprice]))
+                    result1 = cur.fetchall()
+                elif city != "" and minprice != "" and maxprice == "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and City = %s and Rent>=%s and Area=%s',
+                        ([loc], [city], [minprice],[area]))
+                    result1 = cur.fetchall()
+
+                elif city != "" and minprice == "" and maxprice != "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and City = %s and Rent<=%s',
+                        ([loc], [city], [maxprice]))
+                    result1 = cur.fetchall()
+                elif city != "" and minprice == "" and maxprice != "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and City = %s and Rent<=%s and Area=%s',
+                        ([loc], [city], [maxprice],[area]))
+                    result1 = cur.fetchall()
+
+                elif city == "" and minprice == "" and maxprice != "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and Rent<=%s',
+                        ([loc], [maxprice]))
+                    result1 = cur.fetchall()
+                elif city == "" and minprice == "" and maxprice != "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and Rent<=%s and Area=%s',
+                        ([loc], [maxprice],[area]))
+                    result1 = cur.fetchall()
+
+                elif city == "" and minprice != "" and maxprice == "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and Rent<=%s',
+                        ([loc], [maxprice]))
+                    result1 = cur.fetchall()
+                elif city == "" and minprice != "" and maxprice == "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and Rent<=%s and Area=%s',
+                        ([loc], [maxprice],[area]))
+                    result1 = cur.fetchall()
+
+                elif city == "" and minprice != "" and maxprice != "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and Rent>=%s and Rent<=%s',
+                        ([loc], [minprice], [maxprice]))
+                    result1 = cur.fetchall()
+                elif city == "" and minprice != "" and maxprice != "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and Rent>=%s and Rent<=%s and Area=%s',
+                        ([loc], [minprice], [maxprice],[area]))
+                    result1 = cur.fetchall()
+
+                elif city != "" and minprice != "" and maxprice != "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and City=%s and Rent>=%s and Rent<=%s',
+                        ([loc], [city], [minprice], [maxprice]))
+                    result1 = cur.fetchall()
+                elif city != "" and minprice != "" and maxprice != "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where State = % s and City=%s and Rent>=%s and Rent<=%s and Area=%s',
+                        ([loc], [city], [minprice], [maxprice],[area]))
+                    result1 = cur.fetchall()
+
+            elif city != "" and loc == "":
+                if minprice == "" and maxprice == "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where City = % s',
+                        [city])
+                    result1 = cur.fetchall()
+                elif minprice == "" and maxprice == "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where City = % s and Area=%s',
+                        ([city],[area]))
+                    result1 = cur.fetchall()
+
+                elif minprice == "" and maxprice != "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where City = % s and Rent<=%s',
+                        ([city], [maxprice]))
+                    result1 = cur.fetchall()
+                elif minprice == "" and maxprice != "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where City = % s and Rent<=%s and Area=%s',
+                        ([city], [maxprice],[area]))
+                    result1 = cur.fetchall()
+
+                elif minprice != "" and maxprice == "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where City = % s and Rent<=%s',
+                        ([city], [maxprice]))
+                    result1 = cur.fetchall()
+                elif minprice != "" and maxprice == "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where City = % s and Rent<=%s and Area=%s',
+                        ([city], [maxprice],[area]))
+                    result1 = cur.fetchall()
+
+                elif minprice != "" and maxprice != "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where City = % s and Rent>=%s and Price<=%s',
+                        ([city], [minprice], [maxprice]))
+                    result1 = cur.fetchall()
+                elif minprice != "" and maxprice != "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where City = % s and Rent>=%s and Price<=%s and Area=%s',
+                        ([city], [minprice], [maxprice],[area]))
+                    result1 = cur.fetchall()
+
+            elif city == "" and loc == "":
+                if minprice == "" and maxprice != "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where Rent<=%s',
+                        ([maxprice]))
+                    result1 = cur.fetchall()
+                elif minprice == "" and maxprice != "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where Rent<=%s and Area=%s',
+                        ([maxprice],[area]))
+                    result1 = cur.fetchall()
+
+                elif minprice != "" and maxprice == "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where Rent>=%s',
+                        ([minprice]))
+                    result1 = cur.fetchall()
+                elif minprice != "" and maxprice == "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where Rent>=%s and Area=%s',
+                        ([minprice],[area]))
+                    result1 = cur.fetchall()
+
+                elif minprice != "" and maxprice != "" and area=="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where Rent>=%s and Rent<=%s',
+                        ([minprice], [maxprice]))
+                    result1 = cur.fetchall()
+                elif minprice != "" and maxprice != "" and area!="":
+                    cur.execute(
+                        'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where Rent>=%s and Rent<=%s and Area=%s',
+                        ([minprice], [maxprice],[area]))
+                    result1 = cur.fetchall()
+
+
+        elif option=='projects':
+            if loc == "" and city == "" and (not flattype):
+                cur.execute(
+                    'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id')
+                result2 = cur.fetchall()
+            elif loc == "" and city == "" and flattype:
+                cur.execute(
+                    'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id',)
+                r = cur.fetchall()
+                for i in r:
+                    l=i['Flattype'].split(', ')
+                    for j in l:
+                        if j in flattype:
+                            result2.append(i)
+                            break
+            elif loc != "":
+                if city == "" and (not flattype) :
+                    cur.execute(
+                        'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where State = % s',
+                        [loc])
+                    result2 = cur.fetchall()
+                elif city == "" and flattype:
+                    cur.execute(
+                        'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where State = % s',
+                        [loc])
+                    r = cur.fetchall()
+                    for i in r:
+                        l = i['Flattype'].split(', ')
+                        for j in l:
+                            if j in flattype:
+                                result2.append(i)
+                                break
+                elif city != "" and (not flattype):
+                    cur.execute(
+                        'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where State = % s and City = %s',
+                        ([loc], [city]))
+                    result2 = cur.fetchall()
+                elif city != "" and flattype:
+                    cur.execute(
+                        'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where State = % s and City = %s',
+                        ([loc], [city]))
+                    r = cur.fetchall()
+                    for i in r:
+                        l = i['Flattype'].split(', ')
+                        for j in l:
+                            if j in flattype:
+                                result2.append(i)
+                                break
+            elif city != "" and loc == "" and (not flattype):
+                    cur.execute(
+                        'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where City = % s',
+                        [city])
+                    result2 = cur.fetchall()
+            elif city != "" and loc == "" and flattype:
+                cur.execute(
+                    'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where City = % s',
+                    [city])
+                r = cur.fetchall()
+                for i in r:
+                    l = i['Flattype'].split(', ')
+                    for j in l:
+                        if j in flattype:
+                            result2.append(i)
+                            break
+        mysql.connection.commit()
+        cur.close()
+        if result or result1 or result2:
+            if 'loggedin' in session:
+                return render_template('search.html', detail=result,detail1=result1,detail2=result2, msg="Result for the search", op=op,
+                                       username=session['username'],email1=session['email1'])
+            else:
+                return render_template('search.html', detail=result,detail1=result1,detail2=result2, msg="Result for the search", op=op, username="",email1="")
+        else:
+            if 'loggedin' in session:
+                return render_template('search.html', msg="No records found", username=session['username'],email1=session['email1'])
+            else:
+                return render_template('search.html', msg="No records found", username="",email1="")
+    else:
+        if 'loggedin' in session:
+            return render_template('search.html', username=session['username'],email1=session['email1'])
+        else:
+            return render_template('search.html', username="",email1="")
+    return render_template('search.html')
 
 app.run(debug=True)

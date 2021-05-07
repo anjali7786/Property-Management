@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PROPERTY MANAGEMENT</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='./css/style.css')}}" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  </head>
+  <body>
+    <div class="navigation-wrap bg-light start-header start-style">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <nav class="navbar navbar-expand-md navbar-light">
+              <a
+                class="navbar-brand"
+                href="/"
+                target="_blank"
+                ><h1><i class="fa fa-home"></i>PROPERTY MANAGEMENT</h1></a>
+
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto py-4 py-md-0">
+                {% if username %}
+                  <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                    <a
+                      class="nav-link dropdown-toggle"
+                      data-toggle="dropdown"
+                      href="#"
+                      role="button"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      ><h6>Profile</h6></a
+                    >
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item"><h6>{{username}}</h6></a>
+                      <a class="dropdown-item"><h6>{{email1}}</h6></a>
+                      <a class="dropdown-item" href="{{ url_for('logout') }}"><h6>Logout</h6></a>
+                    </div>
+                  </li>
+                {% endif %}
+                {% if username=="" %}
+                  <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                    <a class="nav-link" href="{{ url_for('login') }}"><h6>Login/SignUp</h6></a>
+                  </li>
+                {% endif %}
+                  {% if username!="" and username!='admin' %}
+                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}"><h6>Dashboard</h6></a>
+                     </li>
+                  {% endif %}
+                  {% if username=='admin' %}
+                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="{{ url_for('admindashboard') }}"><h6>Dashboard</h6></a>
+                     </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    </header>
+        <br>
+        <br>
+        <br>
+        <br>
+    <div class = "container">
+    <div class="col-md-7 col-lg-8 mx-auto">
+        <form action="/search/" method="post">
+            <div class="row">
+                <div class="form-group col-lg-12 mb-4">
+                <label for="property"><h4>Property type </h4></label>
+                <select class="form-control" name="opt" id="property" onchange="addremoveFields(this.value)">
+                  <option name="options" value="choose">Choose...</option>
+                  <option name="options" value="apartments">Apartments</option>
+                  <option name="options" value="rooms">Rooms</option>
+                  <option name="options" value="projects">Projects</option>
+                </select>
+              </div>
+
+                <div class="input-group col-lg-12 mb-4">
+                <div class="input-group-prepend">
+                  <span
+                    class="input-group-text bg-white px-4 border-md border-right-0"
+                  >
+                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <input
+                  id="location"
+                  type="search"
+                  name="location"
+                  placeholder="STATE"
+                  class="form-control bg-white border-left-0 border-md"
+                />
+              </div>
+
+              <div class="input-group col-lg-12 mb-4">
+                <div class="input-group-prepend">
+                  <span
+                    class="input-group-text bg-white px-4 border-md border-right-0"
+                  >
+                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <input
+                  id="city"
+                  type="search"
+                  name="city"
+                  placeholder="CITY"
+                  class="form-control bg-white border-left-0 border-md"
+                />
+              </div>
+
+              <div class="input-group col-lg-6 mb-4" id="minpricein">
+                <div class="input-group-prepend">
+                  <span
+                    class="input-group-text bg-white px-4 border-md border-right-0"
+                  >
+                    <i class="fa fa-tag" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <input
+                  id="minprice"
+                  type="text"
+                  name="minprice"
+                  placeholder="MIN PRICE"
+                  class="form-control bg-white border-left-0 border-md"
+                />
+              </div>
+
+              <div class="input-group col-lg-6 mb-4" id="maxpricein">
+                <div class="input-group-prepend">
+                  <span
+                    class="input-group-text bg-white px-4 border-md border-right-0"
+                  >
+                    <i class="fa fa-tag" aria-hidden="true"></i>
+                  </span>
+                </div>
+
+                <input
+                  id="maxprice"
+                  type="text"
+                  name="maxprice"
+                  placeholder="MAX PRICE"
+                  class="form-control bg-white border-md border-left-0 pl-3"
+                />
+              </div>
+
+                <div class="input-group col-lg-6 mb-4" id="areain">
+                <div class="input-group-prepend">
+                  <span
+                    class="input-group-text bg-white px-4 border-md border-right-0"
+                  >
+                    <i class="fa fa-square" aria-hidden="true"></i>
+                  </span>
+                </div>
+
+                <input
+                  id="area"
+                  type="text"
+                  name="area"
+                  placeholder="Area"
+                  class="form-control bg-white border-md border-left-0 pl-3"
+                />
+              </div>
+              <div class="form-group col-lg-6 mb-4" id="atypein">
+                <label for="atype"><h6>Apartment type </h6></label>
+                <select class="form-control" name="atypeo" id="atype">
+                  <option  value="">Choose...</option>
+                  <option  value="studio">Studio</option>
+                  <option  value="alcovestudio">Alcove Studio</option>
+                  <option  value="loft">Loft</option>
+                  <option  value="duplex">Duplex</option>
+                </select>
+              </div>
+
+
+
+                </div><div class="input-group col-12" id="flattypein1">
+                <div>
+                      <h6><strong>Flat Types</strong></h6>
+                  </div>
+                </div>
+                <div class="input-group col-lg-12 mb-4" id="flattypein2">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "flattype" class="get_value" value="1BHK(starting from 20 lac)">1BHK(starting from 20 lac)</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "flattype" class="get_value" value="2BHK(starting from 35 lac)">2BHK(starting from 35 lac)</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "flattype" class="get_value" value="3BHK(starting from 60 lac)">3BHK(starting from 60 lac)</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "flattype" class="get_value" value="4BHK(starting from 80 lac)">4BHK(starting from 80 lac)</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name = "flattype" class="get_value" value="Others">Others</label>
+                    </div>
+
+                </div>
+
+
+              <div class="form-group col-lg-8 mx-auto mb-0">
+                <button type="submit" class="btn btn-outline-primary btn-block py-2">
+                  <span class="font-weight-bold">Search</span>
+                </button>
+              </div>
+            </div>
+        </form>
+        </div>
+     </div>
+    <br>
+    <!--search result-->
+    {% if msg %}
+     <div class="container">
+       <div class="alert alert-warning alert-dismissible">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>{{msg}}</strong>
+       </div>
+     </div>
+    {%endif%}
+    <br>
+     {% if detail %}
+        <h1>Apartments</h1>
+    <br>
+    <div class="container-fluid" id="s">
+    <div class="slider owl-carousel">
+
+        {% for u in detail %}
+                <div class="card">
+                <div class="img">
+                <img src="{{url_for('static', filename='./Uploads/'+u.image)}}" alt=""></div>
+                <div class="content">
+                <div class="title">
+                Name of apartment: {{u['Aname']}}</div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <p class="2">Owner:{{u['username']}}</p>
+                            <p class="3">Address:{{u['Address']}}</p>
+                            <p class="4">City:{{u['City']}}</p>
+                            <p class="5">Pincode:{{u['Pincode']}}</p>
+                            <p class="6">State:{{u['State']}} </p>
+                            <p class="7">Country:{{u['Country']}}</p>
+                            <p class="8">Landmark:{{u['Landmark']}}</p>
+                            <p class="9">Plot_no:{{u['Plot_no']}}</p>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <p class="10">Price:{{u['Price']}}</p>
+                            <p class="11">Atype:{{u['Atype']}}</p>
+                            <p class="12">RS: {{u['RS']}}</p>
+                            <p class="13">Availability:{{u['Availability']}}</p>
+                            <p class="14">Facilities:{{u['Facilities']}}</p>
+                            <p class="15">Description:{{u['Descr']}}</p>
+                            <p class="16">Area:{{u['Area']}}</p>
+                            <p class="17">Rating:{{u['rating']}}</p>
+                        </div>
+                    </div>
+                    <div class="btn">
+                        <a href="#"><button>Apply</button></a>
+                        <a href="#"><button >Complaints</button></a>
+                    </div>
+                    <div class="btn">
+                        <a href="#"><button>Save for Later</button></a>
+                        <a href="#"><button>Book A Meeting</button></a>
+                    </div>
+                </div>
+                </div>
+
+        {%endfor%}
+    </div>
+   </div>
+    {%endif%}
+    <br>
+    {% if detail1 %}
+        <h1>Rooms</h1>
+    <br>
+    <div class="container-fluid" id="s">
+    <div class="slider owl-carousel">
+        {% for u in detail1 %}
+                <div class="card">
+                <div class="img">
+                <img src="{{url_for('static', filename='./Uploads/'+u.image)}}" alt=""></div>
+                <div class="content">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <p class="5">Owner:{{u['username']}} </p>
+                            <p class="1">Room number:{{u['Room_no']}}</p>
+                            <p class="1">Building Name:{{u['Bname']}}</p>
+                            <p class="2">Address:{{u['Address']}}</p>
+                            <p class="3">City:{{u['City']}}</p>
+                            <p class="4">Pincode:{{u['Pincode']}}</p>
+                            <p class="5">State:{{u['State']}} </p>
+                            <p class="5">Landmark:{{u['Landmark']}} </p>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <p class="6">Country:{{u['Country']}}</p>
+                            <p class="7">Availability:{{u['Availability']}}</p>
+                            <p class="8">Rent:{{u['Rent']}}</p>
+                            <p class="9">Facilities:{{u['Facilities']}}</p>
+                            <p class="10">Description:{{u['Descr']}}</p>
+                            <p class="10">Rating:{{u['rating']}}</p>
+                        </div>
+                    </div>
+                    <div class="btn">
+                        <a href="#"><button>Apply</button></a>
+                        <a href="#"><button>Complaints</button></a>
+                    </div>
+                    <div class="btn">
+                        <a href="#"><button>Save for Later</button></a>
+                        <a href="#"><button>Book A Meeting</button></a>
+                    </div>
+                </div>
+                </div>
+        {%endfor%}
+    </div>
+   </div>
+    {%endif%}
+    <br>
+    {% if detail2 %}
+        <h1>Projects</h1>
+    <br>
+    <div class="container-fluid" id="s">
+    <div class="slider owl-carousel">
+
+        {% for u in detail2 %}
+                <div class="card">
+                <div class="img">
+                <img src="{{url_for('static', filename='./Uploads/'+u.image)}}" alt=""></div>
+                <div class="content">
+                <div class="title">
+                Name of Project: {{u['Pname']}}</div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <p class="2">Builder:{{u['username']}}</p>
+                            <p class="3">Flat Type:{{u['Flattype']}}</p>
+                            <p class="4">Features:{{u['Features']}}</p>
+                            <p class="5">Pincode:{{u['Pincode']}}</p>
+                            <p class="6">Availability:{{u['Availability']}} </p>
+                            <p class="7">Facilities:{{u['Facilities']}}</p>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <p class="2">Description:{{u['Descr']}}</p>
+                            <p class="3">Address:{{u['Address']}}</p>
+                            <p class="4">City:{{u['City']}}</p>
+                            <p class="6">State:{{u['State']}} </p>
+                            <p class="7">Country:{{u['Country']}}</p>
+                            <p class="5">Rating:{{u['rating']}}</p>
+                        </div>
+                    </div>
+                    <div class="btn">
+                        <a href="#"><button>Apply</button></a>
+                        <a href="#"><button>Complaints</button></a>
+                    </div>
+                    <div class="btn">
+                        <a href="#"><button>Save for Later</button></a>
+                        <a href="#"><button>Book A Meeting</button></a>
+                    </div>
+                </div>
+                </div>
+
+        {%endfor%}
+    </div>
+   </div>
+    {%endif%}
+   <br>
+    <br>
+    <script src="{{url_for('static', filename='./js/script.js')}}"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script type='text/javascript'>
+        function addremoveFields(val){
+           //var val=document.getElementById("options");
+           document.getElementById("areain").style.display='none';
+           document.getElementById("minpricein").style.display='none';
+           document.getElementById("maxpricein").style.display='none';
+           document.getElementById("atypein").style.display='none';
+           document.getElementById("flattypein1").style.display='none';
+           document.getElementById("flattypein2").style.display='none';
+           if(val=='apartments'){
+            document.getElementById("areain").style.display='flex';
+            document.getElementById("atypein").style.display='flex';
+            document.getElementById("minpricein").style.display='flex';
+            document.getElementById("maxpricein").style.display='flex';
+           }
+           else if(val=='rooms'){
+             document.getElementById("areain").style.display='flex';
+             document.getElementById("minpricein").style.display='flex';
+             document.getElementById("maxpricein").style.display='flex';
+           }
+           else if(val=='projects'){
+             document.getElementById("flattypein1").style.display='flex';
+             document.getElementById("flattypein2").style.display='flex';
+           }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script>
+      $(".slider").owlCarousel({
+        loop: true,
+        autoplay: true,
+        autoplayTimeout: 2000, //2000ms = 2s;
+        autoplayHoverPause: true,
+      });
+    </script>
+  </body>
+</html>
