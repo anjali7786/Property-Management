@@ -77,8 +77,24 @@ CREATE TABLE projectdetail(
     FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
  );
 
+CREATE TABLE Buy_propertyapt(
+    A_ID int(110) NOT NULL,
+    id int not null,
+    Age int NOT NULL,
+    Address varchar(100) NOT NULL,
+    Landmark varchar(100) NOT NULL,
+    City varchar(50) NOT NULL,
+    Pincode decimal(6,0) NOT NULL,
+    State varchar(50) NOT NULL,
+    Occupation varchar(50) NOT NULL,
+    Status varchar(50) NOT NULL,
+    primary key(A_ID,id),
+    foreign key(A_ID) references apartmentdetail(A_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+    foreign key(id) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 Select * from accounts;
 Select * from apartmentdetail;
 Select * from roomdetail;
 Select * from projectdetail;
+select * from Buy_propertyapt;
