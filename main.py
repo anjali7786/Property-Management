@@ -1035,4 +1035,51 @@ def search():
             return render_template('search.html', username="",email1="")
     return render_template('search.html')
 
+
+@app.route("/ownerapartments/")
+def ownerapartments():
+    msg = ''
+    if 'loggedin' in session:
+        cur = mysql.connection.cursor()
+        resultValue = cur.execute("SELECT * FROM apartmentdetail where id = %s", (session['id'],))
+        print(resultValue)
+        if resultValue > 0:
+            apartDetails = cur.fetchall()
+            return render_template('ownerapartments.html', msg=msg, apartDetails=apartDetails, username=session['username'],email1=session['email1'])
+        else:
+            msg = 'No Apartments registered by you as of now'
+            return render_template('ownerapartments.html', msg=msg, username=session['username'], email1=session['email1'])
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/ownerrooms/")
+def ownerrooms():
+    msg = ''
+    if 'loggedin' in session:
+        cur = mysql.connection.cursor()
+        resultValue = cur.execute("SELECT * FROM roomdetail where id=%s", (session['id'],))
+        if resultValue > 0:
+            roomDetails = cur.fetchall()
+            return render_template('ownerrooms.html', msg=msg, roomDetails=roomDetails, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'No Room Registered by you as of now'
+            return render_template('ownerrooms.html', msg=msg, username=session['username'], email1=session['email1'])
+
+
+@app.route("/ownerprojects/")
+def ownerprojects():
+    msg = ''
+    if 'loggedin' in session:
+        cur = mysql.connection.cursor()
+        resultValue = cur.execute("SELECT * FROM projectdetail where id=%s", (session['id'],))
+        if resultValue > 0:
+            projectDetails = cur.fetchall()
+            return render_template('ownerprojects.html', msg=msg, projectDetails=projectDetails, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'No Projects added by you as of now'
+            return render_template('ownerprojects.html', msg=msg, username=session['username'], email1=session['email1'])
+
+
 app.run(debug=True)
