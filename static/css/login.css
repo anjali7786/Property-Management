@@ -49,7 +49,7 @@ h2 {
       border-bottom-left-radius: 7px;
       border-bottom-right-radius: 7px; }
     .content .contents .form-group label, .content .bg .form-group label {
-      font-size: 12px;
+      font-size: 15px;
       display: block;
       margin-bottom: 0;
       color: #b3b3b3; }
@@ -163,8 +163,8 @@ h2 {
   pointer-events: none; }
 
 .control__indicator:after {
-  font-family: 'icomoon';
-  content: '\e5ca';
+  font-family: "Material Icons";
+  content: "\e5ca";
   position: absolute;
   display: none;
   font-size: 16px;
@@ -190,4 +190,30 @@ h2 {
 .control--checkbox input:disabled:checked ~ .control__indicator {
   background-color: #7e0cf5;
   opacity: .2; }
+
+#areain{
+  display:none;
+}
+
+#minpricein{
+  display:none;
+}
+
+#maxpricein{
+  display:none;
+}
+
+#atypein{
+  display:none;
+}
+
+#flattypein{
+  display:none;
+}
+#flattypein1{
+  display:none;
+}
+#flattypein2{
+  display:none;
+}
 

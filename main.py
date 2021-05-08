@@ -1081,5 +1081,60 @@ def ownerprojects():
             msg = 'No Projects added by you as of now'
             return render_template('ownerprojects.html', msg=msg, username=session['username'], email1=session['email1'])
 
+@app.route("/applied_apt/", methods=['GET', 'POST'])
+def applied_apt():
+    if 'loggedin' in session and session['username'] != 'admin':
+      cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+      cursor.execute('SELECT username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where A_ID in (select A_ID from Buy_propertyapt where id=%s) ',[session['id']])
+      result = cursor.fetchall()
+      mysql.connection.commit()
+      cursor.close()
+      return render_template('applied_aptdetails.html',details=result,username=session['username'],email1=session['email1'])
+    elif 'loggedin' in session and session['username'] == 'admin':
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/Buy_propertyapt/<string:id>", methods=['GET', 'POST'])
+def Buy_propertyapt(id):
+    if 'loggedin' in session and session['username'] != 'admin':
+        msg = ''
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * from Buy_propertyapt where A_ID=%s and id=%s', ([id], [session['id']]))
+        res = cursor.fetchall()
+        # 1-------
+        if res:
+            msg = 'You have already applied for this apartment!'
+            return render_template('search.html', username=session['username'], msg=msg,email1=session['email1'])
+        elif request.method == 'POST':
+                Age = request.form['Age']
+                Occupation = request.form['Occupation']
+                Address = request.form['Address']
+                Landmark = request.form['Landmark']
+                City = request.form['City']
+                Pincode = request.form['Pincode']
+                State = request.form['State']
+                Status = 'Not Approved'
+                if len(City) > 0 and len(Age) > 0 and len(Occupation) > 0 and len(Address) > 0 and len(Landmark) > 0 and len(Pincode) > 0 and len(State) > 0:
+                    cursor.execute('INSERT INTO Buy_propertyapt VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',(id,session['id'],Age,Address,Landmark,City,Pincode,State,Occupation,Status))
+                    mysql.connection.commit()
+                    cursor.close()
+                    msg = 'Your application for an apartment is registered successfully :)'
+                    return redirect(url_for('applied_apt'))
+                else:
+                    msg = 'Please fill out the form !'
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT Aname from apartmentdetail where A_ID=%s', [id, ])
+        data = cur.fetchall()
+        cur.execute('SELECT fullname,email,mobile from accounts where id=%s', [session['id'], ])
+        data1 = cur.fetchall()
+        data = data + data1
+        cur.close()
+        return render_template("Buy_propertyapt.html", datas=data, msg=msg, id=id, username=session['username'],
+                               email1=session['email1'])
+    elif 'loggedin' in session and session['username'] == 'admin':
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
 
 app.run(debug=True)

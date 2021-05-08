@@ -56,7 +56,7 @@ body {
   padding: 0;
 }
 .navbar-brand h1{
-   color: #a71930;
+   color: #b0306a;
 }
 .navbar-brand .fa-home{
    color:#FF3800;
@@ -588,26 +588,50 @@ select.form-control {
 .guide_card_home .fa-question-circle{
     color: #FFBF00;
 }
-#areain{
-  display:none;
+#bt{
+  background-color:#fe6f5e;
 }
 
-#minpricein{
-  display:none;
+#bt:hover{
+  background-color: #e34234;
 }
 
-#maxpricein{
-  display:none;
+#bt1{
+  background-color: #32cd32;
 }
 
-#atypein{
-  display:none;
+#bt1:hover{
+  background-color: #009000;
 }
 
-#flattypein1{
-  display:none;
+#bt2{
+  background-color: #ff0000;
 }
 
-#flattypein2{
-  display:none;
+#bt2:hover{
+  background-color: #8b0000;
+}
+
+#bt3{
+  background-color: #9a2ca0;
+}
+
+#bt3:hover{
+  background-color: #720058;
+}
+
+#bt4{
+  background-color: #ffd800;
+}
+
+#bt4:hover{
+  background-color: #e1ad01;
+}
+
+#bbt{
+  background-color: #c54b8c;
+}
+
+#bbt:hover{
+  background-color: #b0306a;
 }
