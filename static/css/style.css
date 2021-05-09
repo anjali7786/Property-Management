@@ -589,43 +589,11 @@ select.form-control {
     color: #FFBF00;
 }
 #bt{
-  background-color:#fe6f5e;
-}
-
-#bt:hover{
-  background-color: #e34234;
+  background-color:#38d39f;
 }
 
 #bt1{
-  background-color: #32cd32;
-}
-
-#bt1:hover{
-  background-color: #009000;
-}
-
-#bt2{
-  background-color: #ff0000;
-}
-
-#bt2:hover{
-  background-color: #8b0000;
-}
-
-#bt3{
-  background-color: #9a2ca0;
-}
-
-#bt3:hover{
-  background-color: #720058;
-}
-
-#bt4{
-  background-color: #ffd800;
-}
-
-#bt4:hover{
-  background-color: #e1ad01;
+  background-color: #40e0d0;
 }
 
 #bbt{
@@ -635,3 +603,10 @@ select.form-control {
 #bbt:hover{
   background-color: #b0306a;
 }
+.k p{
+  text-align: justify;
+}
+.k:hover{
+  box-shadow: 0 0 40px -10px rgba(0, 0, 0, 0.25);
+}
+

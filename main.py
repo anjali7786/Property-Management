@@ -1288,10 +1288,17 @@ def Buy_propertyapt(id):
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * from Buy_propertyapt where A_ID=%s and id=%s', ([id], [session['id']]))
         res = cursor.fetchall()
+        cursor.execute('SELECT * from apartmentdetail where A_ID=%s and id=%s', ([id], [session['id']]))
+        res1 = cursor.fetchall()
         # 1-------
         if res:
             msg = 'You have already applied for this apartment!'
-            return render_template('search.html', username=session['username'], msg=msg,email1=session['email1'])
+            return render_template('search.html', detail="", deatail1="", detail2="", username=session['username'],
+                                   msg=msg, email1=session['email1'])
+        elif res1:
+            msg = 'You are the owner of this apartment, you cannot apply for this apartment!'
+            return render_template('search.html', detail="", deatail1="", detail2="", username=session['username'],
+                                   msg=msg, email1=session['email1'])
         elif request.method == 'POST':
                 Age = request.form['Age']
                 Occupation = request.form['Occupation']
@@ -1849,5 +1856,163 @@ def accept_project(id, pid):
             return render_template("accept_project.html", datas=l, data1=l1, msg=msg, P_ID=pid, buyer_id=id, username=session['username'],
                                    email1=session['email1'])
     return redirect(url_for('login'))
+
+@app.route("/savedproperties/", methods=['GET', 'POST'])
+def savedproperties():
+    if 'loggedin' in session and session['username'] != 'admin':
+        cursor2 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor2.execute('select A_ID from saveapartment where id=%s',[session['id']])
+        r = cursor2.fetchall()
+        result=()
+        for i in r:
+            cursor2.execute(
+                'SELECT A_ID,Aname,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where A_ID=%s',
+                ([i['A_ID']]))
+            l=cursor2.fetchall()
+            result=result+l
+        mysql.connection.commit()
+        cursor2.close()
+
+        cursor3 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor3.execute('select P_ID from saveproject where id=%s', [session['id']])
+        r2 = cursor3.fetchall()
+        result2 = ()
+        for i in r2:
+          cursor3.execute(
+            'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where P_ID=%s',
+            [i['P_ID']])
+          l2 = cursor3.fetchall()
+          result2 = result2 + l2
+        mysql.connection.commit()
+        cursor3.close()
+
+        cursor4 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor4.execute('select R_ID from saveroom where id=%s', [session['id']])
+        r1 = cursor4.fetchall()
+        result1 = ()
+        for i in r1:
+          cursor4.execute(
+            'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where R_ID=%s ',
+            [i['R_ID']])
+          l1 = cursor4.fetchall()
+          result1 = result1 + l1
+        mysql.connection.commit()
+        cursor4.close()
+        return render_template("savedproperties.html", detail=result, detail1=result1,detail2=result2, username=session['username'],
+        email1=session['email1'])
+    elif 'loggedin' in session and session['username'] == 'admin':
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/saveapartment/<string:id>", methods=['GET', 'POST'])
+def saveapartment(id):
+    if 'loggedin' in session and session['username'] != 'admin':
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * from saveapartment where id=%s', ([session['id']]))
+        res = cursor.fetchall()
+        cursor.execute('SELECT * from saveroom where id=%s', ([session['id']]))
+        res=res+cursor.fetchall()
+        cursor.execute('SELECT * from saveproject where id=%s', ([session['id']]))
+        res = res + cursor.fetchall()
+        cursor.execute('SELECT * from saveapartment where id=%s and A_ID=%s', ([session['id']], [id]))
+        res1 = cursor.fetchall()
+        cursor.execute('SELECT * from apartmentdetail where A_ID=%s and id=%s', ([id], [session['id']]))
+        res2 = cursor.fetchall()
+        mysql.connection.commit()
+        cursor.close()
+        if len(res) >= 15:
+            msg = 'You have already saved 15 properties!'
+            return render_template('search.html', username=session['username'], msg=msg, email1=session['email1'])
+        elif res1:
+            msg = 'You have already saved this apartment!'
+            return render_template('search.html', username=session['username'], msg=msg, email1=session['email1'])
+        elif res2:
+            msg = 'You are the owner of this apartment, you cannot save this apartment!'
+            return render_template('search.html', username=session['username'], msg=msg, email1=session['email1'])
+        else:
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('INSERT INTO saveapartment VALUES (%s,%s)',(id, session['id']))
+            mysql.connection.commit()
+            cursor1.close()
+            return redirect(url_for('savedproperties'))
+    elif 'loggedin' in session and session['username'] == 'admin':
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/saveroom/<string:id>", methods=['GET', 'POST'])
+def saveroom(id):
+    if 'loggedin' in session and session['username'] != 'admin':
+        print(1)
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * from saveapartment where id=%s', ([session['id']]))
+        res = cursor.fetchall()
+        cursor.execute('SELECT * from saveroom where id=%s', ([session['id']]))
+        res=res+cursor.fetchall()
+        cursor.execute('SELECT * from saveproject where id=%s', ([session['id']]))
+        res = res + cursor.fetchall()
+        cursor.execute('SELECT * from saveroom where id=%s and R_ID=%s', ([session['id']], [id]))
+        res1 = cursor.fetchall()
+        cursor.execute('SELECT * from roomdetail where R_ID=%s and id=%s', ([id], [session['id']]))
+        res2 = cursor.fetchall()
+        mysql.connection.commit()
+        cursor.close()
+        if len(res) >= 15:
+            msg = 'You have already saved 15 properties!'
+            return render_template('search.html', username=session['username'], msg=msg, email1=session['email1'])
+        elif res1:
+            msg = 'You have already saved this room!'
+            return render_template('search.html', username=session['username'], msg=msg, email1=session['email1'])
+        elif res2:
+            msg = 'You are the owner of this room, you cannot save this room!'
+            return render_template('search.html', username=session['username'], msg=msg, email1=session['email1'])
+        else:
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('INSERT INTO saveroom VALUES (%s,%s)',(id, session['id']))
+            mysql.connection.commit()
+            cursor1.close()
+            return redirect(url_for('savedproperties'))
+    elif 'loggedin' in session and session['username'] == 'admin':
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/saveproject/<string:id>", methods=['GET', 'POST'])
+def saveproject(id):
+    if 'loggedin' in session and session['username'] != 'admin':
+        msg = ''
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * from saveapartment where id=%s', ([session['id']]))
+        res = cursor.fetchall()
+        cursor.execute('SELECT * from saveroom where id=%s', ([session['id']]))
+        res=res+cursor.fetchall()
+        cursor.execute('SELECT * from saveproject where id=%s', ([session['id']]))
+        res = res + cursor.fetchall()
+        cursor.execute('SELECT * from saveproject where id=%s and P_ID=%s', ([session['id']],[id]))
+        res1=cursor.fetchall()
+        cursor.execute('SELECT * from projectdetail where P_ID=%s and id=%s', ([id], [session['id']]))
+        res2 = cursor.fetchall()
+        mysql.connection.commit()
+        cursor.close()
+        if len(res)>=15:
+            msg = 'You have already saved 15 properties!'
+            return render_template('search.html', username=session['username'], msg=msg,email1=session['email1'])
+        elif res1:
+            msg = 'You have already saved this project!'
+            return render_template('search.html', username=session['username'], msg=msg, email1=session['email1'])
+        elif res2:
+            msg = 'You are the builder of this project, you cannot save this project!'
+            return render_template('search.html', username=session['username'], msg=msg, email1=session['email1'])
+        else:
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('INSERT INTO saveproject VALUES (%s,%s)',(id, session['id']))
+            mysql.connection.commit()
+            cursor1.close()
+            return redirect(url_for('savedproperties'))
+    elif 'loggedin' in session and session['username'] == 'admin':
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
 
 app.run(debug=True)

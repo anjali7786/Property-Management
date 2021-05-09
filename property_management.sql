@@ -220,6 +220,31 @@ CREATE TABLE complaintsbuilder (
 	PRIMARY KEY (C_ID),
 	FOREIGN KEY (P_ID) REFERENCES projectdetail(P_ID) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE TABLE saveapartment(
+    A_ID int NOT NULL,
+    id int not null,
+    primary key(A_ID,id),
+    foreign key(A_ID) references apartmentdetail(A_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+    foreign key(id) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE saveroom(
+    R_ID int NOT NULL,
+    id int not null,
+    primary key(R_ID,id),
+    foreign key(R_ID) references roomdetail(R_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+    foreign key(id) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE saveproject(
+    P_ID int NOT NULL,
+    id int not null,
+    primary key(P_ID,id),
+    foreign key(P_ID) references projectdetail(P_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+    foreign key(id) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 Select *
 from accounts;
 Select *
