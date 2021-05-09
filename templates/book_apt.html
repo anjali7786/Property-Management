@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <title>Book A Meet</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='./css/style.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='./css/login.css')}}" />
+</head>
+<body>
+<div class="navigation-wrap bg-light start-header start-style">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <nav class="navbar navbar-expand-md navbar-light">
+              <a
+                class="navbar-brand"
+                href="/"
+                target="_blank"
+                ><h1><i class="fa fa-home"></i>PROPERTY MANAGEMENT</h1></a>
+
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto py-4 py-md-0">
+
+                  <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                    <a
+                      class="nav-link dropdown-toggle"
+                      data-toggle="dropdown"
+                      href="#"
+                      role="button"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      ><h6>Profile</h6></a
+                    >
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item"><h6>{{username}}</h6></a>
+                      <a class="dropdown-item"><h6>{{email1}}</h6></a>
+                      <a class="dropdown-item" href="{{ url_for('logout') }}"><h6>Logout</h6></a>
+                    </div>
+                  </li>
+
+
+                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="/dashboard"><h6>Dashboard</h6></a>
+                     </li>
+                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="/search/"><h6>Search</h6></a>
+                    </li>
+
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<div class="content">
+    <div class="container">
+      <div class="row">
+        <div class=" col-sm-12 col-md-6  order-md-2 order-sm-1">
+          <img src="{{url_for('static', filename='./images/bookmeet.png')}}" alt="Image" class="img-fluid">
+        </div>
+        <div class="col-md-6 col-sm-12 contents">
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <div class="mb-4">
+              <h3><strong>Book A Meet</strong></h3>
+              <p class="mb-4">{{msg}}</p>
+            </div>
+            <form action="{{url_for('book_apt',id=A_ID)}}" method="post">
+
+
+              <div class="form-group first ">
+                <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Aname</h4>
+                <input type="text" class="form-control" id="Aname" name="Aname" value="{{datas[0]['Aname']}}" readonly >
+              </div>
+
+
+              <div class="row">
+                <div class="form-group first col-md-6 col-sm-12">
+                <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Fullname</h4>
+                <input type="text" class="form-control" id="fullname" name="fullname" value="{{data1[0]['fullname']}}" readonly >
+              </div>
+
+              <div class="form-group first col-md-6 col-sm-12">
+                <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Email</h4>
+                <input type="email" class="form-control" id="email" name="email" value="{{data1[0]['email']}}" readonly >
+              </div>
+              </div>
+
+                <div class="row">
+                <div class="form-group first col-md-6 col-sm-12">
+                <label for="Address">Address</label>
+                <input type="text" class="form-control" id="Address" name="Address"  >
+              </div>
+
+                <div class="form-group first col-md-6 col-sm-12">
+                <label for="Landmark">Landmark</label>
+                <input type="text" class="form-control" id="Landmark" name="Landmark"  >
+              </div>
+                </div>
+
+                <div class="row">
+                <div class="form-group first col-md-6 col-sm-12">
+                <label for="City">City</label>
+                <input type="text" class="form-control" id="City" name="City"  >
+              </div>
+
+                <div class="form-group first col-md-6 col-sm-12">
+                <label for="State">State</label>
+                <input type="text" class="form-control" id="State" name="State" >
+              </div>
+                </div>
+
+                <div class="row">
+               <div class="form-group first col-md-6 col-sm-12">
+                <label for="Pincode">Pincode</label>
+                <input type="text" class="form-control" id="Pincode" name="Pincode"  >
+              </div>
+
+                <div class="form-group first col-md-6 col-sm-12">
+                <label for="Occupation">Occupation</label>
+                <input type="text" class="form-control" id="Occupation" name="Occupation"  >
+              </div>
+                </div>
+                <div class="form-group first">
+                <label for="Country">Country</label>
+                <input type="text" class="form-control" id="Country" name="Country"  >
+              </div>
+
+            <div class="row">
+                <div class="form-group first col-md-6 col-sm-12">
+                <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Mobile</h4>
+                <input type="text" class="form-control" id="mobile" name="mobile" value="{{data1[0]['mobile']}}" readonly >
+              </div>
+               <div class="form-group first col-md-6 col-sm-12">
+                <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Date</h4>
+                <input type="date" class="form-control" id="Date" name="booking_date"  >
+              </div>
+            </div>
+
+                 <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Slot</h4>
+                <div class="form-group last mb-4">
+                    <div class="form-check form-check-inline">
+                <input type="radio" class="form-check-input"  name="Slot" value="Evening" >
+                    <h4 style=" font-size: 18px;display: block; margin-bottom: 0;">Evening</h4>
+                    </div>
+                    <div class="form-check form-check-inline">
+                <input type="radio" class="form-check-input"  name="Slot" value="Morning" >
+                    <h4 style=" font-size: 18px;display: block; margin-bottom: 0;">Morning</h4>
+                    </div>
+                    <div class="form-check form-check-inline">
+                 <input type="radio" class="form-check-input"  name="Slot" value="Afternoon" >
+                    <h4 style=" font-size: 18px;display: block; margin-bottom: 0;">Afternoon</h4>
+                    </div>
+                    <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input"  name="Slot" value="Night" >
+                    <h4 style=" font-size: 18px;display: block; margin-bottom: 0;">Night</h4>
+                    </div>
+              </div>
+
+               <div class="form-group first col-md-6 col-sm-12">
+                  <h4 style="color: #b3b3b3; font-size: 12px;display: none; margin-bottom: 0;">A_Id</h4>
+                <input style="display:none" type="text" class="form-control" id="A_ID" name="A_ID" value="{{A_ID}}" readonly  >
+              </div>
+              <input type="submit" value="Book Meet" class="btn text-white btn-block btn-success">
+
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+    <script src="{{url_for('static', filename='./js/script.js')}}"></script>
+    <script src="{{url_for('static', filename='./js/login.js')}}"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</body>
+</html>

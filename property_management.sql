@@ -93,8 +93,122 @@ CREATE TABLE Buy_propertyapt(
     foreign key(id) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE book_meet_apt(
+ 	A_ID int NOT NULL,
+	id int NOT NULL,
+    Address varchar(100) NOT NULL,
+ 	Landmark varchar(200) NOT NULL,
+ 	City varchar(50) NOT NULL,
+ 	Pincode decimal(6,0) NOT NULL,
+ 	State varchar(50) NOT NULL,
+ 	Country varchar(50) NOT NULL,
+ 	Occupation varchar(20) NOT NULL,
+ 	Slot varchar(250) NOT NULL,
+ 	booking_date date NOT null,
+ 	PRIMARY KEY (A_ID, id),
+    FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (A_ID) REFERENCES apartmentdetail(A_ID) ON DELETE CASCADE ON UPDATE CASCADE
+ );
+
+ CREATE TABLE accept_meet_apt(
+    Ac_id int not null unique auto_increment,
+ 	A_ID int NOT NULL,
+	id int NOT NULL,
+    buyer_id int NOT NULL,
+    Address varchar(100) NOT NULL,
+ 	Landmark varchar(200) NOT NULL,
+ 	City varchar(50) NOT NULL,
+ 	Pincode decimal(6,0) NOT NULL,
+ 	State varchar(50) NOT NULL,
+ 	Country varchar(50) NOT NULL,
+ 	booking_date date NOT null,
+    starttime time not null,
+    endtime time not null,
+ 	PRIMARY KEY (Ac_id),
+    FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (buyer_id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (A_ID) REFERENCES apartmentdetail(A_ID) ON DELETE CASCADE ON UPDATE CASCADE
+ );
+
+ CREATE TABLE book_meet_room(
+ 	R_ID int NOT NULL,
+	id int NOT NULL,
+    Address varchar(100) NOT NULL,
+ 	Landmark varchar(200) NOT NULL,
+ 	City varchar(50) NOT NULL,
+ 	Pincode decimal(6,0) NOT NULL,
+ 	State varchar(50) NOT NULL,
+ 	Country varchar(50) NOT NULL,
+ 	Occupation varchar(20) NOT NULL,
+ 	Slot varchar(250) NOT NULL,
+ 	booking_date date NOT null,
+ 	PRIMARY KEY (R_ID, id),
+    FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (R_ID) REFERENCES roomdetail(R_ID) ON DELETE CASCADE ON UPDATE CASCADE
+ );
+
+ CREATE TABLE accept_meet_room(
+    Ac_id int not null unique auto_increment,
+ 	R_ID int NOT NULL,
+	id int NOT NULL,
+    buyer_id int NOT NULL,
+    Address varchar(100) NOT NULL,
+ 	Landmark varchar(200) NOT NULL,
+ 	City varchar(50) NOT NULL,
+ 	Pincode decimal(6,0) NOT NULL,
+ 	State varchar(50) NOT NULL,
+ 	Country varchar(50) NOT NULL,
+ 	booking_date date NOT null,
+    starttime time not null,
+    endtime time not null,
+ 	PRIMARY KEY (Ac_id),
+    FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (buyer_id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (R_ID) REFERENCES roomdetail(R_ID) ON DELETE CASCADE ON UPDATE CASCADE
+ );
+
+ CREATE TABLE book_meet_project(
+ 	P_ID int NOT NULL,
+	id int NOT NULL,
+    Address varchar(100) NOT NULL,
+ 	Landmark varchar(200) NOT NULL,
+ 	City varchar(50) NOT NULL,
+ 	Pincode decimal(6,0) NOT NULL,
+ 	State varchar(50) NOT NULL,
+ 	Country varchar(50) NOT NULL,
+ 	Occupation varchar(20) NOT NULL,
+ 	Slot varchar(250) NOT NULL,
+ 	booking_date date NOT null,
+ 	PRIMARY KEY (P_ID, id),
+    FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (P_ID) REFERENCES projectdetail(P_ID) ON DELETE CASCADE ON UPDATE CASCADE
+ );
+
+ CREATE TABLE accept_meet_project(
+    Ac_id int not null unique auto_increment,
+ 	P_ID int NOT NULL,
+	id int NOT NULL,
+    buyer_id int NOT NULL,
+    Address varchar(100) NOT NULL,
+ 	Landmark varchar(200) NOT NULL,
+ 	City varchar(50) NOT NULL,
+ 	Pincode decimal(6,0) NOT NULL,
+ 	State varchar(50) NOT NULL,
+ 	Country varchar(50) NOT NULL,
+ 	booking_date date NOT null,
+    starttime time not null,
+    endtime time not null,
+ 	PRIMARY KEY (Ac_id),
+    FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (buyer_id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (P_ID) REFERENCES projectdetail(P_ID) ON DELETE CASCADE ON UPDATE CASCADE
+ );
+
 Select * from accounts;
 Select * from apartmentdetail;
 Select * from roomdetail;
 Select * from projectdetail;
-select * from Buy_propertyapt;
+select * from book_meet_project;
+select * from book_meet_room;
+select * from book_meet_apt;
+select * from accept_meet_apt;
