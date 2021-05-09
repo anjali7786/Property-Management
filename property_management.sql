@@ -245,19 +245,22 @@ CREATE TABLE saveproject(
     foreign key(id) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-Select *
-from accounts;
-Select *
-from apartmentdetail;
-Select *
-from roomdetail;
-Select *
-from projectdetail;
-select *
-from book_meet_project;
-select *
-from book_meet_room;
-select *
-from book_meet_apt;
-select *
-from accept_meet_apt;
+Create table contactus
+(
+	M_ID int(110) NOT NULL auto_increment,
+	fname varchar(50) NOT NULL,
+	email varchar(50) NOT NULL,
+	message varchar(200) NOT NULL,
+    primary key(M_ID)
+);
+
+Select * from accounts;
+Select * from apartmentdetail;
+Select * from roomdetail;
+Select * from projectdetail;
+select * from book_meet_project;
+select * from book_meet_room;
+select * from book_meet_apt;
+select * from accept_meet_apt;
+select * from contactus;
+

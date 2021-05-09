@@ -5,9 +5,22 @@ import MySQLdb.cursors
 import re
 import os, uuid
 from werkzeug.utils import secure_filename
+from flask_mail import Mail, Message
 from datetime import date, timedelta, datetime
 
 app = Flask(__name__)
+
+app.config.update(
+    MAIL_SERVER = 'smtp.gmail.com',
+    MAIL_PORT = '465',
+    MAIL_USE_SSL = True,
+    MAIL_USE_TLS = False,
+    MAIL_USERNAME = 'pmsa45910@gmail.com',
+    MAIL_PASSWORD = 'admin@pms'
+)
+mail = Mail(app)
+
+
 app.secret_key='h+\xe1GZ]\x9egB\xcf\xf4\x88_z\x01>'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -137,6 +150,12 @@ def admindashboard():
 def dashboard():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM apartmentdetail where id = %s ", (session['id'],))
+        counta = cursor.fetchall()
+        cursor.execute("SELECT * FROM roomdetail where id = %s ", (session['id'],))
+        countr = cursor.fetchall()
+        cursor.execute("SELECT * FROM projectdetail where id = %s ", (session['id'],))
+        countp = cursor.fetchall()
         cursor.execute('SELECT * FROM book_meet_apt where A_ID in (select A_ID from apartmentdetail where id=%s)',
                        [session['id']])
         result = cursor.fetchall()
@@ -317,7 +336,7 @@ def dashboard():
                     ansr1.append(k)
 
         cursor.close()
-        return render_template('userdashboard.html', ans=ans, ans1=ans1, ansp=ansp, ansp1=ansp1, ansr=ansr, ansr1=ansr1, username=session['username'],
+        return render_template('userdashboard.html', counta=len(counta), countr = len(countr), countp = len(countp), ans=ans, ans1=ans1, ansp=ansp, ansp1=ansp1, ansr=ansr, ansr1=ansr1, username=session['username'],
                                email1=session['email1'])
     return redirect(url_for('login'))
 
@@ -2014,5 +2033,92 @@ def saveproject(id):
         return redirect(url_for('home'))
     else:
         return redirect(url_for('login'))
+
+
+
+@app.route("/deletep/<string:id>")
+def deletep(id):
+    msg = ''
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("DELETE FROM projectdetail where P_ID=%s", [id, ])
+    mysql.connection.commit()
+    cursor.close()
+    cur1 = mysql.connection.cursor()
+    if session['username'] != "admin":
+        resultValue = cur1.execute("SELECT * FROM projectdetail where id=%s", (session['id'], ))
+        projectDetails = cur1.fetchall()
+        if resultValue > 0:
+            return render_template('ownerprojects.html', msg=msg, projectDetails=projectDetails,
+                                   username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'There are no projects added by you as of now'
+            return render_template('ownerprojects.html', msg=msg, username=session['username'],
+                                   email1=session['email1'])
+    else:
+        resultValue = cur1.execute("SELECT * FROM projectdetail")
+        projectDetails = cur1.fetchall()
+        if resultValue > 0:
+            return render_template('admindashboard.html', msg=msg, projectDetails=projectDetails, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'There are no projects registered as of now'
+            return render_template('admindashboard.html', msg=msg, username=session['username'], email1=session['email1'])
+    cur1.close()
+
+
+
+@app.route('/contactus/', methods = ['GET', 'POST'])
+def contactus():
+    msg = ''
+    if request.method == 'POST':
+        details = request.form
+        name = details['name']
+        email = details['email']
+        message = details['message']
+        if len(name) > 0 and len(email) > 0 and len(message) > 0:
+            if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                msg = 'Invalid email address !'
+            else:
+                cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cursor.execute('INSERT INTO contactus VALUES (NULL, %s, %s, %s)', (name, email, message))
+                mysql.connection.commit()
+                cursor.close()
+                mes = Message('Message from ' + name, sender=email, recipients = ['pmsa45910@gmail.com'])
+                mes.body = message + "\n" + "From: " + "\n" + name + "\n" + email
+                mail.send(mes)
+                mess = Message('Message from Admin PMS', sender='pmsa45910@gmail.com', recipients=[email])
+                mess.body = "Hi " + name + "\n" + "Thank you for contacting PMS. We have received your message and will be in contact soon"
+                mail.send(mess)
+                msg = 'Message have been sent successfully!'
+        else:
+            msg = 'Please fill the form!'
+    return render_template("contactus.html", msg=msg)
+
+
+@app.route("/msglist/")
+def msglist():
+    if 'loggedin' in session:
+        if session['username']=='admin':
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM contactus")
+            userMsg = cur.fetchall()
+            mysql.connection.commit()
+            cur.close()
+            return render_template('msglist.html', userMsg=userMsg, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            return render_template('home.html')
+    else:
+        return render_template('login.html')
+
+@app.route("/deletemsg/<string:id>")
+def deletemsg(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM contactus where M_ID=%s", [id, ])
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('msglist'))
+
 
 app.run(debug=True)
