@@ -92,6 +92,7 @@
                     <tr class="table-warning">
                       <th scope="col">Image</th>
                       <th scope="col">Owner</th>
+                      <th scope="col">Apartment Name</th>
                       <th scope="col">Address</th>
                       <th scope="col">City</th>
                       <th scope="col">Pincode</th>
@@ -114,6 +115,7 @@
                   <tr>
                   <td> <img src="{{url_for('static', filename='./Uploads/'+u.image)}}" alt="" style="height:55px; width:55px"> </td>
                   <td>{{u['username']}}</td>
+                  <td>{{u['Aname']}}</td>
                   <td>{{u['Address']}}</td>
                   <td>{{u['City']}}</td>
                   <td>{{u['Pincode']}}</td>

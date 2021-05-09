@@ -267,11 +267,11 @@
                     {%if username!="admin" and username!=u['username']%}
                     <div class="btn">
                         <a href="{{url_for('Buy_propertyapt',id=u['A_ID'])}}"><button id="bt1">Apply</button></a>
-                        <a href="{{url_for('complaintsapartment',id=u['A_ID'])}}"><button id="bt2">Complaint</button></a>
+                        <a href="{{url_for('complaintsapartment',id=u['A_ID'])}}"><button id="bt1">Complaint</button></a>
                     </div>
                     <div class="btn">
-                        <a href="#"><button id="bt3">Save for Later</button></a>
-                        <a href="{{url_for('book_apt',id=u['A_ID'])}}"><button id="bt4">Book A Meeting</button></a>
+                        <a href="{{url_for('saveapartment',id=u['A_ID'])}}"><button id="bt1">Save for Later</button></a>
+                        <a href="{{url_for('book_apt',id=u['A_ID'])}}"><button id="bt1">Book A Meeting</button></a>
                     </div>
                     {%endif%}
                 </div>
@@ -315,11 +315,11 @@
                     {%if username!="admin" and username!=u['username']%}
                     <div class="btn">
                         <a href="#"><button id="bt1">Apply</button></a>
-                        <a href="{{url_for('complaintsroom',id=u['R_ID'])}}"><button id="bt2">Complaint</button></a>
+                        <a href="{{url_for('complaintsroom',id=u['R_ID'])}}"><button id="bt1">Complaint</button></a>
                     </div>
                     <div class="btn">
-                        <a href="#"><button id="bt3">Save for Later</button></a>
-                        <a href="{{url_for('book_room',id=u['R_ID'])}}"><button id="bt4">Book A Meeting</button></a>
+                        <a href="{{url_for('saveroom',id=u['R_ID'])}}"><button id="bt1">Save for Later</button></a>
+                        <a href="{{url_for('book_room',id=u['R_ID'])}}"><button id="bt1">Book A Meeting</button></a>
                     </div>
                     {%endif%}
                 </div>
@@ -363,11 +363,11 @@
                     {%if username!="admin" and username!=u['username']%}
                     <div class="btn">
                         <a href="#"><button id="bt1">Apply</button></a>
-                        <a href="{{url_for('complaintsbuilder',id=u['P_ID'])}}"><button id="bt2">Complaint</button></a>
+                        <a href="{{url_for('complaintsbuilder',id=u['P_ID'])}}"><button id="bt1">Complaint</button></a>
                     </div>
                     <div class="btn">
-                        <a href="#"><button id="bt3">Save for Later</button></a>
-                        <a href="{{url_for('book_project',id=u['P_ID'])}}"><button id="bt4">Book A Meeting</button></a>
+                        <a href="{{url_for('saveproject',id=u['A_ID'])}}"><button id="bt1">Save for Later</button></a>
+                        <a href="{{url_for('book_project',id=u['P_ID'])}}"><button id="bt1">Book A Meeting</button></a>
                     </div>
                     {%endif%}
                 </div>
