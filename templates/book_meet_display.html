@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Meet Requested</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='./css/style.css')}}" />
+
+  </head>
+  <body>
+    <div class="navigation-wrap bg-light start-header start-style">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <nav class="navbar navbar-expand-md navbar-light">
+              <a
+                class="navbar-brand"
+                href="/"
+                target="_blank"
+                ><h1><i class="fa fa-home"></i>PROPERTY MANAGEMENT</h1></a>
+
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto py-4 py-md-0">
+
+                  <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                    <a
+                      class="nav-link dropdown-toggle"
+                      data-toggle="dropdown"
+                      href="#"
+                      role="button"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      ><h6>Profile</h6></a
+                    >
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item"><h6>{{username}}</h6></a>
+                      <a class="dropdown-item"><h6>{{email1}}</h6></a>
+                      <a class="dropdown-item" href="{{ url_for('logout') }}"><h6>Logout</h6></a>
+                    </div>
+                  </li>
+
+
+                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="/dashboard"><h6>Dashboard</h6></a>
+                     </li>
+                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="/search/"><h6>Search</h6></a>
+                    </li>
+
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+  <div class = "container" >
+       {% if ans %}
+         <div class="table-responsive">
+                <table class="table table-hover">
+
+                    <h1>Meet Requested for Apartments</h1>
+                    <thead >
+                    <tr class="table-warning">
+                      <th scope="col">Apartment</th>
+                      <th scope="col">Full Name</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Mobile Number</th>
+                      <th scope="col">Occupation</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">Landmark</th>
+                      <th scope="col">City</th>
+                      <th scope="col">State</th>
+                      <th scope="col">Country</th>
+                      <th scope="col">Pincode</th>
+                      <th scope="col">Slot</th>
+                      <th scope="col">Meeting Date</th>
+                      <th scope="col">Accept</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in ans %}
+                      <tr class="info">
+                      <td> {{user[11]}} </td>
+                      <td> {{user[12]}} </td>
+                      <td> {{user[13]}} </td>
+                      <td> {{user[14]}} </td>
+                      <td> {{user[8]}} </td>
+                      <td> {{user[2]}} </td>
+                      <td> {{user[3]}} </td>
+                      <td> {{user[4]}} </td>
+                      <td> {{user[6]}} </td>
+                      <td> {{user[7]}} </td>
+                      <td> {{user[5]}} </td>
+                      <td> {{user[9]}} </td>
+                      <td> {{user[10]}} </td>
+                      <td><a href="{{url_for('accept_apt',id=user[1], aid= user[0] )}}"><button type="button" class="btn btn-danger">Accept</button></a></td>
+                      </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+          </table>
+            </div>
+       {% endif %}
+       {% if ansr %}
+          <div class="table-responsive">
+                <table class="table table-hover">
+                    <h1>Meet Requested for Rooms</h1>
+                    <thead >
+                    <tr class="table-warning">
+                      <th scope="col">Bname</th>
+                      <th scope="col">Room No</th>
+                      <th scope="col">Full Name</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Mobile Number</th>
+                      <th scope="col">Occupation</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">Landmark</th>
+                      <th scope="col">City</th>
+                      <th scope="col">State</th>
+                      <th scope="col">Country</th>
+                      <th scope="col">Pincode</th>
+                      <th scope="col">Slot</th>
+                      <th scope="col">Meeting Date</th>
+                      <th scope="col">Accept</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in ansr %}
+                      <tr class="info">
+                      <td> {{user[11]}} </td>
+                      <td> {{user[15]}} </td>
+                      <td> {{user[12]}} </td>
+                      <td> {{user[13]}} </td>
+                      <td> {{user[14]}} </td>
+                      <td> {{user[8]}} </td>
+                      <td> {{user[2]}} </td>
+                      <td> {{user[3]}} </td>
+                      <td> {{user[4]}} </td>
+                      <td> {{user[6]}} </td>
+                      <td> {{user[7]}} </td>
+                      <td> {{user[5]}} </td>
+                      <td> {{user[9]}} </td>
+                      <td> {{user[10]}} </td>
+                      <td><a href="{{url_for('accept_room',id=user[1], rid= user[0] )}}"><button type="button" class="btn btn-danger">Accept</button></a></td>
+                      </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+          </div>
+       {% endif %}
+       {% if ansp %}
+             <div class="table-responsive">
+                <table class="table table-hover">
+                    <h1>Meet Requested for Projects</h1>
+                    <thead >
+                    <tr class="table-warning">
+                      <th scope="col">Project</th>
+                      <th scope="col">Flat type</th>
+                      <th scope="col">Full Name</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Mobile Number</th>
+                      <th scope="col">Occupation</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">Landmark</th>
+                      <th scope="col">City</th>
+                      <th scope="col">State</th>
+                      <th scope="col">Country</th>
+                      <th scope="col">Pincode</th>
+                      <th scope="col">Slot</th>
+                      <th scope="col">Meeting Date</th>
+                      <th scope="col">Accept</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in ansp %}
+                      <tr class="info">
+                      <td> {{user[11]}} </td>
+                      <td> {{user[15]}} </td>
+                      <td> {{user[12]}} </td>
+                      <td> {{user[13]}} </td>
+                      <td> {{user[14]}} </td>
+                      <td> {{user[8]}} </td>
+                      <td> {{user[2]}} </td>
+                      <td> {{user[3]}} </td>
+                      <td> {{user[4]}} </td>
+                      <td> {{user[6]}} </td>
+                      <td> {{user[7]}} </td>
+                      <td> {{user[5]}} </td>
+                      <td> {{user[9]}} </td>
+                      <td> {{user[10]}} </td>
+                      <td><a href="{{url_for('accept_project',id=user[1], pid= user[0] )}}"><button type="button" class="btn btn-danger">Accept</button></a></td>
+                    </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+             </div>
+       {%endif%}
+
+    </div>
+
+
+    <script src="{{url_for('static', filename='./js/script.js')}}"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</body>
+</html>

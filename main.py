@@ -36,7 +36,7 @@ def login():
             mysql.connection.commit()
             cursor.close()
             if account and bcrypt.checkpw(password.encode('utf-8'), account['password'].encode('utf-8')):
-                if username == 'admin' and password == 'admin':
+                if username == 'admin':
                     session['loggedin'] = True
                     session['id'] = account['id']
                     session['username'] = account['username']
@@ -123,16 +123,202 @@ def admindashboard():
         count = cursor.fetchall()
         cursor.execute('SELECT * FROM apartmentdetail')
         counta = cursor.fetchall()
+        cursor.execute('SELECT * FROM roomdetail')
+        countr = cursor.fetchall()
+        cursor.execute('SELECT * FROM projectdetail')
+        countp = cursor.fetchall()
         mysql.connection.commit()
         cursor.close()
-        return render_template('admindashboard.html', count=len(count)-1, counta= len(counta), username='admin', email1=session['email1'])
+        return render_template('admindashboard.html', count=len(count)-1, counta= len(counta), countr= len(countr), countp= len(countp), username='admin', email1=session['email1'])
     return redirect(url_for('login'))
 
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
     if 'loggedin' in session:
-        return render_template('userdashboard.html', username=session['username'], email1=session['email1'])
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM book_meet_apt where A_ID in (select A_ID from apartmentdetail where id=%s)',
+                       [session['id']])
+        result = cursor.fetchall()
+        r = list(result)
+        cursor.execute(
+            'SELECT A_ID, Aname FROM apartmentdetail where id= %s and A_ID in (select A_ID from book_meet_apt)',
+            [session['id']])
+        result1 = cursor.fetchall()
+        r1 = list(result1)
+        ans = []
+        for i in r:
+            for j in r1:
+                if i['A_ID'] == j['A_ID']:
+                    k = []
+                    k.append(i['A_ID'])
+                    k.append(i['id'])
+                    k.append(i['Occupation'])
+                    k.append(i['Slot'])
+                    k.append(i['booking_date'])
+                    k.append(j['Aname'])
+                    cursor.execute('select fullname from accounts where id=%s', [i['id']])
+                    result2 = cursor.fetchall()
+                    r2 = list(result2)
+                    k.append(r2[0]['fullname'])
+                    ans.append(k)
+
+        cursor.execute('SELECT * FROM accept_meet_apt where buyer_id =%s',
+                       [session['id']])
+        result9 = cursor.fetchall()
+        r9 = list(result9)
+        cursor.execute(
+            'SELECT A_ID, Aname FROM apartmentdetail where A_ID in (select A_ID from accept_meet_apt where buyer_id=%s)',
+            [session['id']])
+        result8 = cursor.fetchall()
+        r8 = list(result8)
+        ans1 = []
+        for i in r9:
+            for j in r8:
+                if i['A_ID'] == j['A_ID']:
+                    k = []
+                    k.append(i['Address'])
+                    k.append(i['Landmark'])
+                    k.append(i['City'])
+                    k.append(i['Pincode'])
+                    k.append(i['State'])
+                    k.append(i['Country'])
+                    k.append(i['booking_date'])
+                    k.append(i['starttime'])
+                    k.append(i['endtime'])
+                    k.append(j['Aname'])
+                    cursor.execute('select fullname, email, mobile from accounts where id=%s', [i['id']])
+                    result2 = cursor.fetchall()
+                    r2 = list(result2)
+                    k.append(r2[0]['fullname'])
+                    k.append(r2[0]['email'])
+                    k.append(r2[0]['mobile'])
+                    ans1.append(k)
+        print(ans1)
+
+        cursor.execute('SELECT * FROM book_meet_project where P_ID in (select P_ID from projectdetail where id=%s)',
+                       [session['id']])
+        resultp = cursor.fetchall()
+        rp = list(resultp)
+        cursor.execute(
+            'SELECT P_ID, Pname, Flattype FROM projectdetail where id= %s and P_ID in (select P_ID from book_meet_project)',
+            [session['id']])
+        resultp1 = cursor.fetchall()
+        rp1 = list(resultp1)
+        ansp = []
+        for i in rp:
+            for j in rp1:
+                if i['P_ID'] == j['P_ID']:
+                    k = []
+                    k.append(i['P_ID'])
+                    k.append(i['id'])
+                    k.append(i['Occupation'])
+                    k.append(i['Slot'])
+                    k.append(i['booking_date'])
+                    k.append(j['Pname'])
+                    cursor.execute('select fullname from accounts where id=%s', [i['id']])
+                    result2 = cursor.fetchall()
+                    r2 = list(result2)
+                    k.append(r2[0]['fullname'])
+                    k.append(j['Flattype'])
+                    ansp.append(k)
+
+        cursor.execute('SELECT * FROM accept_meet_project where buyer_id =%s',
+                       [session['id']])
+        resultp9 = cursor.fetchall()
+        rp9 = list(resultp9)
+        cursor.execute(
+            'SELECT P_ID, Pname, Flattype FROM projectdetail where P_ID in (select P_ID from accept_meet_project where buyer_id=%s)',
+            [session['id']])
+        resultp8 = cursor.fetchall()
+        rp8 = list(resultp8)
+        ansp1 = []
+        for i in rp9:
+            for j in rp8:
+                if i['P_ID'] == j['P_ID']:
+                    k = []
+                    k.append(i['Address'])
+                    k.append(i['Landmark'])
+                    k.append(i['City'])
+                    k.append(i['Pincode'])
+                    k.append(i['State'])
+                    k.append(i['Country'])
+                    k.append(i['booking_date'])
+                    k.append(i['starttime'])
+                    k.append(i['endtime'])
+                    k.append(j['Pname'])
+                    cursor.execute('select fullname, email, mobile from accounts where id=%s', [i['id']])
+                    result2 = cursor.fetchall()
+                    r2 = list(result2)
+                    k.append(r2[0]['fullname'])
+                    k.append(r2[0]['email'])
+                    k.append(r2[0]['mobile'])
+                    k.append(j['Flattype'])
+                    ansp1.append(k)
+
+        cursor.execute('SELECT * FROM book_meet_room where R_ID in (select R_ID from roomdetail where id=%s)',
+                       [session['id']])
+        resultr = cursor.fetchall()
+        rr = list(resultr)
+        cursor.execute(
+            'SELECT R_ID, Bname, Room_no FROM roomdetail where id= %s and R_ID in (select R_ID from book_meet_room)',
+            [session['id']])
+        resultr1 = cursor.fetchall()
+        rr1 = list(resultr1)
+        ansr = []
+        for i in rr:
+            for j in rr1:
+                if i['R_ID'] == j['R_ID']:
+                    k = []
+                    k.append(i['R_ID'])
+                    k.append(i['id'])
+                    k.append(i['Occupation'])
+                    k.append(i['Slot'])
+                    k.append(i['booking_date'])
+                    k.append(j['Bname'])
+                    cursor.execute('select fullname from accounts where id=%s', [i['id']])
+                    result2 = cursor.fetchall()
+                    r2 = list(result2)
+                    k.append(r2[0]['fullname'])
+                    k.append(j['Room_no'])
+                    ansr.append(k)
+
+        cursor.execute('SELECT * FROM accept_meet_room where buyer_id =%s',
+                       [session['id']])
+        resultr9 = cursor.fetchall()
+        rr9 = list(resultr9)
+        cursor.execute(
+            'SELECT R_ID, Bname , Room_no FROM roomdetail where R_ID in (select R_ID from accept_meet_room where buyer_id=%s)',
+            [session['id']])
+        resultr8 = cursor.fetchall()
+        rr8 = list(resultr8)
+        ansr1 = []
+        for i in rr9:
+            for j in rr8:
+                if i['R_ID'] == j['R_ID']:
+                    k = []
+                    k.append(i['Address'])
+                    k.append(i['Landmark'])
+                    k.append(i['City'])
+                    k.append(i['Pincode'])
+                    k.append(i['State'])
+                    k.append(i['Country'])
+                    k.append(i['booking_date'])
+                    k.append(i['starttime'])
+                    k.append(i['endtime'])
+                    k.append(j['Bname'])
+                    cursor.execute('select fullname, email, mobile from accounts where id=%s', [i['id']])
+                    result2 = cursor.fetchall()
+                    r2 = list(result2)
+                    k.append(r2[0]['fullname'])
+                    k.append(r2[0]['email'])
+                    k.append(r2[0]['mobile'])
+                    k.append(j['Room_no'])
+                    ansr1.append(k)
+
+        cursor.close()
+        return render_template('userdashboard.html', ans=ans, ans1=ans1, ansp=ansp, ansp1=ansp1, ansr=ansr, ansr1=ansr1, username=session['username'],
+                               email1=session['email1'])
     return redirect(url_for('login'))
 
 
@@ -1136,5 +1322,454 @@ def Buy_propertyapt(id):
         return redirect(url_for('home'))
     else:
         return redirect(url_for('login'))
+
+@app.route("/book_apt/<string:id>", methods=['GET', 'POST'])
+def book_apt(id):
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            msg=''
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('select * from book_meet_apt where A_ID=%s and id=%s',([id], [session['id']]))
+            res= cursor.fetchall()
+            if res:
+                msg= 'You have already booked a meeting for this apartment!'
+                return render_template("search.html", msg=msg,username=session['username'], email1=session['email1'])
+            elif request.method == 'POST':
+                A_ID = request.form['A_ID']
+                Aname = request.form['Aname']
+                Fullname = request.form['fullname']
+                Email = request.form['email']
+                Mobile = request.form['mobile']
+                Address = request.form['Address']
+                Landmark = request.form['Landmark']
+                City = request.form['City']
+                Pincode = request.form['Pincode']
+                State = request.form['State']
+                Country = request.form['Country']
+                Occupation = request.form['Occupation']
+                Slot = request.form['Slot']
+                booking_date = request.form['booking_date']
+                if len(A_ID) > 0 and len(Aname) > 0 and len(Email) > 0 and len(Mobile) > 0 and len(
+                        Fullname) > 0 and len(
+                        City) > 0 and len(Slot) > 0 and len(Address) > 0 and len(Landmark) > 0 and len(
+                    Pincode) > 0 and len(State) > 0 and len(Country) > 0 and len(Occupation)>0 and len(booking_date)>0:
+                    if not re.match(r'[^@]+@[^@]+\.[^@]+', Email):
+                        msg = 'Invalid email address !'
+                    elif len(Mobile) != 10:
+                        msg = 'Enter 10 digit number !'
+                    else:
+                        cursor.execute(
+                            'INSERT INTO book_meet_apt VALUES (%s, % s, % s, % s, % s, % s, % s, %s, %s, %s, %s)',
+                            (A_ID, session['id'], Address, Landmark, City, Pincode, State, Country, Occupation, Slot, booking_date))
+                        mysql.connection.commit()
+                        cursor.close()
+                        return render_template("search.html", username=session['username'], email1=session['email1'])
+                else:
+                    msg = 'Please fill out the form !'
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('SELECT Aname from apartmentdetail where A_ID=%s', [id, ])
+            data = cur.fetchall()
+            cur.execute('select fullname,email,mobile from accounts where username=%s', [session['username'], ])
+            data1 = cur.fetchall()
+            l = list(data)
+            l1 =list(data1)
+            cur.close()
+            return render_template("book_apt.html", datas=l, data1=l1, msg=msg, A_ID=id, username=session['username'],
+                                   email1=session['email1'])
+    return redirect(url_for('login'))
+
+@app.route("/book_meet_display", methods=['GET', 'POST'])
+def book_meet_display():
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM book_meet_apt where A_ID in (select A_ID from apartmentdetail where id=%s)',
+                           [session['id']])
+            result = cursor.fetchall()
+            r = list(result)
+            cursor.execute(
+                'SELECT A_ID, Aname FROM apartmentdetail where id= %s and A_ID in (select A_ID from book_meet_apt)',
+                [session['id']])
+            result1 = cursor.fetchall()
+            r1 = list(result1)
+            ans = []
+            for i in r:
+                for j in r1:
+                    if i['A_ID'] == j['A_ID']:
+                        k = []
+                        k.append(i['A_ID'])
+                        k.append(i['id'])
+                        k.append(i['Address'])
+                        k.append(i['Landmark'])
+                        k.append(i['City'])
+                        k.append(i['Pincode'])
+                        k.append(i['State'])
+                        k.append(i['Country'])
+                        k.append(i['Occupation'])
+                        k.append(i['Slot'])
+                        k.append(i['booking_date'])
+                        k.append(j['Aname'])
+                        cursor.execute('select fullname, email, mobile from accounts where id=%s', [i['id']])
+                        result2 = cursor.fetchall()
+                        r2 = list(result2)
+                        k.append(r2[0]['fullname'])
+                        k.append(r2[0]['email'])
+                        k.append(r2[0]['mobile'])
+                        ans.append(k)
+
+            cursor.execute('SELECT * FROM book_meet_room where R_ID in (select R_ID from roomdetail where id=%s)',
+                           [session['id']])
+            resultr = cursor.fetchall()
+            rr = list(resultr)
+            cursor.execute(
+                'SELECT R_ID, Bname, Room_no FROM roomdetail where id= %s and R_ID in (select R_ID from book_meet_room)',
+                [session['id']])
+            resultr1 = cursor.fetchall()
+            rr1 = list(resultr1)
+            ansr = []
+            for i in rr:
+                for j in rr1:
+                    if i['R_ID'] == j['R_ID']:
+                        k = []
+                        k.append(i['R_ID'])
+                        k.append(i['id'])
+                        k.append(i['Address'])
+                        k.append(i['Landmark'])
+                        k.append(i['City'])
+                        k.append(i['Pincode'])
+                        k.append(i['State'])
+                        k.append(i['Country'])
+                        k.append(i['Occupation'])
+                        k.append(i['Slot'])
+                        k.append(i['booking_date'])
+                        k.append(j['Bname'])
+                        cursor.execute('select fullname, email, mobile from accounts where id=%s', [i['id']])
+                        result2 = cursor.fetchall()
+                        r2 = list(result2)
+                        k.append(r2[0]['fullname'])
+                        k.append(r2[0]['email'])
+                        k.append(r2[0]['mobile'])
+                        k.append(j['Room_no'])
+                        ansr.append(k)
+
+            cursor.execute('SELECT * FROM book_meet_project where P_ID in (select P_ID from projectdetail where id=%s)',
+                           [session['id']])
+            resultp = cursor.fetchall()
+            rp = list(resultp)
+            cursor.execute(
+                'SELECT P_ID, Pname, Flattype FROM projectdetail where id= %s and P_ID in (select P_ID from book_meet_project)',
+                [session['id']])
+            resultp1 = cursor.fetchall()
+            rp1 = list(resultp1)
+            ansp = []
+            for i in rp:
+                for j in rp1:
+                    if i['P_ID'] == j['P_ID']:
+                        k = []
+                        k.append(i['P_ID'])
+                        k.append(i['id'])
+                        k.append(i['Address'])
+                        k.append(i['Landmark'])
+                        k.append(i['City'])
+                        k.append(i['Pincode'])
+                        k.append(i['State'])
+                        k.append(i['Country'])
+                        k.append(i['Occupation'])
+                        k.append(i['Slot'])
+                        k.append(i['booking_date'])
+                        k.append(j['Pname'])
+                        cursor.execute('select fullname, email, mobile from accounts where id=%s', [i['id']])
+                        result2 = cursor.fetchall()
+                        r2 = list(result2)
+                        k.append(r2[0]['fullname'])
+                        k.append(r2[0]['email'])
+                        k.append(r2[0]['mobile'])
+                        k.append(j['Flattype'])
+                        ansp.append(k)
+            cursor.close()
+            print(ansp)
+            print(ansr)
+            return render_template("book_meet_display.html", ans=ans,ansr=ansr, ansp=ansp, username=session['username'],
+                                   email1=session['email1'])
+    return redirect(url_for('login'))
+
+@app.route("/accept_apt/<string:id>/<string:aid>", methods=['GET', 'POST'])
+def accept_apt(id, aid):
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            msg=''
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            if request.method == 'POST':
+                A_ID = aid
+                buyer_id = id
+                Aname = request.form['Aname']
+                Fullname = request.form['fullname']
+                Email = request.form['email']
+                Mobile = request.form['mobile']
+                Address = request.form['Address']
+                Landmark = request.form['Landmark']
+                City = request.form['City']
+                Pincode = request.form['Pincode']
+                State = request.form['State']
+                Country = request.form['Country']
+                starttime = request.form['starttime']
+                endtime = request.form['endtime']
+                booking_date = request.form['booking_date']
+                if len(A_ID) > 0 and len(Aname) > 0 and len(Email) > 0 and len(Mobile) > 0 and len(
+                        Fullname) > 0 and len(
+                        City) > 0 and len(starttime) > 0 and len(Address) > 0 and len(Landmark) > 0 and len(
+                    Pincode) > 0 and len(State) > 0 and len(Country) > 0 and len(endtime)>0 and len(booking_date)>0:
+                    if not re.match(r'[^@]+@[^@]+\.[^@]+', Email):
+                        msg = 'Invalid email address !'
+                    elif len(Mobile) != 10:
+                        msg = 'Enter 10 digit number !'
+                    else:
+                        cursor.execute(
+                            'INSERT INTO accept_meet_apt VALUES (NULL,%s, % s, % s, % s, % s, % s, % s, %s, %s, %s, %s, %s)',
+                            (A_ID, session['id'],buyer_id, Address, Landmark, City, Pincode, State, Country, booking_date, starttime, endtime))
+                        mysql.connection.commit()
+
+                        cursor.execute('delete from book_meet_apt where A_ID=%s and id=%s', [A_ID, buyer_id, ])
+                        mysql.connection.commit()
+                        cursor.close()
+                        return render_template("search.html", username=session['username'], email1=session['email1'])
+                else:
+                    msg = 'Please fill out the form !'
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('SELECT Aname from apartmentdetail where A_ID=%s', [aid, ])
+            data = cur.fetchall()
+            cur.execute('select fullname,email,mobile from accounts where username=%s', [session['username'], ])
+            data1 = cur.fetchall()
+            l = list(data)
+            l1 =list(data1)
+            cur.close()
+            return render_template("accept_apt.html", datas=l, data1=l1, msg=msg, A_ID=aid, buyer_id=id, username=session['username'],
+                                   email1=session['email1'])
+    return redirect(url_for('login'))
+
+@app.route("/book_room/<string:id>", methods=['GET', 'POST'])
+def book_room(id):
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            msg=''
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('select * from book_meet_room where R_ID=%s and id=%s',([id], [session['id']]))
+            res= cursor.fetchall()
+            if res:
+                msg= 'You have already booked a meeting for this room!'
+                return render_template("search.html", msg=msg,username=session['username'], email1=session['email1'])
+            elif request.method == 'POST':
+                R_ID = request.form['R_ID']
+                Bname = request.form['Bname']
+                Room_no = request.form['Room_no']
+                Fullname = request.form['fullname']
+                Email = request.form['email']
+                Mobile = request.form['mobile']
+                Address = request.form['Address']
+                Landmark = request.form['Landmark']
+                City = request.form['City']
+                Pincode = request.form['Pincode']
+                State = request.form['State']
+                Country = request.form['Country']
+                Occupation = request.form['Occupation']
+                Slot = request.form['Slot']
+                booking_date = request.form['booking_date']
+                if len(R_ID) > 0 and len(Bname) > 0 and len(Email) > 0 and len(Mobile) > 0 and len(
+                        Fullname) > 0 and len(
+                        City) > 0 and len(Slot) > 0 and len(Address) > 0 and len(Landmark) > 0 and len(
+                    Pincode) > 0 and len(State) > 0 and len(Country) > 0 and len(Occupation)>0 and len(booking_date)>0 and len(Room_no) >0:
+                    if not re.match(r'[^@]+@[^@]+\.[^@]+', Email):
+                        msg = 'Invalid email address !'
+                    elif len(Mobile) != 10:
+                        msg = 'Enter 10 digit number !'
+                    else:
+                        cursor.execute(
+                            'INSERT INTO book_meet_room VALUES (%s, % s, % s, % s, % s, % s, % s, %s, %s, %s, %s)',
+                            (R_ID, session['id'], Address, Landmark, City, Pincode, State, Country, Occupation, Slot, booking_date))
+                        mysql.connection.commit()
+                        cursor.close()
+                        return render_template("search.html", username=session['username'], email1=session['email1'])
+                else:
+                    msg = 'Please fill out the form !'
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('SELECT Bname, Room_no from roomdetail where R_ID=%s', [id, ])
+            data = cur.fetchall()
+            cur.execute('select fullname,email,mobile from accounts where username=%s', [session['username'], ])
+            data1 = cur.fetchall()
+            l = list(data)
+            l1 =list(data1)
+            cur.close()
+            return render_template("book_room.html", datas=l, data1=l1, msg=msg, R_ID=id, username=session['username'],
+                                   email1=session['email1'])
+    return redirect(url_for('login'))
+
+
+@app.route("/accept_room/<string:id>/<string:rid>", methods=['GET', 'POST'])
+def accept_room(id, rid):
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            msg=''
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            if request.method == 'POST':
+                R_ID = rid
+                buyer_id = id
+                Bname = request.form['Bname']
+                Room_no = request.form['Room_no']
+                Fullname = request.form['fullname']
+                Email = request.form['email']
+                Mobile = request.form['mobile']
+                Address = request.form['Address']
+                Landmark = request.form['Landmark']
+                City = request.form['City']
+                Pincode = request.form['Pincode']
+                State = request.form['State']
+                Country = request.form['Country']
+                starttime = request.form['starttime']
+                endtime = request.form['endtime']
+                booking_date = request.form['booking_date']
+                if len(R_ID) > 0 and len(Bname) > 0 and len(Room_no)>0 and len(Email) > 0 and len(Mobile) > 0 and len(
+                        Fullname) > 0 and len(
+                        City) > 0 and len(starttime) > 0 and len(Address) > 0 and len(Landmark) > 0 and len(
+                    Pincode) > 0 and len(State) > 0 and len(Country) > 0 and len(endtime)>0 and len(booking_date)>0:
+                    if not re.match(r'[^@]+@[^@]+\.[^@]+', Email):
+                        msg = 'Invalid email address !'
+                    elif len(Mobile) != 10:
+                        msg = 'Enter 10 digit number !'
+                    else:
+                        cursor.execute(
+                            'INSERT INTO accept_meet_room VALUES (NULL,%s, % s, % s, % s, % s, % s, % s, %s, %s, %s, %s, %s)',
+                            (R_ID, session['id'],buyer_id, Address, Landmark, City, Pincode, State, Country, booking_date, starttime, endtime))
+                        mysql.connection.commit()
+
+                        cursor.execute('delete from book_meet_room where R_ID=%s and id=%s', [R_ID, buyer_id, ])
+                        mysql.connection.commit()
+                        cursor.close()
+                        return render_template("search.html", username=session['username'], email1=session['email1'])
+                else:
+                    msg = 'Please fill out the form !'
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('SELECT Bname, Room_no from roomdetail where R_ID=%s', [rid, ])
+            data = cur.fetchall()
+            cur.execute('select fullname,email,mobile from accounts where username=%s', [session['username'], ])
+            data1 = cur.fetchall()
+            l = list(data)
+            l1 =list(data1)
+            cur.close()
+            return render_template("accept_room.html", datas=l, data1=l1, msg=msg, R_ID=rid, buyer_id=id, username=session['username'],
+                                   email1=session['email1'])
+    return redirect(url_for('login'))
+
+@app.route("/book_project/<string:id>", methods=['GET', 'POST'])
+def book_project(id):
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            msg=''
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('select * from book_meet_project where P_ID=%s and id=%s',([id], [session['id']]))
+            res= cursor.fetchall()
+            if res:
+                msg= 'You have already booked a meeting for this project!'
+                return render_template("search.html", msg=msg,username=session['username'], email1=session['email1'])
+            elif request.method == 'POST':
+                P_ID = request.form['P_ID']
+                Pname = request.form['Pname']
+                Flattype = request.form['Flattype']
+                Fullname = request.form['fullname']
+                Email = request.form['email']
+                Mobile = request.form['mobile']
+                Address = request.form['Address']
+                Landmark = request.form['Landmark']
+                City = request.form['City']
+                Pincode = request.form['Pincode']
+                State = request.form['State']
+                Country = request.form['Country']
+                Occupation = request.form['Occupation']
+                Slot = request.form['Slot']
+                booking_date = request.form['booking_date']
+                if len(P_ID) > 0 and len(Pname) > 0 and len(Flattype)>0 and len(Email) > 0 and len(Mobile) > 0 and len(
+                        Fullname) > 0 and len(
+                        City) > 0 and len(Slot) > 0 and len(Address) > 0 and len(Landmark) > 0 and len(
+                    Pincode) > 0 and len(State) > 0 and len(Country) > 0 and len(Occupation)>0 and len(booking_date)>0:
+                    if not re.match(r'[^@]+@[^@]+\.[^@]+', Email):
+                        msg = 'Invalid email address !'
+                    elif len(Mobile) != 10:
+                        msg = 'Enter 10 digit number !'
+                    else:
+                        cursor.execute(
+                            'INSERT INTO book_meet_project VALUES (%s, % s, % s, % s, % s, % s, % s, %s, %s, %s, %s)',
+                            (P_ID, session['id'], Address, Landmark, City, Pincode, State, Country, Occupation, Slot, booking_date))
+                        mysql.connection.commit()
+                        cursor.close()
+                        return render_template("search.html", username=session['username'], email1=session['email1'])
+                else:
+                    msg = 'Please fill out the form !'
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('SELECT Pname, Flattype from projectdetail where P_ID=%s', [id, ])
+            data = cur.fetchall()
+            cur.execute('select fullname,email,mobile from accounts where username=%s', [session['username'], ])
+            data1 = cur.fetchall()
+            l = list(data)
+            l1 =list(data1)
+            cur.close()
+            return render_template("book_project.html", datas=l, data1=l1, msg=msg, P_ID=id, username=session['username'],
+                                   email1=session['email1'])
+    return redirect(url_for('login'))
+
+
+
+@app.route("/accept_project/<string:id>/<string:pid>", methods=['GET', 'POST'])
+def accept_project(id, pid):
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            msg=''
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            if request.method == 'POST':
+                P_ID = pid
+                buyer_id = id
+                Pname = request.form['Pname']
+                Flattype = request.form['Flattype']
+                Fullname = request.form['fullname']
+                Email = request.form['email']
+                Mobile = request.form['mobile']
+                Address = request.form['Address']
+                Landmark = request.form['Landmark']
+                City = request.form['City']
+                Pincode = request.form['Pincode']
+                State = request.form['State']
+                Country = request.form['Country']
+                starttime = request.form['starttime']
+                endtime = request.form['endtime']
+                booking_date = request.form['booking_date']
+                if len(P_ID) > 0 and len(Pname) > 0 and len(Flattype)>0 and len(Email) > 0 and len(Mobile) > 0 and len(
+                        Fullname) > 0 and len(
+                        City) > 0 and len(starttime) > 0 and len(Address) > 0 and len(Landmark) > 0 and len(
+                    Pincode) > 0 and len(State) > 0 and len(Country) > 0 and len(endtime)>0 and len(booking_date)>0:
+                    if not re.match(r'[^@]+@[^@]+\.[^@]+', Email):
+                        msg = 'Invalid email address !'
+                    elif len(Mobile) != 10:
+                        msg = 'Enter 10 digit number !'
+                    else:
+                        cursor.execute(
+                            'INSERT INTO accept_meet_project VALUES (NULL,%s, % s, % s, % s, % s, % s, % s, %s, %s, %s, %s, %s)',
+                            (P_ID, session['id'],buyer_id, Address, Landmark, City, Pincode, State, Country, booking_date, starttime, endtime))
+                        mysql.connection.commit()
+
+                        cursor.execute('delete from book_meet_project where P_ID=%s and id=%s', [P_ID, buyer_id, ])
+                        mysql.connection.commit()
+                        cursor.close()
+                        return render_template("search.html", username=session['username'], email1=session['email1'])
+                else:
+                    msg = 'Please fill out the form !'
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('SELECT Pname,Flattype from projectdetail where P_ID=%s', [pid, ])
+            data = cur.fetchall()
+            cur.execute('select fullname,email,mobile from accounts where username=%s', [session['username'], ])
+            data1 = cur.fetchall()
+            l = list(data)
+            l1 =list(data1)
+            cur.close()
+            return render_template("accept_project.html", datas=l, data1=l1, msg=msg, P_ID=pid, buyer_id=id, username=session['username'],
+                                   email1=session['email1'])
+    return redirect(url_for('login'))
 
 app.run(debug=True)

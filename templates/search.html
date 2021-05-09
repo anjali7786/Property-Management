@@ -271,7 +271,7 @@
                     </div>
                     <div class="btn">
                         <a href="#"><button id="bt3">Save for Later</button></a>
-                        <a href="#"><button id="bt4">Book A Meeting</button></a>
+                        <a href="{{url_for('book_apt',id=u['A_ID'])}}"><button id="bt4">Book A Meeting</button></a>
                     </div>
                     {%endif%}
                 </div>
@@ -312,14 +312,14 @@
                             <p class="10" style="color: black;">Rating:{{u['rating']}}</p>
                         </div>
                     </div>
-                    {%if username!="admin" and username!=u['Username']%}
+                    {%if username!="admin" and username!=u['username']%}
                     <div class="btn">
                         <a href="#"><button id="bt1">Apply</button></a>
                         <a href="#"><button id="bt2">Complaint</button></a>
                     </div>
                     <div class="btn">
                         <a href="#"><button id="bt3">Save for Later</button></a>
-                        <a href="#"><button id="bt4">Book A Meeting</button></a>
+                        <a href="{{url_for('book_room',id=u['R_ID'])}}"><button id="bt4">Book A Meeting</button></a>
                     </div>
                     {%endif%}
                 </div>
@@ -360,14 +360,14 @@
                             <p class="5" style="color: black;">Rating:{{u['rating']}}</p>
                         </div>
                     </div>
-                    {%if username!="admin" and username!=u['Username']%}
+                    {%if username!="admin" and username!=u['username']%}
                     <div class="btn">
                         <a href="#"><button id="bt1">Apply</button></a>
                         <a href="#"><button id="bt2">Complaint</button></a>
                     </div>
                     <div class="btn">
                         <a href="#"><button id="bt3">Save for Later</button></a>
-                        <a href="#"><button id="bt4">Book A Meeting</button></a>
+                        <a href="{{url_for('book_project',id=u['P_ID'])}}"><button id="bt4">Book A Meeting</button></a>
                     </div>
                     {%endif%}
                 </div>

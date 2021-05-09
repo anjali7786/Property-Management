@@ -198,6 +198,9 @@ main {
   border-radius: 5px;
   background: #ffffff;
   box-shadow: 5px 5px 13px #ededed, -5px -5px 13px #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0abab5;
 }
 
 .charts__left__title {

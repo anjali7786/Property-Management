@@ -57,7 +57,71 @@
                 </div>
                 <i class="fa fa-bell" aria-hidden="true"></i>
               </div>
-              <div id="apex1"></div>
+              <br>
+              <div id="apex1">
+                <ul>
+                {% for r in ans %}
+                              <li>
+                                <p>
+                                  {{r[6]}} has requested for a meet on {{r[4]}}, {{r[3]}} for apartment {{r[5]}}.
+                                  <a href="{{url_for('book_meet_display')}}">View</a>
+                                </p>
+                              </li>
+                {% endfor %}
+                  </ul>
+                <ul>
+                {% for r in ans1 %}
+                              <li>
+                                <p>
+                                  {{r[10]}} has accepted your request for a meet on {{r[6]}}, from {{r[7]}} to {{r[8]}} for apartment {{r[9]}}.
+                                  Details of owner - email: {{r[11]}}, contact number: {{r[12]}}, Country: {{r[5]}}, State: {{r[4]}}, City: {{r[2]}}.
+                                </p>
+                              </li>
+                {% endfor %}
+                  </ul>
+
+                <ul>
+                {% for r in ansr %}
+                              <li>
+                                <p>
+                                  {{r[6]}} has requested for a meet on {{r[4]}}, {{r[3]}} for room number {{r[7]}}, block name {{r[5]}}.
+                                  <a href="{{url_for('book_meet_display')}}">View</a>
+                                </p>
+                              </li>
+                {% endfor %}
+                  </ul>
+                <ul>
+                {% for r in ansr1 %}
+                              <li>
+                                <p>
+                                  {{r[10]}} has accepted your request for a meet on {{r[6]}}, from {{r[7]}} to {{r[8]}} for room number {{r[13]}}, block name {{r[9]}}.
+                                  Details of owner - email: {{r[11]}}, contact number: {{r[12]}}, Country: {{r[5]}}, State: {{r[4]}}, City: {{r[2]}}.
+                                </p>
+                              </li>
+                {% endfor %}
+                  </ul>
+
+                <ul>
+                {% for r in ansp %}
+                              <li>
+                                <p>
+                                  {{r[6]}} has requested for a meet on {{r[4]}}, {{r[3]}} for project {{r[5]}}, flat type {{r[7]}}.
+                                  <a href="{{url_for('book_meet_display')}}">View</a>
+                                </p>
+                              </li>
+                {% endfor %}
+                  </ul>
+                <ul>
+                {% for r in ansp1 %}
+                              <li>
+                                <p>
+                                  {{r[10]}} has accepted your request for a meet on {{r[6]}}, from {{r[7]}} to {{r[8]}} for project {{r[9]}}, flat type {{r[13]}}.
+                                  Details of owner - email: {{r[11]}}, contact number: {{r[12]}}, Country: {{r[5]}}, State: {{r[4]}}, City: {{r[2]}}.
+                                </p>
+                              </li>
+                {% endfor %}
+                  </ul>
+              </div>
             </div>
 
             <div class="charts__right">
@@ -169,6 +233,12 @@
           <div class="sidebar__link">
             <i class="fa fa-building"></i>
             <a href="/applied_apt/">Applied Apartments</a>
+          </div>
+
+          <h2>BOOK-MEET DISPLAY</h2>
+          <div class="sidebar__link">
+            <i class="fa fa-building"></i>
+            <a href="/book_meet_display">Property</a>
           </div>
 
           <div class="sidebar__logout">
