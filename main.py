@@ -1323,6 +1323,84 @@ def Buy_propertyapt(id):
     else:
         return redirect(url_for('login'))
 
+@app.route('/complaintsapartment/<string:id>', methods=['GET', 'POST'])
+def complaintsapartment(id):
+    msg = ''
+    if request.method == 'POST':
+        data = request.form
+        apmtname = data['name']
+        complaint = data['complaint']
+        if len(apmtname) > 0 and len(complaint) > 0:
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO complaintsapartment VALUES(NULL, %s, %s, %s,0)", (id, apmtname, complaint))
+            mysql.connection.commit()
+            cur.close()
+            msg = '   A complaint has been successfully registered'
+        else:
+            msg = '   Please fill out the form !'
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("SELECT Aname from apartmentdetail where A_ID=%s",(id) )
+    aptn = cur.fetchall()
+    cur.close()
+    if 'loggedin' in session:
+        return render_template("complaintsapartment.html", msg=msg, datas=aptn, id=id, username=session['username'],
+                               email1=session['email1'])
+    else:
+        return render_template("login.html")
+
+
+@app.route('/complaintsroom/<string:id>', methods=['GET', 'POST'])
+def complaintsroom(id):
+    msg = ''
+    if request.method == 'POST':
+        data = request.form
+        Room_no = data['name']
+        complaint = data['complaint']
+        if len(Room_no) > 0 and len(complaint) > 0:
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute("INSERT INTO complaintsroom VALUES(NULL, %s, %s, %s, 0)", [id, Room_no, complaint])
+
+            mysql.connection.commit()
+            cur.close()
+            msg = '   A complaint has been successfully registered'
+        else:
+            msg = '   Please fill out the form !'
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT Room_no from roomdetail where R_ID=%s', [id, ])
+    no = cur.fetchall()
+    cur.close()
+    if 'loggedin' in session:
+        return render_template("complaintsroom.html", msg=msg, datas=no, id=id, username=session['username'],
+                               email1=session['email1'])
+    else:
+        return render_template("login.html")
+
+@app.route('/complaintsbuilder/<string:id>', methods=['GET', 'POST'])
+def complaintsbuilder(id):
+    msg = ''
+    if request.method == 'POST':
+        data = request.form
+        pname = data['name']
+        complaint = data['complaint']
+        if len(pname) > 0 and len(complaint) > 0:
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO complaintsbuilder VALUES(NULL, %s, %s, %s,0)", (id, pname, complaint))
+            mysql.connection.commit()
+            cur.close()
+            msg = '   A complaint has been successfully registered'
+        else:
+            msg = '   Please fill out the form !'
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("SELECT Pname from projectdetail where P_ID=%s",(id) )
+    pn = cur.fetchall()
+    cur.close()
+    if 'loggedin' in session:
+        return render_template("complaintsbuilder.html", msg=msg, datas=pn, id=id, username=session['username'],
+                               email1=session['email1'])
+    else:
+        return render_template("login.html")
+
+
 @app.route("/book_apt/<string:id>", methods=['GET', 'POST'])
 def book_apt(id):
     if 'loggedin' in session:
