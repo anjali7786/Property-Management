@@ -79,41 +79,27 @@
       </div>
     </div>
 
-<div class="content">
-    <div class="container">
-        <div class="row py-5 mt-4 align-items-center">
-
-        <div class="col-md-6 order-md-2">
-          <img
-            src="{{url_for('static', filename='./images/comp5.jpg')}}"
-            alt="Img"
-            class="img-fluid"
-          />
-          <h2>Rooms Complaint Registration</h2>
-        </div>
-
-        <!-- Registration Form -->
-        <div class="col-md-7 col-lg-6 ml-auto">
-            {% if msg %}
-              <div class="alert alert-info alert-dismissible">
-                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                 <strong>{{msg}}</strong>
+    <div class="content">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 order-md-2 ">
+            <img src="{{url_for('static', filename='./images/comp5.jpg')}}" alt="Image" class="img-fluid">
+          </div>
+          <div class="col-md-6 contents">
+            <div class="row justify-content-center">
+              <div class="col-md-8">
+                <div class="mb-4">
+                <h3>Register complaints for <strong>Rooms</strong></h3>
+                {% if msg %}
+                <p class="mb-4">{{msg}}</p>
+                {%endif%}
               </div>
-            {%endif%}
-            <p>Please fill in the form to register a complaint</p><br>
-          <form action="{{url_for('complaintsroom',id=id)}}" method="post"  enctype="multipart/form-data">
-            <div class="row">
-              <!-- Apartment name -->
-              <div class="input-group col-lg-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-building text-muted"></i>
-                  </span>
-                </div>
-                {% for i in datas%}
-                <input
+              <form action="{{url_for('complaintsroom',id=id)}}" method="post">
+  
+                <div class="form-group first">
+                  <!-- <label for="Apartment name">Apartment name</label> -->
+                  {% for i in datas%}
+                  <input
                   id="name"
                   type="number"
                   name="name"
@@ -122,17 +108,10 @@
                   class="form-control bg-white border-left-0 border-md"
                 />
                 {% endfor %}
-              </div>
-
-              <!-- Plot Number  -->
-              <div class="input-group col-lg-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0">
-                    <i class="fa fa-hand-paper-o text-muted"></i>
-                  </span>
+  
                 </div>
-                <input
+                <div class="form-group last mb-4">
+                  <input
                   id="complaint"
                   type="text"
                   name="complaint"
@@ -140,26 +119,22 @@
                   required
                   class="form-control bg-white border-left-0 border-md"
                 />
+  
+                </div>
+  
+                <input type="submit" value="Register Complaint" class="btn text-white btn-block btn-success">
+        
+              </form>
               </div>
-
-                
-
-              <!-- Register Button -->
-              <div class="form-group col-lg-12 mx-auto mb-0">
-                <button type="submit" class="btn btn-primary btn-block py-2">
-                  <span class="font-weight-bold">Register Complaint</span>
-                </button>
-              </div>
-
             </div>
-          </form>
+  
+          </div>
+  
         </div>
       </div>
+    </div>
 
 
-     </div>
-
-</div>
 
     <script src="{{url_for('static', filename='./js/script.js')}}"></script>
     <script src="{{url_for('static', filename='./js/login.js')}}"></script>
