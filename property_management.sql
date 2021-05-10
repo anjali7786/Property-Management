@@ -254,6 +254,23 @@ Create table contactus
     primary key(M_ID)
 );
 
+CREATE TABLE follow1(
+    id1 int not null,
+    id2 int not null,
+    primary key(id1,id2),
+    foreign key(id1) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    foreign key(id2) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE follow2(
+    id1 int not null,
+    id2 int not null,
+    primary key(id1,id2),
+    foreign key(id1) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    foreign key(id2) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
 Select * from accounts;
 Select * from apartmentdetail;
 Select * from roomdetail;

@@ -152,6 +152,15 @@
                               </li>
                 {% endfor %}
                   </ul>
+                <ul>
+                {% for r in res %}
+                              <li>
+                                <p>
+                                  {{r['fullname']}} has sent you a follow request. <a href="{{url_for('follower_following')}}">View</a>
+                                </p>
+                              </li>
+                {% endfor %}
+                  </ul>
               </div>
             </div>
 
@@ -284,6 +293,16 @@
           <div class="sidebar__link">
             <i class="fa fa-building"></i>
             <a href="/savedproperties/">Saved Properties</a>
+          </div>
+
+          <h2>FOLLOWER FOLLOWING</h2>
+          <div class="sidebar__link">
+            <i class="fa fa-building"></i>
+            <a href="/members/">Members</a>
+          </div>
+          <div class="sidebar__link">
+            <i class="fa fa-building"></i>
+            <a href="/follower_following/">Followers-followings</a>
           </div>
 
           <div class="sidebar__logout">

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Applied Apartments</title>
+    <title>Friends Applied Apartments</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -84,45 +84,46 @@
     <br>
     <br>
     {% if details %}
-        <h1>Applied Apartments</h1>
+        <h1>Friends Applied Apartments</h1>
     <br>
   <div class="container-fluid p-0 m-0 align-items-center justify-content-center d-flex" style="min-height: 100vh;">
         <div class="row w-100 p-0 w-0" >
           {% for u in details %}
             <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
                 <div class="card h-100 k" style="max-width: 24rem; margin: auto; margin-bottom: 1rem;">
-                    <img class="card-img-top" src="{{url_for('static', filename='./Uploads/'+u.image)}}" alt="Card image cap" style = "width:100%; height:24rem; object-fit: cover;">
+                    <img class="card-img-top" src="{{url_for('static', filename='./Uploads/'+u[16])}}" alt="Card image cap" style = "width:100%; height:24rem; object-fit: cover;">
                     <div class="card-body">
-                        <h5 class="card-title" ><strong style="color:#880085;">Name of apartment:</strong> {{u['Aname']}}</h5>
+                        <h5 class="card-title" ><strong style="color:#880085;">Name of apartment:</strong> {{u[1]}}</h5>
                         <div class="row">
                         <div class="col-md-6 col-sm-12">
-                            <p class="card-text" style="color: black;"><strong>Owner:</strong> {{u['fullname']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Address:</strong> {{u['Address']}}</p>
-                            <p class="card-text" style="color: black;"><strong>City:</strong> {{u['City']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Pincode:</strong> {{u['Pincode']}}</p>
-                            <p class="card-text" style="color: black;"><strong>State:</strong> {{u['State']}} </p>
-                            <p class="card-text" style="color: black;"><strong>Country:</strong> {{u['Country']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Landmark:</strong> {{u['Landmark']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Plot-number:</strong> {{u['Plot_no']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Owner:</strong> {{u[19]}}</p>
+                            <p class="card-text" style="color: black;"><strong>Address:</strong> {{u[4]}}</p>
+                            <p class="card-text" style="color: black;"><strong>City:</strong> {{u[6]}}</p>
+                            <p class="card-text" style="color: black;"><strong>Pincode:</strong> {{u[7]}}</p>
+                            <p class="card-text" style="color: black;"><strong>State:</strong> {{u[8]}} </p>
+                            <p class="card-text" style="color: black;"><strong>Country:</strong> {{u[9]}}</p>
+                            <p class="card-text" style="color: black;"><strong>Landmark:</strong> {{u[5]}}</p>
+                            <p class="card-text" style="color: black;"><strong>Plot-number:</strong> {{u[2]}}</p>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <p class="card-text" style="color: black;"><strong>Price:</strong> {{u['Price']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Apartment-Type:</strong> {{u['Atype']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Rent/Sale:</strong> {{u['RS']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Availability:</strong> {{u['Availability']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Facilities:</strong> {{u['Facilities']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Description:</strong> {{u['Descr']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Area:</strong> {{u['Area']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Rating:</strong> {{u['rating']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Price:</strong> {{u[10]}}</p>
+                            <p class="card-text" style="color: black;"><strong>Apartment-Type:</strong> {{u[11]}}</p>
+                            <p class="card-text" style="color: black;"><strong>Rent/Sale:</strong> {{u[12]}}</p>
+                            <p class="card-text" style="color: black;"><strong>Availability:</strong> {{u[13]}}</p>
+                            <p class="card-text" style="color: black;"><strong>Facilities:</strong> {{u[14]}}</p>
+                            <p class="card-text" style="color: black;"><strong>Description:</strong> {{u[15]}}</p>
+                            <p class="card-text" style="color: black;"><strong>Area:</strong> {{u[3]}}</p>
+                            <p class="card-text" style="color: black;"><strong>Rating:</strong> {{u[17]}}</p>
                         </div>
                     </div>
-                      {%if username!="admin" and username!=u['username']%}
+                      {%if username!="admin" and username!=u[0]%}
                     <div class="btn">
-                        <a href="{{url_for('saveapartment',id=u['A_ID'])}}"><button type="button" class="btn " id="bt1">Save for later</button></a>
-                        <a href="{{url_for('complaintsapartment',id=u['A_ID'])}}"><button type="button" class="btn" id="bt1">Complaint</button></a>
+                        <a href="{{url_for('Buy_propertyapt',id=u[18])}}"><button type="button" class="btn " id="bt1">Apply</button></a>
+                        <a href="{{url_for('complaintsapartment',id=u[18])}}"><button type="button" class="btn" id="bt1">Complaint</button></a>
                     </div>
                     <div class="btn">
-                        <a href="{{url_for('book_apt',id=u['A_ID'])}}"><button type="button" class="btn" id="bt1">Book A Meeting</button></a>
+                        <a href="{{url_for('saveapartment',id=u[18])}}"><button type="button" class="btn" id="bt1">Save For Later</button></a>
+                        <a href="{{url_for('book_apt',id=u[18])}}"><button type="button" class="btn" id="bt1">Book A Meeting</button></a>
                     </div>
                     {%endif%}
                     </div>
