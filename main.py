@@ -375,8 +375,10 @@ def dashboard():
             k.append(i['Pname'])
             k.append(i['Complaint'])
             comp6.append(k)
+        cursor.execute('select fullname from follow1 INNER JOIN accounts on id1=id where id2=%s', [session['id']])
+        res = cursor.fetchall()
         cursor.close()
-        return render_template('userdashboard.html', counta=len(counta), countr = len(countr), countp = len(countp), ans=ans, ans1=ans1, ansp=ansp, ansp1=ansp1, ansr=ansr, ansr1=ansr1, username=session['username'],
+        return render_template('userdashboard.html',res=res, counta=len(counta), countr = len(countr), countp = len(countp), ans=ans, ans1=ans1, ansp=ansp, ansp1=ansp1, ansr=ansr, ansr1=ansr1, username=session['username'],
                                comp=comp4, comp1=comp5,comp2=comp6, email1=session['email1'])
     return redirect(url_for('login'))
 
@@ -1330,7 +1332,7 @@ def ownerprojects():
 def applied_apt():
     if 'loggedin' in session and session['username'] != 'admin':
       cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-      cursor.execute('SELECT username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where A_ID in (select A_ID from Buy_propertyapt where id=%s) ',[session['id']])
+      cursor.execute('SELECT A_ID,username,fullname,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where A_ID in (select A_ID from Buy_propertyapt where id=%s) ',[session['id']])
       result = cursor.fetchall()
       mysql.connection.commit()
       cursor.close()
@@ -1925,7 +1927,7 @@ def savedproperties():
         result=()
         for i in r:
             cursor2.execute(
-                'SELECT A_ID,Aname,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where A_ID=%s',
+                'SELECT A_ID,Aname,fullname,username,Aname,Plot_no,Area,Address,Landmark,City,Pincode,State,Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating FROM apartmentdetail INNER JOIN accounts on apartmentdetail.id=accounts.id where A_ID=%s',
                 ([i['A_ID']]))
             l=cursor2.fetchall()
             result=result+l
@@ -1938,7 +1940,7 @@ def savedproperties():
         result2 = ()
         for i in r2:
           cursor3.execute(
-            'SELECT P_ID,username,Pname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where P_ID=%s',
+            'SELECT P_ID,username,Pname,fullname,Flattype,Features,Address,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where P_ID=%s',
             [i['P_ID']])
           l2 = cursor3.fetchall()
           result2 = result2 + l2
@@ -1951,7 +1953,7 @@ def savedproperties():
         result1 = ()
         for i in r1:
           cursor4.execute(
-            'SELECT R_ID,username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where R_ID=%s ',
+            'SELECT R_ID,username,Bname,fullname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Availability,Facilities,Descr,image,Rent,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where R_ID=%s ',
             [i['R_ID']])
           l1 = cursor4.fetchall()
           result1 = result1 + l1
@@ -2249,4 +2251,194 @@ def warn2(id, cid):
     cur.close()
     return redirect(url_for('complaintlist'))
 
+
+@app.route("/members/")
+def members():
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT id,fullname FROM accounts where username <> 'admin' and id <>%s ", [session['id']])
+            userDetails = cur.fetchall()
+            l = len(userDetails)
+            # id1->id2
+            cur.execute("SELECT id2 FROM follow1 where id1 =%s ", [session['id']])
+            l1 = []
+            p = cur.fetchall()
+            for i in p:
+                l1.append(i[0])
+            cur.execute("SELECT id2 FROM follow2 where id1 =%s ", [session['id']])
+            l2 = []
+            q = cur.fetchall()
+            for i in q:
+                l2.append(i[0])
+            mysql.connection.commit()
+            cur.close()
+            print(l1)
+            print(l2)
+            return render_template('members.html', l=l, l1=l1, l2=l2, userDetails=userDetails,
+                                   username=session['username'],
+                                   email1=session['email1'])
+        else:
+            return redirect(url_for('home'))
+    else:
+        return render_template('login.html')
+
+
+@app.route("/follow/<string:id>", methods=['GET', 'POST'])
+def follow(id):
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            cur = mysql.connection.cursor()
+            cur.execute('INSERT INTO follow1 VALUES (%s,%s)', (session['id'], id))
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('follower_following'))
+        else:
+            return render_template('home.html')
+    else:
+        return render_template('login.html')
+
+
+@app.route("/follower_following/", methods=['GET', 'POST'])
+def follower_following():
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT id2,fullname FROM accounts INNER JOIN follow1 on id2=id where id1=%s ", [session['id']])
+            userDetails = cur.fetchall()
+            cur.execute("SELECT id2,fullname FROM accounts INNER JOIN follow2 on id2=id where id1=%s ", [session['id']])
+            userDetails = userDetails + cur.fetchall()
+            cur.execute("SELECT id1,fullname FROM accounts INNER JOIN follow2 on id1=id where id2=%s ", [session['id']])
+            userDetails1 = cur.fetchall()
+            cur.execute("SELECT id1,fullname FROM accounts INNER JOIN follow1 on id1=id where id2=%s ", [session['id']])
+            userDetails1 = userDetails1 + cur.fetchall()
+            l = len(userDetails)
+            # id1->id2
+            cur.execute("SELECT id2 FROM follow1 where id1 =%s ", [session['id']])
+            l1 = []
+            p = cur.fetchall()
+            for i in p:
+                l1.append(i[0])
+            cur.execute("SELECT id1 FROM follow1 where id2 =%s ", [session['id']])
+            l2 = []
+            q = cur.fetchall()
+            for i in q:
+                l2.append(i[0])
+            mysql.connection.commit()
+            cur.close()
+            print(userDetails)
+            print(userDetails1)
+            print(l1)
+            print(l2)
+            return render_template('follower-following.html', l=l, l1=l1, l2=l2, userDetails=userDetails,
+                                   userDetails1=userDetails1,
+                                   username=session['username'],
+                                   email1=session['email1'])
+        else:
+            return render_template('home.html')
+    else:
+        return render_template('login.html')
+
+
+@app.route("/accept/<string:id>", methods=['GET', 'POST'])
+def accept(id):
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            cur = mysql.connection.cursor()
+            cur.execute('INSERT INTO follow2 VALUES (%s,%s)', (id, session['id']))
+            cur.execute('delete from follow1 where id2=%s and id1=%s', (session['id'], id))
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('follower_following'))
+        else:
+            return render_template('home.html')
+    else:
+        return render_template('login.html')
+
+
+@app.route("/ignore/<string:id>", methods=['GET', 'POST'])
+def ignore(id):
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            cur = mysql.connection.cursor()
+            cur.execute('select * from follow2 where id2=%s and id1=%s', ([session['id']], [id]))
+            res = cur.fetchall()
+            if res:
+                cur.execute('delete from follow2 where id2=%s and id1=%s', ([session['id']], [id]))
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('follower_following'))
+        else:
+            return render_template('home.html')
+    else:
+        return render_template('login.html')
+
+
+@app.route("/viewfriendsapt/<string:id>", methods=['GET', 'POST'])
+def viewfriendsapt(id):
+    if 'loggedin' in session:
+        if session['username'] != 'admin':
+            cur = mysql.connection.cursor()
+            cur.execute('select * from follow2 where id1=%s and id2=%s', ([session['id']], [id]))
+            r = cur.fetchall()
+            if r:
+                cur.execute(
+                    'select username,Aname,Plot_no,Area,apartmentdetail.Address,apartmentdetail.Landmark,apartmentdetail.City,apartmentdetail.Pincode,apartmentdetail.State,apartmentdetail.Country,Price,Atype,RS,Availability,Facilities,Descr,image,rating,Buy_propertyapt.A_ID,accounts.fullname from Buy_propertyapt INNER JOIN apartmentdetail on Buy_propertyapt.A_ID=apartmentdetail.A_ID INNER JOIN accounts on accounts.id = apartmentdetail.id where Buy_propertyapt.id=%s',
+                    [id])
+                res = cur.fetchall()
+                return render_template("friends_apartments.html", details=res,
+                                       username=session['username'],
+                                       email1=session['email1'])
+            mysql.connection.commit()
+            cur.close()
+            return render_template('home.html')
+        else:
+            return render_template('home.html')
+    else:
+        return render_template('login.html')
+
+
+'''
+@app.route("/viewfriendsroom/<string:id>", methods=['GET', 'POST'])
+def viewfriendsroom(id):
+    if 'loggedin' in session:
+        if session['username']!='admin':
+            cur = mysql.connection.cursor()
+            cur.execute('select * from follow2 where id1=%s and id2=%s', ([session['id']], [id]))
+            r = cur.fetchall()
+            if r:
+              cur.execute('select Buy_propertyroom.R_ID,username,Bname,Room_no,Area,roomdetail.Address,roomdetail.Landmark,roomdetail.City,roomdetail.Pincode,roomdetail.State,roomdetail.Country,roomdetail.Availability,Facilities,Descr,image,Rent,rating,fullname from Buy_propertyroom INNER JOIN roomdetail on Buy_propertyroom.R_ID=roomdetail.R_ID INNER JOIN accounts on accounts.id = roomdetail.id where Buy_propertyroom.id=%s', [id])
+              res=cur.fetchall()
+              return render_template("friends_rooms.html", details=res,
+                                     username=session['username'],
+                                     email1=session['email1'])
+            mysql.connection.commit()
+            cur.close()
+            return render_template('home.html')
+        else:
+            return render_template('home.html')
+    else:
+        return render_template('login.html')
+
+@app.route("/viewfriendsproject/<string:id>", methods=['GET', 'POST'])
+def viewfriendsproject(id):
+    if 'loggedin' in session:
+        if session['username']!='admin':
+            cur = mysql.connection.cursor()
+            cur.execute('select * from follow2 where id1=%s and id2=%s', ([session['id']], [id]))
+            r = cur.fetchall()
+            if r:
+              cur.execute('select username,Pname,Flattype,Features,projectdetail.Address,projectdetail.City,projectdetail.Pincode,projectdetail.State,projectdetail.Country,Availability,Facilities,Descr,image,rating,fullname,Buy_propertyproject.P_ID from Buy_propertyproject INNER JOIN projectdetail on Buy_propertyproject.P_ID=projectdetail.P_ID INNER JOIN accounts on accounts.id = projectdetail.id where Buy_propertyproject.id=%s', [id])
+              res=cur.fetchall()
+              return render_template("friends_projects.html", details=res,
+                                     username=session['username'],
+                                     email1=session['email1'])
+            mysql.connection.commit()
+            cur.close()
+            return render_template('home.html')
+        else:
+            return render_template('home.html')
+    else:
+        return render_template('login.html')
+'''
 app.run(debug=True)

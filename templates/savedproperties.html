@@ -96,7 +96,7 @@
                         <h5 class="card-title" ><strong style="color:#880085;">Name of apartment:</strong> {{u['Aname']}}</h5>
                         <div class="row">
                         <div class="col-md-6 col-sm-12">
-                            <p class="card-text" style="color: black;"><strong>Owner:</strong> {{u['username']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Owner:</strong> {{u['fullname']}}</p>
                             <p class="card-text" style="color: black;"><strong>Address:</strong> {{u['Address']}}</p>
                             <p class="card-text" style="color: black;"><strong>City:</strong> {{u['City']}}</p>
                             <p class="card-text" style="color: black;"><strong>Pincode:</strong> {{u['Pincode']}}</p>
@@ -119,10 +119,10 @@
                       {%if username!="admin" and username!=u['username']%}
                     <div class="btn">
                         <a href="{{url_for('Buy_propertyapt',id=u['A_ID'])}}"><button type="button" class="btn " id="bt1">Apply</button></a>
-                        <a href="#"><button type="button" class="btn" id="bt1">Complaint</button></a>
+                        <a href="{{url_for('complaintsapartment',id=u['A_ID'])}}"><button type="button" class="btn" id="bt1">Complaint</button></a>
                     </div>
                     <div class="btn">
-                        <a href="#"><button type="button" class="btn" id="bt1">Book A Meeting</button></a>
+                        <a href="{{url_for('book_apt',id=u['A_ID'])}}"><button type="button" class="btn" id="bt1">Book A Meeting</button></a>
                     </div>
                     {%endif%}
                     </div>
@@ -145,7 +145,7 @@
                     <div class="card-body">
                         <div class="row">
                         <div class="col-md-6 col-sm-12">
-                            <p class="5" style="color: black;"><strong>Owner:</strong> {{u['username']}} </p>
+                            <p class="5" style="color: black;"><strong>Owner:</strong> {{u['fullname']}} </p>
                             <p class="1" style="color: black;"><strong>Room-number:</strong> {{u['Room_no']}}</p>
                             <p class="1" style="color: black;"><strong>Building-Name:</strong> {{u['Bname']}}</p>
                             <p class="2" style="color: black;"><strong>Address:</strong> {{u['Address']}}</p>
@@ -166,10 +166,10 @@
                       {%if username!="admin" and username!=u['username']%}
                     <div class="btn">
                         <a href="#"><button type="button" class="btn" id="bt1">Apply</button></a>
-                        <a href="#"><button type="button" class="btn" id="bt1">Complaint</button></a>
+                        <a href="{{url_for('complaintsroom',id=u['R_ID'])}}"><button type="button" class="btn" id="bt1">Complaint</button></a>
                     </div>
                     <div class="btn">
-                        <a href="#"><button type="button" class="btn" id="bt1">Book A Meeting</button></a>
+                        <a href="{{url_for('book_room',id=u['R_ID'])}}"><button type="button" class="btn" id="bt1">Book A Meeting</button></a>
                     </div>
                     {%endif%}
                     </div>
@@ -193,7 +193,7 @@
                         <h5 class="card-title"><strong style="color:#880085">Name of Project:</strong> {{u['Pname']}}</h5>
                         <div class="row">
                         <div class="col-md-6 col-sm-12">
-                            <p class="2" style="color: black;"><strong>Builder:</strong> {{u['username']}}</p>
+                            <p class="2" style="color: black;"><strong>Builder:</strong> {{u['fullname']}}</p>
                             <p class="3" style="color: black;"><strong>Flat-Type:</strong> {{u['Flattype']}}</p>
                             <p class="4" style="color: black;"><strong>Features:</strong> {{u['Features']}}</p>
                             <p class="5" style="color: black;"><strong>Pincode:</strong> {{u['Pincode']}}</p>
@@ -212,10 +212,10 @@
                       {%if username!="admin" and username!=u['username']%}
                     <div class="btn">
                         <a href="#"><button type="button" class="btn" id="bt1">Apply</button></a>
-                        <a href="#"><button type="button" class="btn" id="bt1">Complaint</button></a>
+                        <a href="{{url_for('complaintsbuilder',id=u['P_ID'])}}"><button type="button" class="btn" id="bt1">Complaint</button></a>
                     </div>
                     <div class="btn">
-                        <a href="#"><button type="button" class="btn" id="bt1">Book A Meeting</button></a>
+                        <a href="{{url_for('book_project',id=u['P_ID'])}}"><button type="button" class="btn" id="bt1">Book A Meeting</button></a>
                     </div>
                     {%endif%}
                     </div>

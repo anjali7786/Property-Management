@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Applied Apartments</title>
+    <title>Follower Following</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -83,57 +83,75 @@
     <br>
     <br>
     <br>
-    {% if details %}
-        <h1>Applied Apartments</h1>
-    <br>
-  <div class="container-fluid p-0 m-0 align-items-center justify-content-center d-flex" style="min-height: 100vh;">
-        <div class="row w-100 p-0 w-0" >
-          {% for u in details %}
-            <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
-                <div class="card h-100 k" style="max-width: 24rem; margin: auto; margin-bottom: 1rem;">
-                    <img class="card-img-top" src="{{url_for('static', filename='./Uploads/'+u.image)}}" alt="Card image cap" style = "width:100%; height:24rem; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title" ><strong style="color:#880085;">Name of apartment:</strong> {{u['Aname']}}</h5>
-                        <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <p class="card-text" style="color: black;"><strong>Owner:</strong> {{u['fullname']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Address:</strong> {{u['Address']}}</p>
-                            <p class="card-text" style="color: black;"><strong>City:</strong> {{u['City']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Pincode:</strong> {{u['Pincode']}}</p>
-                            <p class="card-text" style="color: black;"><strong>State:</strong> {{u['State']}} </p>
-                            <p class="card-text" style="color: black;"><strong>Country:</strong> {{u['Country']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Landmark:</strong> {{u['Landmark']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Plot-number:</strong> {{u['Plot_no']}}</p>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <p class="card-text" style="color: black;"><strong>Price:</strong> {{u['Price']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Apartment-Type:</strong> {{u['Atype']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Rent/Sale:</strong> {{u['RS']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Availability:</strong> {{u['Availability']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Facilities:</strong> {{u['Facilities']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Description:</strong> {{u['Descr']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Area:</strong> {{u['Area']}}</p>
-                            <p class="card-text" style="color: black;"><strong>Rating:</strong> {{u['rating']}}</p>
-                        </div>
-                    </div>
-                      {%if username!="admin" and username!=u['username']%}
-                    <div class="btn">
-                        <a href="{{url_for('saveapartment',id=u['A_ID'])}}"><button type="button" class="btn " id="bt1">Save for later</button></a>
-                        <a href="{{url_for('complaintsapartment',id=u['A_ID'])}}"><button type="button" class="btn" id="bt1">Complaint</button></a>
-                    </div>
-                    <div class="btn">
-                        <a href="{{url_for('book_apt',id=u['A_ID'])}}"><button type="button" class="btn" id="bt1">Book A Meeting</button></a>
-                    </div>
-                    {%endif%}
-                    </div>
-                </div>
+  <div class = "container" >
+         <div class="table-responsive">
+                <table class="table table-hover">
+                  {% if userDetails %}
+                    <h1>Following</h1>
+                    <thead >
+                    <tr class="table-warning">
+                      <th class="text-center" scope="col">Full Name</th>
+                      <th class="text-center" scope="col">STATUS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for user in userDetails %}
+                  <tr class="info">
+                  <td class="text-center"> {{user[1]}} </td>
+                  {% if l1 and user[0] in l1 %}
+                  <td class="text-center"><a href="#"><button type="button" class="btn btn-success"><i>Pending</i></button></a></td>
+                  {% else%}
+                  <td class="text-center">
+                    <a href="{{url_for('viewfriendsapt',id=user[0])}}"><button type="button" class="btn btn-success">View Apartments</button></a>
+                    <a href="#"><button type="button" class="btn btn-success">View Rooms</button></a>
+                    <a href="#"><button type="button" class="btn btn-success">View Projects</button></a>
+                  </td>
+                  {%endif%}
+                  </tr>
+                  {% endfor %}
+
+                  </tbody>
+                {%else%}
+                    <h1>Not following anyone</h1>
+
+                {%endif%}
+                </table>
             </div>
-            {%endfor%}
-        </div>
     </div>
-    {% else %}
-        <h1>No Applied Apartments</h1>
-    {% endif %}
+
+    <div class = "container" >
+         <div class="table-responsive">
+                <table class="table table-hover">
+                  {% if userDetails1 %}
+                    <h1>Followers</h1>
+                    <thead >
+                    <tr class="table-warning">
+                      <th class="text-center" scope="col">Full Name</th>
+                      <th class="text-center" scope="col">STATUS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for user in userDetails1 %}
+                  <tr class="info">
+                  <td class="text-center"> {{user[1]}} </td>
+                  {% if l2 and user[0] in l2 %}
+                  <td class="text-center"><a href="{{url_for('accept',id=user[0])}}"><button type="button" class="btn btn-success">Accept</button></a></td>
+                  {% elif l1 and user[0] in l1%}
+                    <td class="text-center"><a href="#"><button type="button" class="btn btn-success"><i>Pending</i></button></a></td>
+                  {%else%}
+                  <td class="text-center"><a href="{{url_for('ignore',id=user[0])}}"><button type="button" class="btn btn-danger">Ignore</button></a></td>
+                  {%endif%}
+                  </tr>
+                  {% endfor %}
+
+                  </tbody>
+                {%else%}
+                    <h1>No followers</h1>
+
+                {%endif%}
+                </table>
+            </div>
+    </div>
 
     <script src="{{url_for('static', filename='./js/script.js')}}"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
