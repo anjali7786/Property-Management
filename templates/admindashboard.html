@@ -24,7 +24,7 @@
         </div>
         <div class="navbar__left">
           <a href="{{ url_for('registeredusers') }}">Registered Users</a>
-          <a href="#">Complaints</a>
+          <a href="{{ url_for('complaintlist') }}">Complaints</a>
         </div>
         <div class="navbar__right">
           <a href="/search">
@@ -74,7 +74,7 @@
               ></i>
               <div class="card_inner">
                 <p class="text-primary-p">Complaints</p>
-                <span class="font-bold text-title">578</span>
+                <span class="font-bold text-title">{{total}}</span>
               </div>
             </div>
 
@@ -165,7 +165,7 @@
           </div>
           <div class="sidebar__link">
             <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
-            <a href="#">Complaints</a>
+            <a href="{{ url_for('complaintlist') }}">Complaints</a>
           </div>
 
           <h2>PROPERTY DETAILS</h2>

@@ -125,6 +125,33 @@
                               </li>
                 {% endfor %}
                   </ul>
+                <ul>
+                {% for c in comp2 %}
+                              <li>
+                                <p>
+                                 This "{{c[1]}}" complaint has been registered against your project {{c[0]}}. If more complaints are found then your project/account will be deleted.
+                                </p>
+                              </li>
+                {% endfor %}
+                  </ul>
+                <ul>
+                {% for c in comp %}
+                              <li>
+                                <p>
+                                 This "{{c[1]}}" complaint has been registered against your apartment {{c[0]}}. If more complaints are found then your apartment/account will be deleted.
+                                </p>
+                              </li>
+                {% endfor %}
+                  </ul>
+                <ul>
+                {% for c in comp1 %}
+                              <li>
+                                <p>
+                                  This "{{c[1]}}" complaint has been registered against your room {{c[0]}}. If more complaints are found then your room/account will be deleted.
+                                </p>
+                              </li>
+                {% endfor %}
+                  </ul>
               </div>
             </div>
 

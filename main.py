@@ -140,9 +140,16 @@ def admindashboard():
         countr = cursor.fetchall()
         cursor.execute('SELECT * FROM projectdetail')
         countp = cursor.fetchall()
+        cursor.execute('SELECT * FROM complaintsapartment')
+        countc = cursor.fetchall()
+        cursor.execute('SELECT * FROM complaintsroom')
+        countc1 = cursor.fetchall()
+        cursor.execute('SELECT * FROM complaintsbuilder')
+        countc2 = cursor.fetchall()
+        total = len(countc)+len(countc1)+len(countc2)
         mysql.connection.commit()
         cursor.close()
-        return render_template('admindashboard.html', count=len(count)-1, counta= len(counta), countr= len(countr), countp= len(countp), username='admin', email1=session['email1'])
+        return render_template('admindashboard.html', count=len(count)-1, counta= len(counta), countr= len(countr), countp= len(countp), total=total, username='admin', email1=session['email1'])
     return redirect(url_for('login'))
 
 
@@ -335,9 +342,42 @@ def dashboard():
                     k.append(j['Room_no'])
                     ansr1.append(k)
 
+        cursor.execute(
+            "SELECT Aname,Complaint,Flag FROM complaintsapartment where Flag=1 and A_ID in (select A_ID from apartmentdetail where id=%s)",
+            [session['id'], ])
+        comp = cursor.fetchall()
+        comp=list(comp)
+        comp4=[]
+        for i in comp:
+            k=[]
+            k.append(i['Aname'])
+            k.append(i['Complaint'])
+            comp4.append(k)
+        cursor.execute(
+            "SELECT Room_no,Complaint,Flag FROM complaintsroom where Flag=1 and R_ID in (select R_ID from roomdetail where id=%s)",
+            [session['id'], ])
+        comp1 = cursor.fetchall()
+        comp1 = list(comp1)
+        comp5 = []
+        for i in comp1:
+            k = []
+            k.append(i['Room_no'])
+            k.append(i['Complaint'])
+            comp5.append(k)
+        cursor.execute(
+            "SELECT Pname,Complaint,Flag FROM complaintsbuilder where Flag=1 and P_ID in (select P_ID from projectdetail where id=%s)",
+            [session['id'], ])
+        comp2 = cursor.fetchall()
+        comp2 = list(comp2)
+        comp6 = []
+        for i in comp2:
+            k = []
+            k.append(i['Pname'])
+            k.append(i['Complaint'])
+            comp6.append(k)
         cursor.close()
         return render_template('userdashboard.html', counta=len(counta), countr = len(countr), countp = len(countp), ans=ans, ans1=ans1, ansp=ansp, ansp1=ansp1, ansr=ansr, ansr1=ansr1, username=session['username'],
-                               email1=session['email1'])
+                               comp=comp4, comp1=comp5,comp2=comp6, email1=session['email1'])
     return redirect(url_for('login'))
 
 
@@ -2120,5 +2160,93 @@ def deletemsg(id):
     cursor.close()
     return redirect(url_for('msglist'))
 
+@app.route("/complaintlist")
+def complaintlist():
+    msg = ''
+    if 'loggedin' in session:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM complaintsapartment ")
+        complain1Details = cur.fetchall()
+        cur.execute("SELECT * FROM complaintsroom ")
+        complain2Details = cur.fetchall()
+        cur.execute("SELECT * FROM complaintsbuilder ")
+        complain3Details = cur.fetchall()
+        if complain1Details  or complain2Details  or complain3Details :
+            cur.execute("select A_ID, count(A_ID) from complaintsapartment group by(A_ID)")
+            count1=cur.fetchall()
+            print(count1)
+            print(complain1Details)
+            comp=[]
+            for i in complain1Details:
+                for j in count1:
+                    if i[1]==j[0]:
+                        l= list(i)
+                        l.append(j[1])
+                        comp.append(l)
+                        break
+            print(comp)
+
+            cur.execute("select R_ID, count(R_ID) from complaintsroom group by(R_ID)")
+            count2 = cur.fetchall()
+            print(count2)
+            print(complain2Details)
+            comp1 = []
+            for i in complain2Details:
+                for j in count2:
+                    if i[1] == j[0]:
+                        l = list(i)
+                        l.append(j[1])
+                        comp1.append(l)
+                        break
+            print(comp1)
+
+            cur.execute("select P_ID, count(P_ID) from complaintsbuilder group by(P_ID)")
+            count3 = cur.fetchall()
+            print(count3)
+            print(complain3Details)
+            comp2 = []
+            for i in complain3Details:
+                for j in count3:
+                    if i[1] == j[0]:
+                        l = list(i)
+                        l.append(j[1])
+                        comp2.append(l)
+                        break
+            print(comp2)
+
+            return render_template('complaintlist.html', msg=msg, complain1Details=comp,
+                                   complain2Details=comp1, complain3Details=comp2, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'There are no complaints as of now'
+            return render_template('complaintlist.html', msg=msg, username=session['username'],
+                                   email1=session['email1'])
+
+
+
+@app.route('/warn/<string:id>/<string:cid>', methods=['GET', 'POST'])
+def warn(id, cid):
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE complaintsapartment SET Flag=1 WHERE A_ID=%s and C_ID=%s", [id, cid])
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('complaintlist'))
+
+
+@app.route('/warn1/<string:id>/<string:cid>', methods=['GET', 'POST'])
+def warn1(id, cid):
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE complaintsroom SET Flag=1 WHERE R_ID=%s and C_ID=%s", [id, cid, ])
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('complaintlist'))
+
+@app.route('/warn2/<string:id>/<string:cid>', methods=['GET', 'POST'])
+def warn2(id, cid):
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE complaintsbuilder SET Flag=1 WHERE P_ID=%s and C_ID=%s", [id, cid, ])
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('complaintlist'))
 
 app.run(debug=True)
