@@ -29,7 +29,7 @@ CREATE TABLE apartmentdetail (
 	Facilities varchar(250) NOT NULL,
 	Descr varchar(500) NOT NULL,
 	image varchar(10000) NOT NULL,
-	rating decimal NOT NULL,
+	rating decimal(10,2) NOT NULL,
 	PRIMARY KEY (A_ID),
 	FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -50,7 +50,7 @@ CREATE TABLE roomdetail(
 	Facilities varchar(250) NOT NULL,
 	Descr varchar(500) NOT NULL,
 	image varchar(10000) NOT NULL,
-	rating decimal NOT NULL,
+	rating decimal(10,2) NOT NULL,
 	PRIMARY KEY (R_ID),
 	FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -69,7 +69,7 @@ CREATE TABLE projectdetail(
 	Facilities varchar(250) NOT NULL,
 	Descr varchar(500) NOT NULL,
 	image varchar(10000) NOT NULL,
-	rating decimal NOT NULL,
+	rating decimal(10,2) NOT NULL,
 	PRIMARY KEY (P_ID),
 	FOREIGN KEY (id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -285,6 +285,67 @@ CREATE TABLE Buy_project(
 	primary key(P_ID, id),
 	foreign key(P_ID) references projectdetail(P_ID) ON DELETE CASCADE ON UPDATE CASCADE,
 	foreign key(id) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+CREATE TABLE approvedapart (
+X_ID int NOT NULL AUTO_INCREMENT,
+A_ID int NOT NULL,
+Aname varchar(50) NOT NULL,
+Applicant varchar(50) NOT NULL,
+email varchar(50) NOT NULL,
+mobile varchar(10) NOT NULL,
+Flag int(1) DEFAULT 0,
+FOREIGN KEY (A_ID) REFERENCES apartmentdetail(A_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+PRIMARY KEY (X_ID)
+);
+CREATE TABLE approvedroom (
+X_ID int NOT NULL AUTO_INCREMENT,
+R_ID int NOT NULL,
+Room_no varchar(50) NOT NULL,
+Applicant varchar(50) NOT NULL,
+email varchar(50) NOT NULL,
+mobile varchar(10) NOT NULL,
+Flag int(1) DEFAULT 0,
+FOREIGN KEY (R_ID) REFERENCES roomdetail(R_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+PRIMARY KEY (X_ID)
+);
+CREATE TABLE approvedproject (
+X_ID int NOT NULL AUTO_INCREMENT,
+P_ID int NOT NULL,
+Pname varchar(50) NOT NULL,
+Applicant varchar(50) NOT NULL,
+email varchar(50) NOT NULL,
+mobile varchar(10) NOT NULL,
+Flag int(1) DEFAULT 0,
+FOREIGN KEY (P_ID) REFERENCES projectdetail(P_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+PRIMARY KEY (X_ID)
+);
+
+
+CREATE TABLE ratings_apt (
+X_ID int NOT NULL AUTO_INCREMENT,
+A_ID int NOT NULL,
+Aname varchar(50) NOT NULL,
+rating decimal(10,2) NOT NULL,
+FOREIGN KEY (A_ID) REFERENCES apartmentdetail(A_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+PRIMARY KEY (X_ID)
+);
+
+CREATE TABLE ratings_room (
+X_ID int NOT NULL AUTO_INCREMENT,
+R_ID int NOT NULL,
+Room_no int NOT NULL,
+rating decimal(10,2) NOT NULL,
+FOREIGN KEY (R_ID) REFERENCES roomdetail(R_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+PRIMARY KEY (X_ID)
+);
+
+CREATE TABLE ratings_project (
+X_ID int NOT NULL AUTO_INCREMENT,
+P_ID int NOT NULL,
+Pname varchar(50) NOT NULL,
+rating decimal(10,2) NOT NULL,
+FOREIGN KEY (P_ID) REFERENCES projectdetail(P_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+PRIMARY KEY (X_ID)
 );
 
 Select * from accounts;

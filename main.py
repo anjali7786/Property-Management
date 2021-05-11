@@ -2473,6 +2473,133 @@ def warn2(id, cid):
     cur.close()
     return redirect(url_for('complaintlist'))
 
+@app.route("/approvedproperty/")
+def approvedproperty():
+    msg = ''
+    if 'loggedin' in session:
+        cur = mysql.connection.cursor()
+        cur1 = mysql.connection.cursor()
+        cursor = mysql.connection.cursor()
+        resultValue = cur.execute("SELECT * FROM approvedapart")
+        resultValue1 = cur1.execute("SELECT * FROM approvedroom")
+        resultValue2 = cursor.execute("SELECT * FROM approvedproject")
+        if resultValue > 0 or resultValue1 > 0 or resultValue2 > 0:
+            Apart = cur.fetchall()
+            Room = cur1.fetchall()
+            Project = cursor.fetchall()
+            return render_template('approvedproperty.html', msg=msg, apart=Apart, room=Room, project=Project, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'There are no approved properties as of now'
+            return render_template('approvedproperty.html', msg=msg, username=session['username'],
+                                   email1=session['email1'])
+    else:
+            return render_template('login.html')
+
+@app.route('/Ratings_apart/<string:id>/<string:cid>', methods=['GET', 'POST'])
+def Ratings_apart(id,cid):
+    msg = ''
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE approvedapart SET Flag=1 WHERE X_ID=%s and A_ID=%s", [id,cid,])
+    mysql.connection.commit()
+    cur.close()
+    if request.method == 'POST':
+        data = request.form
+        Aname = data['name']
+        rating = data['rating-control']
+        if len(Aname) > 0 and len(rating) > 0:
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO ratings_apt VALUES(NULL, %s, %s, %s)", (cid, Aname, rating))
+            mysql.connection.commit()
+            cur.close()
+            cur1 = mysql.connection.cursor()
+            cur1.execute("UPDATE apartmentdetail SET rating =(SELECT AVG(rating) FROM ratings_apt WHERE A_ID=%s) WHERE A_ID=%s", (cid, cid))
+            mysql.connection.commit()
+            cur1.close()
+            msg = '   Rating has been successfully made'
+        else:
+            msg = '   Please fill out the form !'
+    cur1 = mysql.connection.cursor()
+    value = cur1.execute("SELECT Aname from approvedapart WHERE X_ID=%s", [id,])
+    datas = cur1.fetchall()
+    mysql.connection.commit()
+    cur1.close()
+    if 'loggedin' in session:
+        return render_template("Ratings_apart.html", msg=msg, datas=datas,cid=cid, id=id, username=session['username'],
+                               email1=session['email1'])
+    else:
+        return render_template("login.html")
+
+    
+
+@app.route('/Ratings_room/<string:id>/<string:cid>', methods=['GET', 'POST'])
+def Ratings_room(id,cid):
+    msg = ''
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE approvedroom SET Flag=1 WHERE X_ID=%s and R_ID=%s", [id,cid,])
+    mysql.connection.commit()
+    cur.close()
+    if request.method == 'POST':
+        data = request.form
+        room = data['name']
+        rating = data['rating-control']
+        if len(room) > 0 and len(rating) > 0:
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO ratings_room VALUES(NULL, %s, %s, %s)", (cid, room, rating))
+            mysql.connection.commit()
+            cur.close()
+            cur1 = mysql.connection.cursor()
+            cur1.execute("UPDATE roomdetail SET rating =(SELECT AVG(rating) FROM ratings_room WHERE R_ID=%s) WHERE R_ID=%s", (cid, cid))
+            mysql.connection.commit()
+            cur1.close()
+            msg = '   Rating has been successfully made'
+        else:
+            msg = '   Please fill out the form !'
+    cur1 = mysql.connection.cursor()
+    value = cur1.execute("SELECT Room_no from approvedroom WHERE X_ID=%s", [id,])
+    datas = cur1.fetchall()
+    mysql.connection.commit()
+    cur1.close()
+    if 'loggedin' in session:
+        return render_template("Ratings_room.html", msg=msg, datas=datas,cid=cid, id=id, username=session['username'],
+                               email1=session['email1'])
+    else:
+        return render_template("login.html")
+
+@app.route('/Ratings_project/<string:id>/<string:cid>', methods=['GET', 'POST'])
+def Ratings_project(id,cid):
+    msg = ''
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE approvedproject SET Flag=1 WHERE X_ID=%s and P_ID=%s", [id,cid,])
+    mysql.connection.commit()
+    cur.close()
+    if request.method == 'POST':
+        data = request.form
+        project = data['name']
+        rating = data['rating-control']
+        if len(project) > 0 and len(rating) > 0:
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO ratings_project VALUES(NULL, %s, %s, %s)", (cid, project, rating))
+            mysql.connection.commit()
+            cur.close()
+            cur1 = mysql.connection.cursor()
+            cur1.execute("UPDATE projectdetail SET rating =(SELECT AVG(rating) FROM ratings_project WHERE P_ID=%s) WHERE P_ID=%s", (cid, cid))
+            mysql.connection.commit()
+            cur1.close()
+            msg = '   Rating has been successfully made'
+        else:
+            msg = '   Please fill out the form !'
+    cur1 = mysql.connection.cursor()
+    value = cur1.execute("SELECT Pname from approvedproject WHERE X_ID=%s", [id,])
+    datas = cur1.fetchall()
+    mysql.connection.commit()
+    cur1.close()
+    if 'loggedin' in session:
+        return render_template("Ratings_project.html", msg=msg, datas=datas,cid=cid, id=id, username=session['username'],
+                               email1=session['email1'])
+    else:
+        return render_template("login.html")
+
 
 @app.route("/members/")
 def members():
