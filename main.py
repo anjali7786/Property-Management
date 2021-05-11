@@ -1468,6 +1468,107 @@ def complaintsbuilder(id):
     else:
         return render_template("login.html")
 
+@app.route('/editapart/<string:id>', methods=['GET', 'POST'])
+def editapart(id):
+    msg = ''
+    if request.method == 'POST':
+        # fetch data
+        details = request.form
+        apmtname = details['name']
+        plot_no = details['Plot']
+        area = details['Area']
+        address = details['Address']
+        landmark = details['Landmark']
+        city = details['City']
+        pin = details['Pincode']
+        state = details['State']
+        country = details['Country']
+        atype = details['Atype']
+        rs = details['Rent/Sale']
+        availability = details['Availability']
+        Price = details['Price']
+        facilities = details['Facilities']
+        description = details['Description']
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        extension = os.path.splitext(filename)
+        allowed_extensions = {'.jpg', '.png', '.jpeg'}
+        if extension[1] in allowed_extensions:
+            f_name = str(uuid.uuid4()) + str(extension[1])
+            app.config['UPLOAD_FOLDER'] = 'static/Uploads'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+            if len(apmtname) > 0 and len(plot_no) > 0 and len(area) > 0 and len(address) > 0 and len(landmark) > 0 and len(city) > 0 and len(pin) > 0 and len(state) > 0 and len(country) > 0 and len(atype) > 0 and len(facilities) > 0:
+                cur = mysql.connection.cursor()
+                cur.execute("UPDATE apartmentdetail SET Aname=%s, Plot_no=%s, Area=%s, Address=%s, Landmark=%s, City=%s, Pincode=%s, State=%s, Country=%s, Atype=%s,RS=%s, Availability=%s,Price=%s,Facilities=%s,Descr=%s,image=%s WHERE A_ID=%s",[apmtname, plot_no, area, address, landmark, city, pin, state, country, atype, rs, availability, Price, facilities, description, f_name,id, ])
+                mysql.connection.commit()
+                cur.close()
+                cursor1 = mysql.connection.cursor()
+                cursor1.execute('SELECT * from apartmentdetail where A_ID=%s', [id,])
+                data = cursor1.fetchall()
+                cursor1.close()
+                msg = ' Details have been successfully updated'
+                return render_template("editapart.html",datas=data,msg=msg, id=id, username=session['username'],email1=session['email1'])
+            else:
+                msg = ' Please fill out the form !'
+
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * from apartmentdetail where A_ID=%s', [id,])
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template("editapart.html",datas=data,msg=msg,id=id,username=session['username'], email1=session['email1'])
+
+@app.route('/editroom/<string:id>', methods=['GET', 'POST'])
+def editroom(id):
+    msg = ''
+    if request.method == 'POST':
+        # fetch data
+        details = request.form
+        bname = details['name']
+        plot_no = details['Plot']
+        area = details['Area']
+        address = details['Address']
+        landmark = details['Landmark']
+        city = details['City']
+        pin = details['Pincode']
+        state = details['State']
+        country = details['Country']
+        availability = details['Availability']
+        Rent = details['Rent']
+        facilities = details['Facilities']
+        description = details['Description']
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        extension = os.path.splitext(filename)
+        allowed_extensions = {'.jpg', '.png', '.jpeg'}
+        if extension[1] in allowed_extensions:
+            f_name = str(uuid.uuid4()) + str(extension[1])
+            app.config['UPLOAD_FOLDER'] = 'static/Uploads'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+            if len(bname) > 0 and len(plot_no) > 0 and len(area) > 0 and len(address) > 0 and len(landmark) > 0 and len(city) > 0 and len(pin) > 0 and len(state) > 0 and len(country) > 0 and len(facilities) > 0:
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    "UPDATE roomdetail SET Bname=%s, Room_no=%s, Area=%s, Address=%s, Landmark=%s, City=%s, Pincode=%s, State=%s, Country=%s, Availability=%s,Rent=%s,Facilities=%s,Descr=%s,image=%s WHERE R_ID=%s",
+                    [bname, plot_no, area, address, landmark, city, pin, state, country, availability, Rent,
+                     facilities, description, f_name, id, ])
+                mysql.connection.commit()
+                cur.close()
+                cursor1 = mysql.connection.cursor()
+                cursor1.execute('SELECT * from roomdetail where R_ID=%s', [id, ])
+                data = cursor1.fetchall()
+                cursor1.close()
+                msg = ' Details have been successfully updated'
+                return render_template("editroom.html",datas=data, msg=msg, id=id, username=session['username'],
+                                       email1=session['email1'])
+            else:
+                msg = ' Please fill out the form !'
+
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * from roomdetail where R_ID=%s', [id, ])
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template("editroom.html", datas=data, msg=msg, id=id, username=session['username'],
+                           email1=session['email1'])
+
 
 @app.route("/book_apt/<string:id>", methods=['GET', 'POST'])
 def book_apt(id):
