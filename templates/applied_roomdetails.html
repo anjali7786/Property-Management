@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Applied Apartments</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='./css/style.css')}}" />
+
+  </head>
+  <body>
+    <div class="navigation-wrap bg-light start-header start-style">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <nav class="navbar navbar-expand-md navbar-light">
+              <a
+                class="navbar-brand"
+                href="/"
+                target="_blank"
+                ><h1><i class="fa fa-home"></i>PROPERTY MANAGEMENT</h1></a>
+
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto py-4 py-md-0">
+
+                  <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                    <a
+                      class="nav-link dropdown-toggle"
+                      data-toggle="dropdown"
+                      href="#"
+                      role="button"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      ><h6>Profile</h6></a
+                    >
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item"><h6>{{username}}</h6></a>
+                      <a class="dropdown-item"><h6>{{email1}}</h6></a>
+                      <a class="dropdown-item" href="{{ url_for('logout') }}"><h6>Logout</h6></a>
+                    </div>
+                  </li>
+
+                      <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="/search/"><h6>Search</h6></a>
+                    </li>
+                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}"><h6>Dashboard</h6></a>
+                     </li>
+
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+  <div class = "container" >
+         <div class="table-responsive">
+                <table class="table table-hover">
+                  {% if details %}
+                    <h1>Applied Rooms</h1>
+                    <thead >
+                    <tr class="table-warning">
+                      <th scope="col">Image</th>
+                      <th scope="col">Owner</th>
+                      <th scope="col">Building Name</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">City</th>
+                      <th scope="col">Pincode</th>
+                      <th scope="col">State</th>
+                      <th scope="col">Country</th>
+                      <th scope="col">Landmark</th>
+                      <th scope="col">Room_no</th>
+                      <th scope="col">Rent</th>
+                      <th scope="col">Availability</th>
+                      <th scope="col">Facilities</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Area</th>
+                      <th scope="col">Rating</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for u in details %}
+                  <tr>
+                  <td> <img src="{{url_for('static', filename='./Uploads/'+u.image)}}" alt="" style="height:55px; width:55px"> </td>
+                  <td>{{u['username']}}</td>
+                  <td>{{u['Bname']}}</td>
+                  <td>{{u['Address']}}</td>
+                  <td>{{u['City']}}</td>
+                  <td>{{u['Pincode']}}</td>
+                  <td>{{u['State']}}</td>
+                  <td>{{u['Country']}}</td>
+                  <td>{{u['Landmark']}}</td>
+                  <td>{{u['Room_no']}}</td>
+                  <td>{{u['Rent']}}</td>
+                  <td>{{u['Availability']}}</td>
+                  <td>{{u['Facilities']}}</td>
+                  <td>{{u['Descr']}}</td>
+                  <td>{{u['Area']}}</td>
+                  <td>{{u['rating']}}</td>
+                  </tr>
+                  {% endfor %}
+
+                  </tbody>
+                {%else%}
+                    <h1>No Applied Rooms</h1>
+
+                {%endif%}
+                </table>
+            </div>
+    </div>
+
+
+    <script src="{{url_for('static', filename='./js/script.js')}}"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</body>
+</html>

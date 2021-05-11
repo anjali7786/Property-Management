@@ -1357,6 +1357,19 @@ def applied_project():
     else:
         return redirect(url_for('login'))
 
+@app.route("/applied_room/", methods=['GET', 'POST'])
+def applied_room():
+    if 'loggedin' in session and session['username'] != 'admin':
+      cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+      cursor.execute('SELECT username,Bname,Room_no,Area,Address,Landmark,City,Pincode,State,Country,Rent,Availability,Facilities,Descr,image,rating FROM roomdetail INNER JOIN accounts on roomdetail.id=accounts.id where R_ID in (select R_ID from Buy_propertyroom where id=%s) ',[session['id']])
+      result = cursor.fetchall()
+      mysql.connection.commit()
+      cursor.close()
+      return render_template('applied_roomdetails.html',details=result,username=session['username'],email1=session['email1'])
+    elif 'loggedin' in session and session['username'] == 'admin':
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route("/Buy_propertyapt/<string:id>", methods=['GET', 'POST'])
@@ -1457,6 +1470,49 @@ def Buy_project(id):
         return redirect(url_for('home'))
     else:
         return redirect(url_for('login'))
+
+@app.route("/Buy_propertyroom/<string:id>", methods=['GET', 'POST'])
+def Buy_propertyroom(id):
+    if 'loggedin' in session and session['username'] != 'admin':
+        msg = ''
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * from Buy_propertyroom where R_ID=%s and id=%s', ([id], [session['id']]))
+        res = cursor.fetchall()
+        # 1-------
+        if res:
+            msg = 'You have already applied for this Room!'
+            return render_template('search.html', username=session['username'], msg=msg,email1=session['email1'])
+        elif request.method == 'POST':
+                Age = request.form['Age']
+                Occupation = request.form['Occupation']
+                Address = request.form['Address']
+                Landmark = request.form['Landmark']
+                City = request.form['City']
+                Pincode = request.form['Pincode']
+                State = request.form['State']
+                Status = 'Not Approved'
+                if len(City) > 0 and len(Age) > 0 and len(Occupation) > 0 and len(Address) > 0 and len(Landmark) > 0 and len(Pincode) > 0 and len(State) > 0:
+                    cursor.execute('INSERT INTO Buy_propertyroom VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',(id,session['id'],Age,Address,Landmark,City,Pincode,State,Occupation,Status))
+                    mysql.connection.commit()
+                    cursor.close()
+                    msg = 'Your application for required room is registered successfully :)'
+                    return redirect(url_for('applied_room'))
+                else:
+                    msg = 'Please fill out the form !'
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT Room_no from roomdetail where R_ID=%s', [id, ])
+        data = cur.fetchall()
+        cur.execute('SELECT fullname,email,mobile from accounts where id=%s', [session['id'], ])
+        data1 = cur.fetchall()
+        data = data + data1
+        cur.close()
+        return render_template("Buy_propertyroom.html", datas=data, msg=msg, id=id, username=session['username'],
+                               email1=session['email1'])
+    elif 'loggedin' in session and session['username'] == 'admin':
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
+
 
 
 @app.route('/complaintsapartment/<string:id>', methods=['GET', 'POST'])
