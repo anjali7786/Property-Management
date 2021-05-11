@@ -165,7 +165,7 @@
                     </div>
                       {%if username!="admin" and username!=u['username']%}
                     <div class="btn">
-                        <a href="#"><button type="button" class="btn" id="bt1">Apply</button></a>
+                        <a href="{{url_for('Buy_propertyroom',id=u['R_ID'])}}"><button type="button" class="btn" id="bt1">Apply</button></a>
                         <a href="{{url_for('complaintsroom',id=u['R_ID'])}}"><button type="button" class="btn" id="bt1">Complaint</button></a>
                     </div>
                     <div class="btn">
@@ -211,7 +211,7 @@
                     </div>
                       {%if username!="admin" and username!=u['username']%}
                     <div class="btn">
-                        <a href="#"><button type="button" class="btn" id="bt1">Apply</button></a>
+                        <a href="{{url_for('Buy_project',id=u['P_ID'])}}"><button type="button" class="btn" id="bt1">Apply</button></a>
                         <a href="{{url_for('complaintsbuilder',id=u['P_ID'])}}"><button type="button" class="btn" id="bt1">Complaint</button></a>
                     </div>
                     <div class="btn">

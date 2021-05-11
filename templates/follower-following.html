@@ -103,8 +103,8 @@
                   {% else%}
                   <td class="text-center">
                     <a href="{{url_for('viewfriendsapt',id=user[0])}}"><button type="button" class="btn btn-success">View Apartments</button></a>
-                    <a href="#"><button type="button" class="btn btn-success">View Rooms</button></a>
-                    <a href="#"><button type="button" class="btn btn-success">View Projects</button></a>
+                    <a href="{{url_for('viewfriendsroom',id=user[0])}}"><button type="button" class="btn btn-success">View Rooms</button></a>
+                    <a href="{{url_for('viewfriendsproject',id=user[0])}}"><button type="button" class="btn btn-success">View Projects</button></a>
                   </td>
                   {%endif%}
                   </tr>
