@@ -2856,7 +2856,29 @@ def registered_project():
         resultValue = cur.execute("SELECT * FROM projectdetail")
         if resultValue > 0:
             projectDetails = cur.fetchall()
-            return render_template('registered_project.html', msg=msg, projectDetails=projectDetails, username=session['username'],
+            ap = []
+            for i in projectDetails:
+                ap3 = []
+                cur.execute('select fullname from accounts where id=%s', [i[1]])
+                ap2 = cur.fetchone()
+                ap3.append(i[0])
+                ap3.append(i[1])
+                ap3.append(i[2])
+                ap3.append(i[3])
+                ap3.append(i[4])
+                ap3.append(i[5])
+                ap3.append(i[6])
+                ap3.append(i[7])
+                ap3.append(i[8])
+                ap3.append(i[9])
+                ap3.append(i[10])
+                ap3.append(i[11])
+                ap3.append(i[12])
+                ap3.append(i[13])
+                ap3.append(i[14])
+                ap3.append(ap2[0])
+                ap.append(ap3)
+            return render_template('registered_project.html', msg=msg, projectDetails=ap, username=session['username'],
                                    email1=session['email1'])
         else:
             msg = 'No Projects added as of now'
@@ -2969,27 +2991,37 @@ def rooms():
     msg = ''
     if 'loggedin' in session:
         cur = mysql.connection.cursor()
-        resultValue = cur.execute("SELECT * FROM roomdetail where id=%s", (session['id'],))
+        resultValue = cur.execute("SELECT * FROM roomdetail")
         if resultValue > 0:
             roomDetails = cur.fetchall()
-            return render_template('rooms.html', msg=msg, roomDetails=roomDetails, username=session['username'],
+            ap = []
+            for i in roomDetails:
+                ap3 = []
+                cur.execute('select fullname from accounts where id=%s', [i[1]])
+                ap2 = cur.fetchone()
+                ap3.append(i[0])
+                ap3.append(i[1])
+                ap3.append(i[2])
+                ap3.append(i[3])
+                ap3.append(i[4])
+                ap3.append(i[5])
+                ap3.append(i[6])
+                ap3.append(i[7])
+                ap3.append(i[8])
+                ap3.append(i[9])
+                ap3.append(i[10])
+                ap3.append(i[11])
+                ap3.append(i[12])
+                ap3.append(i[13])
+                ap3.append(i[14])
+                ap3.append(i[15])
+                ap3.append(i[16])
+                ap3.append(ap2[0])
+                ap.append(ap3)
+            return render_template('rooms.html', msg=msg, roomDetails=ap, username=session['username'],
                                    email1=session['email1'])
         else:
             msg = 'No Room Registered as of now'
             return render_template('rooms.html', msg=msg, username=session['username'], email1=session['email1'])
-
-@app.route("/apartments/")
-def apartments():
-    msg = ''
-    if 'loggedin' in session:
-        cur = mysql.connection.cursor()
-        resultValue = cur.execute("SELECT * FROM apartmentdetail where id=%s", (session['id'],))
-        if resultValue > 0:
-            apartDetails = cur.fetchall()
-            return render_template('apartments.html', msg=msg, apartDetails=apartDetails, username=session['username'],
-                                   email1=session['email1'])
-        else:
-            msg = 'No Apartment registered as of now'
-            return render_template('apartments.html', msg=msg, username=session['username'], email1=session['email1'])
 
 app.run(debug=True)
