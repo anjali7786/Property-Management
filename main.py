@@ -2848,7 +2848,7 @@ def viewfriendsproject(id):
         return render_template('login.html')
 
 
-@app.route("/registerd_project/")
+@app.route("/registered_project/")
 def registered_project():
     msg = ''
     if 'loggedin' in session and session['username'] == 'admin':
@@ -2864,6 +2864,46 @@ def registered_project():
     else:
         return render_template('login.html')
 
-
+@app.route("/registered_apartment/")
+def registered_apartment():
+    msg = ''
+    if 'loggedin' in session and session['username'] == 'admin':
+        cur = mysql.connection.cursor()
+        resultValue = cur.execute("SELECT * FROM apartmentdetail")
+        if resultValue > 0:
+            apartDetails = cur.fetchall()
+            ap=[]
+            for i in apartDetails:
+                ap3=[]
+                cur.execute('select fullname from accounts where id=%s',[i[1]])
+                ap2=cur.fetchone()
+                ap3.append(i[0])
+                ap3.append(i[1])
+                ap3.append(i[2])
+                ap3.append(i[3])
+                ap3.append(i[4])
+                ap3.append(i[5])
+                ap3.append(i[6])
+                ap3.append(i[7])
+                ap3.append(i[8])
+                ap3.append(i[9])
+                ap3.append(i[10])
+                ap3.append(i[11])
+                ap3.append(i[12])
+                ap3.append(i[13])
+                ap3.append(i[14])
+                ap3.append(i[15])
+                ap3.append(i[16])
+                ap3.append(i[17])
+                ap3.append(i[18])
+                ap3.append(ap2[0])
+                ap.append(ap3)
+            return render_template('registered_apartments.html',ap=ap, msg=msg, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'No Apartments added as of now'
+            return render_template('registered_apartments.html', msg=msg, username=session['username'], email1=session['email1'])
+    else:
+        return render_template('login.html')
 
 app.run(debug=True)
