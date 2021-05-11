@@ -2379,11 +2379,11 @@ def deletep(id):
         resultValue = cur1.execute("SELECT * FROM projectdetail")
         projectDetails = cur1.fetchall()
         if resultValue > 0:
-            return render_template('admindashboard.html', msg=msg, projectDetails=projectDetails, username=session['username'],
+            return render_template('registered_project.html', msg=msg, projectDetails=projectDetails, username=session['username'],
                                    email1=session['email1'])
         else:
             msg = 'There are no projects registered as of now'
-            return render_template('admindashboard.html', msg=msg, username=session['username'], email1=session['email1'])
+            return render_template('registered_project.html', msg=msg, username=session['username'], email1=session['email1'])
     cur1.close()
 
 
@@ -2846,5 +2846,24 @@ def viewfriendsproject(id):
             return render_template('home.html')
     else:
         return render_template('login.html')
+
+
+@app.route("/registerd_project/")
+def registered_project():
+    msg = ''
+    if 'loggedin' in session and session['username'] == 'admin':
+        cur = mysql.connection.cursor()
+        resultValue = cur.execute("SELECT * FROM projectdetail")
+        if resultValue > 0:
+            projectDetails = cur.fetchall()
+            return render_template('registered_project.html', msg=msg, projectDetails=projectDetails, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'No Projects added as of now'
+            return render_template('registered_project.html', msg=msg, username=session['username'], email1=session['email1'])
+    else:
+        return render_template('login.html')
+
+
 
 app.run(debug=True)
