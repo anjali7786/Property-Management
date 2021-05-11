@@ -1570,6 +1570,59 @@ def editroom(id):
                            email1=session['email1'])
 
 
+
+@app.route('/editproject/<string:id>', methods=['GET', 'POST'])
+def editproject(id):
+    msg = ''
+    if request.method == 'POST':
+        # fetch data
+        details = request.form
+        pname = details['name']
+        flat = details.getlist('Flattype')
+        print(flat)
+        flattype = ', '.join(flat)
+        address = details['Address']
+        city = details['City']
+        pin = details['Pincode']
+        state = details['State']
+        country = details['Country']
+        facility = details.getlist('Facilities')
+        facilities = ', '.join(facility)
+        feature = details.getlist('Features')
+        features = ', '.join(feature)
+        availability = details['Availability']
+        description = details['Description']
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        extension = os.path.splitext(filename)
+        allowed_extensions = {'.jpg', '.png', '.jpeg'}
+        if extension[1] in allowed_extensions:
+            f_name = str(uuid.uuid4()) + str(extension[1])
+            app.config['UPLOAD_FOLDER'] = 'static/Uploads'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute(
+                "UPDATE projectdetail SET Pname=%s,Flattype=%s, Address=%s, Features=%s, City=%s, Pincode=%s, State=%s, Country=%s, Availability=%s, Facilities=%s,Descr=%s,image=%s WHERE P_ID=%s",
+                [pname, flattype, address, features, city, pin, state, country, availability,
+                 facilities, description, f_name, id, ])
+            mysql.connection.commit()
+            cur.close()
+            cursor1 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor1.execute('SELECT * from projectdetail where P_ID=%s', [id, ])
+            data = cursor1.fetchall()
+            cursor1.close()
+            msg = ' Details have been successfully updated'
+            return render_template("editproject.html", datas=data, msg=msg, id=id, username=session['username'],
+                                   email1=session['email1'])
+
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * from projectdetail where P_ID=%s', [id,])
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template("editproject.html",datas=data,msg=msg,id=id,username=session['username'], email1=session['email1'])
+
+
+
 @app.route("/book_apt/<string:id>", methods=['GET', 'POST'])
 def book_apt(id):
     if 'loggedin' in session:

@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, user-scalable=no"
     />
-    <title>Edit</title>
+    <title>Edit Apartment</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -77,11 +77,13 @@
         </div>
       </div>
     </div>
+<br>
+
     <div class="content">
         <div class="container">
           <div class="row">
             <div class="col-md-6 order-md-2 ">
-              <img src="{{url_for('static', filename='./images/bgapmt.png')}}" alt="Image" class="img-fluid">
+              <br><br><br><img src="{{url_for('static', filename='./images/bgedit.png')}}" alt="Image" class="img-fluid">
             </div>
             <div class="col-md-6 contents">
               <div class="row justify-content-center">
@@ -90,7 +92,7 @@
                   <h3>Edit details for <strong>Apartment</strong></h3>
                   <p class="mb-4">{{msg}}</p>
                 </div>
-                <form action="{{url_for('editapart',id=id)}}" enctype="multipart/form-data" method="post">
+                <div action="{{url_for('editapart',id=id)}}" enctype="multipart/form-data" method="post">
                     {% for i in datas%}
                   <div class="form-group first">
                     <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Apartment Name</h4>
@@ -103,9 +105,35 @@
                   required
                   class="form-control"
                 />
-
                   </div>
-                  <div class="form-group first">
+
+              <div class="form-group first">
+                   <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Address</h4>
+                    <input
+                  id="Address"
+                  type="text"
+                  name="Address"
+                  value="{{i[5]}}"
+                  placeholder="Address"
+                  required
+                  class="form-control"
+                />
+                  </div>
+
+              <div class="row">
+                  <div class="form-group first col-md-6 col-sm-12">
+                   <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Landmark</h4>
+                    <input
+                  id="Landmark"
+                  type="text"
+                  name="Landmark"
+                  value="{{i[6]}}"
+                  placeholder="Landmark"
+                  required
+                  class="form-control"
+                />
+                  </div>
+                  <div class="form-group first col-md-6 col-sm-12">
                     <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Plot number</h4>
                 <input
                   id="Plot"
@@ -117,33 +145,11 @@
                   class="form-control"
                 />
                 </div>
-                  <div class="form-group first">
-                   <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Address</h4>
-                    <input
-                  id="Address"
-                  type="text"
-                  name="Address"
-                  value="{{i[5]}}"
-                  placeholder="Address"
-                  required
-                  class="form-control"
-                />
-
                   </div>
-                  <div class="form-group first">
-                   <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Landmark</h4>
-                    <input
-                  id="Landmark"
-                  type="text"
-                  name="Landmark"
-                  value="{{i[6]}}"
-                  placeholder="Landmark"
-                  required
-                  class="form-control"
-                />
 
-                  </div>
-                  <div class="form-group first">
+
+                <div class="row">
+                  <div class="form-group first col-md-6 col-sm-12">
                     <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">City</h4>
                     <input
                   id="City"
@@ -156,7 +162,7 @@
                 />
 
                   </div>
-                  <div class="form-group first">
+                  <div class="form-group first col-md-6 col-sm-12">
                     <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Pincode</h4>
                     <input
                   id="Pincode"
@@ -167,9 +173,11 @@
                   required
                   class="form-control"
                 />
-
+            </div>
                   </div>
-                  <div class="form-group first">
+
+            <div class="row">
+                <div class="form-group first col-md-6 col-sm-12">
                     <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">State</h4>
                     <input
                   id="State"
@@ -182,7 +190,7 @@
                 />
 
                   </div>
-                  <div class="form-group first">
+                  <div class="form-group first col-md-6 col-sm-12">
                       <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Country</h4>
                     <input
                   id="Country"
@@ -193,16 +201,18 @@
                   required
                   class="form-control"
                 />
+                  </div>
 
                   </div>
                   <div class="form-group first">
+                        <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Rent/Sale</h4>
                     <div class="form-check form-check-inline">
                         {%if i[12]=="Rent" %}
                         <input class="form-check-input" type="radio" name="Rent/Sale" id="rent" value="Rent" checked>
                         {%else%}
                         <input class="form-check-input" type="radio" name="Rent/Sale" id="rent" value="Rent">
                         {%endif%}
-                        <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Rent</h4>
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Rent</h4>
                     </div>
                     <div class="form-check form-check-inline">
                         {%if i[12]=="Sale" %}
@@ -210,17 +220,18 @@
                       {%else%}
                       <input class="form-check-input" type="radio" name="Rent/Sale" id="sale" value="Sale">
                       {%endif%}
-                      <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Sale</h4>
+                      <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Sale</h4>
                     </div>
                   </div>
                   <div class="form-group first">
+                        <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Availability</h4>
                     <div class="form-check form-check-inline">
                         {%if i[13]=="Vacant" %}
                         <input class="form-check-input" type="radio" name="Availability" id="vacant" value="Vacant" checked>
                         {%else%}
                         <input class="form-check-input" type="radio" name="Availability" id="vacant" value="Vacant">
                         {%endif%}
-                        <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Vacant</h4>
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Vacant</h4>
                     </div>
                     <div class="form-check form-check-inline">
                         {%if i[13]=="Occupied" %}
@@ -228,10 +239,12 @@
                       {%else%}
                       <input class="form-check-input" type="radio" name="Availability" id="occupied" value="Occupied">
                       {%endif%}
-                        <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Occupied</h4>
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Occupied</h4>
                     </div>
                   </div>
-                  <div class="form-group first">
+
+                <div class="row">
+                  <div class="form-group first col-md-6 col-sm-12">
                     <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Area</h4>
                     <input
                   id="Area"
@@ -244,7 +257,7 @@
                 />
 
                   </div>
-                  <div class="form-group first">
+                  <div class="form-group first col-md-6 col-sm-12">
                       <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Price</h4>
                     <input
                   id="Price"
@@ -256,14 +269,17 @@
                   class="form-control"
                 />
                   </div>
+                </div>
+
                 <div class="form-group first">
+                        <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Apartment Type</h4>
                     <div class="form-check form-check-inline">
                         {%if i[11]=="Studio" %}
                         <input class="form-check-input" type="radio" name="Atype" id="studio" value="Studio" checked>
                         {%else%}
                         <input class="form-check-input" type="radio" name="Atype" id="studio" value="Studio">
                         {%endif%}
-                        <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Studio</h4>
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Studio</h4>
                     </div>
                     <div class="form-check form-check-inline">
                         {%if i[11]=="Alcovestudio" %}
@@ -271,7 +287,7 @@
                       {%else%}
                       <input class="form-check-input" type="radio" name="Atype" id="alcovestudio" value="Alcovestudio">
                       {%endif%}
-                        <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Alcove Studio</h4>
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Alcove Studio</h4>
                     </div>
 
                     <div class="form-check form-check-inline">
@@ -280,7 +296,7 @@
                       {%else%}
                       <input class="form-check-input" type="radio" name="Atype" id="loft" value="Loft">
                       {%endif%}
-                        <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Loft</h4>
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Loft</h4>
                     </div>
 
                     <div class="form-check form-check-inline">
@@ -289,7 +305,7 @@
                       {%else%}
                       <input class="form-check-input" type="radio" name="Atype" id="duplex" value="Duplex">
                       {%endif%}
-                      <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Duplex</h4>
+                      <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Duplex</h4>
                     </div>
 
                     <div class="form-check form-check-inline">
@@ -298,7 +314,7 @@
                       {%else%}
                       <input class="form-check-input" type="radio" name="Atype" id="triplex" value="Triplex">
                       {%endif%}
-                        <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Triplex</h4>
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Triplex</h4>
                     </div>
                     <div class="form-check form-check-inline">
                         {%if i[11]=="Other" %}
@@ -306,7 +322,7 @@
                       {%else%}
                       <input class="form-check-input" type="radio" name="Atype" id="other" value="Other">
                       {%endif%}
-                      <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Other</h4>
+                      <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Other</h4>
                     </div>
                   </div>
                   <div class="form-group first">

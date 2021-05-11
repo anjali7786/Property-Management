@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <title>Edit Project</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='./css/style.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='./css/login.css')}}" />
+</head>
+<body>
+
+<div class="navigation-wrap bg-light start-header start-style">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <nav class="navbar navbar-expand-md navbar-light">
+              <a
+                class="navbar-brand"
+                href="/"
+                target="_blank"
+                ><h1><i class="fa fa-home"></i>PROPERTY MANAGEMENT</h1></a>
+
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto py-4 py-md-0">
+
+                  <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                    <a
+                      class="nav-link dropdown-toggle"
+                      data-toggle="dropdown"
+                      href="#"
+                      role="button"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      ><h6>Profile</h6></a
+                    >
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item"><h6>{{username}}</h6></a>
+                      <a class="dropdown-item"><h6>{{email1}}</h6></a>
+                      <a class="dropdown-item" href="{{ url_for('logout') }}"><h6>Logout</h6></a>
+                    </div>
+                  </li>
+
+                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="/dashboard"><h6>Dashboard</h6></a>
+                     </li>
+                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="/search/"><h6>Search</h6></a>
+                    </li>
+
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+<br>
+
+
+    <div class="content">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 order-md-2 ">
+              <br><br><br><img src="{{url_for('static', filename='./images/bgedit.png')}}" alt="Image" class="img-fluid">
+            </div>
+            <div class="col-md-6 contents">
+              <div class="row justify-content-center">
+                <div class="col-md-8">
+                  <div class="mb-4">
+                  <h3>Edit details for <strong>Projects</strong></h3>
+                  <p class="mb-4">{{msg}}</p>
+                </div>
+                <form action="{{url_for('editproject',id=id)}}" enctype="multipart/form-data" method="post">
+                    {% for i in datas%}
+                  <div class="form-group first">
+                    <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Project Name</h4>
+                    <input
+                  id="name"
+                  type="text"
+                  name="name"
+                  value="{{i[2]}}"
+                  placeholder="Project Name"
+                  required
+                  class="form-control"
+                />
+                  </div>
+
+                <div class="form-group first">
+                   <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Address</h4>
+                    <input
+                  id="Address"
+                  type="text"
+                  name="Address"
+                  value="{{i[4]}}"
+                  placeholder="Address"
+                  required
+                  class="form-control"
+                />
+                  </div>
+
+                    <div class="row">
+                <div class="form-group first col-md-6 col-sm-12">
+                    <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">City</h4>
+                    <input
+                  id="City"
+                  type="text"
+                  name="City"
+                  placeholder="City"
+                  value="{{i[6]}}"
+                  required
+                  class="form-control"
+                />
+                  </div>
+                <div class="form-group last col-md-6 col-sm-12">
+                    <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Pincode</h4>
+                    <input
+                  id="Pincode"
+                  type="number"
+                  name="Pincode"
+                  value="{{i[7]}}"
+                  placeholder="Pincode"
+                  required
+                  class="form-control"
+                />
+                  </div>
+                </div>
+
+                <div class="row">
+                <div class="form-group first col-md-6 col-sm-12">
+                    <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">State</h4>
+                    <input
+                  id="State"
+                  type="text"
+                  name="State"
+                  value="{{i[8]}}"
+                  placeholder="State"
+                  required
+                  class="form-control"
+                />
+                  </div>
+                  <div class="form-group last col-md-6 col-sm-12">
+                      <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Country</h4>
+                    <input
+                  id="Country"
+                  type="text"
+                  name="Country"
+                  value="{{i[9]}}"
+                  placeholder="Country"
+                  required
+                  class="form-control"
+                />
+                  </div>
+                </div>
+
+                <!-- Flattype -->
+                <div class="row">
+                  <div class="form-group last col-12">
+                      <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Flat Types</h4>
+                      <div class="form-check form-check-inline">
+                        {%if "1BHK(starting from 20 lac)" in i[3] %}
+                        <input class="form-check-input" type="checkbox" name="Flattype" value="1BHK(starting from 20 lac)" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Flattype" value="1BHK(starting from 20 lac)">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">1BHK(starting from 20 lac)</h4>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        {%if "2BHK(starting from 35 lac)" in i[3] %}
+                        <input class="form-check-input" type="checkbox" name="Flattype" value="2BHK(starting from 35 lac)" checked="checked">
+                        {%else%}
+                        <input class="form-check-input" type="checkbox" name="Flattype" value="2BHK(starting from 35 lac)">
+                        {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">2BHK(starting from 35 lac)</h4>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        {%if "3BHK(starting from 60 lac)" in i[3] %}
+                        <input class="form-check-input" type="checkbox" name="Flattype" value="3BHK(starting from 60 lac)" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Flattype" value="3BHK(starting from 60 lac)">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">3BHK(starting from 60 lac)</h4>
+                    </div>
+                    <div class="form-check form-check-inline ">
+                        {%if "4BHK(starting from 80 lac)" in i[3] %}
+                        <input class="form-check-input" type="checkbox" name="Flattype" value="4BHK(starting from 80 lac)" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Flattype" value="4BHK(starting from 80 lac)">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">4BHK(starting from 80 lac)</h4>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        {%if "Others" in i[3] %}
+                        <input class="form-check-input" type="checkbox" name="Flattype" value="Others" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Flattype" value="Others">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Others</h4>
+                    </div>
+                  </div>
+                </div>
+
+                    <!-- Availability -->
+                <div class="row">
+                  <div class="form-group col-12">
+                     <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Available</h4>
+                      <div class="form-check form-check-inline">
+                        {%if i[10]=="Yes" %}
+                        <input class="form-check-input" type="radio" name="Availability" id="vacant" value="Yes" checked>
+                        {%else%}
+                        <input class="form-check-input" type="radio" name="Availability" id="vacant" value="Yes">
+                        {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Yes</h4>
+                    </div>
+                     <div class="form-check form-check-inline">
+                        {%if i[10]=="No" %}
+                        <input class="form-check-input" type="radio" name="Availability" id="occupied" value="No" checked>
+                      {%else%}
+                      <input class="form-check-input" type="radio" name="Availability" id="occupied" value="No">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">No</h4>
+                  </div>
+                </div>
+                </div>
+
+                <!-- Features -->
+                <div class="row">
+                  <div class="form-group last col-12">
+                      <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Features(Near to)</h4>
+                      <div class="form-check form-check-inline col-6">
+                        {%if "Hospital" in i[5] %}
+                        <input class="form-check-input" type="checkbox" name="Features" value="Hospital" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Features" value="Hospital">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Hospital</h4>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        {%if "Mall" in i[5] %}
+                        <input class="form-check-input" type="checkbox" name="Features" value="Mall" checked="checked">
+                        {%else%}
+                        <input class="form-check-input" type="checkbox" name="Features" value="Mall">
+                        {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Mall</h4>
+                    </div>
+                    <div class="form-check form-check-inline col-6">
+                        {%if "School" in i[5] %}
+                        <input class="form-check-input" type="checkbox" name="Features" value="School" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Features" value="School">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">School</h4>
+                    </div>
+                    <div class="form-check form-check-inline ">
+                        {%if "Market" in i[5] %}
+                        <input class="form-check-input" type="checkbox" name="Features" value="Market" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Features" value="Market">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Market</h4>
+                    </div>
+                    <div class="form-check form-check-inline col-6">
+                        {%if "Park" in i[5] %}
+                        <input class="form-check-input" type="checkbox" name="Features" value="Park" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Features" value="Park">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Park</h4>
+                    </div>
+
+                    <div class="form-check form-check-inline ">
+                        {%if "Airport" in i[5] %}
+                        <input class="form-check-input" type="checkbox" name="Features" value="Airport" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Features" value="Airport">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Airport</h4>
+                    </div>
+                    <div class="form-check form-check-inline col-6">
+                        {%if "Others" in i[5] %}
+                        <input class="form-check-input" type="checkbox" name="Features" value="Others" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Features" value="Others">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Others</h4>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                    <!-- Facilities -->
+                <div class="row">
+                  <div class="form-group last col-12">
+                      <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Facilities(Near to)</h4>
+                      <div class="form-check form-check-inline col-6">
+                        {%if "Yoga Area" in i[11] %}
+                        <input class="form-check-input" type="checkbox" name="Facilities" value="Yoga Area" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Facilities" value="Yoga Area">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Yoga Area</h4>
+                    </div>
+                      <div class="form-check form-check-inline">
+                        {%if "Indoor Games" in i[11] %}
+                        <input class="form-check-input" type="checkbox" name="Facilities" value="Indoor Games" checked="checked">
+                        {%else%}
+                        <input class="form-check-input" type="checkbox" name="Facilities" value="Indoor Games">
+                        {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Indoor Games</h4>
+                    </div>
+                    <div class="form-check form-check-inline col-6">
+                        {%if "Jogging Track" in i[11] %}
+                        <input class="form-check-input" type="checkbox" name="Facilities" value="Jogging Track" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Facilities" value="Jogging Track">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Jogging Track</h4>
+                    </div>
+                    <div class="form-check form-check-inline ">
+                        {%if "Club House" in i[11] %}
+                        <input class="form-check-input" type="checkbox" name="Facilities" value="Club House" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Facilities" value="Club House">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Club House</h4>
+                    </div>
+                    <div class="form-check form-check-inline col-6">
+                        {%if "Swimming Pool" in i[11] %}
+                        <input class="form-check-input" type="checkbox" name="Facilities" value="Swimming Pool" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Facilities" value="Swimming Pool">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Swimming Pool</h4>
+                    </div>
+
+                    <div class="form-check form-check-inline ">
+                        {%if "Gym" in i[11] %}
+                        <input class="form-check-input" type="checkbox" name="Facilities" value="Gym" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Facilities" value="Gym">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Gym</h4>
+                    </div>
+                    <div class="form-check form-check-inline col-6">
+                        {%if "Others" in i[11] %}
+                        <input class="form-check-input" type="checkbox" name="Facilities" value="Others" checked="checked">
+                      {%else%}
+                      <input class="form-check-input" type="checkbox" name="Facilities" value="Others">
+                      {%endif%}
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Others</h4>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="form-group first col-12">
+                          <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Description</h4>
+                        <input
+                      id="Description"
+                      type="text"
+                      name="Description"
+                      value="{{i[12]}}"
+                      placeholder="Description"
+                      required
+                      class="form-control"
+                    />
+                      </div>
+                </div>
+
+                <div class="form-group">
+                    <h4 style="color: #b3b3b3; font-size: 12px;display: block; margin-bottom: 0;">Image</h4>
+                    <input style="border-bottom: none;"
+                  id="file"
+                  type="file"
+                  name="file"
+                />
+                </div>
+
+            {%endfor%}
+
+                  <input type="submit" value="Update Changes" class="btn text-white btn-block btn-success">
+
+                </form>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+    <script src="{{url_for('static', filename='./js/script.js')}}"></script>
+    <script src="{{url_for('static', filename='./js/login.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+ </body>
+</html>
