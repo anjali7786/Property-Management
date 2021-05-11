@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Applied Projects</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='./css/style.css')}}" />
+
+  </head>
+  <body>
+    <div class="navigation-wrap bg-light start-header start-style">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <nav class="navbar navbar-expand-md navbar-light">
+              <a
+                class="navbar-brand"
+                href="/"
+                target="_blank"
+                ><h1><i class="fa fa-home"></i>PROPERTY MANAGEMENT</h1></a>
+
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto py-4 py-md-0">
+
+                  <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                    <a
+                      class="nav-link dropdown-toggle"
+                      data-toggle="dropdown"
+                      href="#"
+                      role="button"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      ><h6>Profile</h6></a
+                    >
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item"><h6>{{username}}</h6></a>
+                      <a class="dropdown-item"><h6>{{email1}}</h6></a>
+                      <a class="dropdown-item" href="{{ url_for('logout') }}"><h6>Logout</h6></a>
+                    </div>
+                  </li>
+
+                      <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="/search/"><h6>Search</h6></a>
+                    </li>
+                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}"><h6>Dashboard</h6></a>
+                     </li>
+
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    {% if details %}
+        <h1>Applied Projects</h1>
+    <br>
+  <div class="container-fluid p-0 m-0 align-items-center justify-content-center d-flex" style="min-height: 100vh;">
+        <div class="row w-100 p-0 w-0" >
+          {% for u in details %}
+            <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
+                <div class="card h-100 k" style="max-width: 24rem; margin: auto; margin-bottom: 1rem;">
+                    <img class="card-img-top" src="{{url_for('static', filename='./Uploads/'+u.image)}}" alt="Card image cap" style = "width:100%; height:24rem; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title" ><strong style="color:#880085;">Name of project:</strong> {{u['Pname']}}</h5>
+                        <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <p class="card-text" style="color: black;"><strong>Owner:</strong> {{u['fullname']}}</p>
+                            <p class="card-text" style="color: black;"><strong>City:</strong> {{u['City']}}</p>
+                            <p class="card-text" style="color: black;"><strong>State:</strong> {{u['State']}} </p>
+                            <p class="card-text" style="color: black;"><strong>Available:</strong> {{u['Availability']}}</p>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <p class="card-text" style="color: black;"><strong>Address:</strong> {{u['Address']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Pincode:</strong> {{u['Pincode']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Country:</strong> {{u['Country']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Rating:</strong> {{u['rating']}}</p>
+                        </div>
+                            <div class="col">
+                                <p class="card-text" style="color: black;"><strong>Flat Type:</strong> {{u['Flattype']}}</p>
+                                <p class="card-text" style="color: black;"><strong>Facilities:</strong> {{u['Facilities']}}</p>
+                                <p class="card-text" style="color: black;"><strong>Description:</strong> {{u['Descr']}}</p>
+                            </div>
+                    </div>
+                      {%if username!="admin" and username!=u['username']%}
+                    <div class="btn">
+                        <a href="{{url_for('saveproject',id=u['P_ID'])}}"><button type="button" class="btn " id="bt1">Save for later</button></a>
+                        <a href="{{url_for('complaintsbuilder',id=u['P_ID'])}}"><button type="button" class="btn" id="bt1">Complaint</button></a>
+                    </div>
+                    <div class="btn">
+                        <a href="{{url_for('book_project',id=u['P_ID'])}}"><button type="button" class="btn" id="bt1">Book A Meeting</button></a>
+                    </div>
+                    {%endif%}
+                    </div>
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+    {% else %}
+        <h1>No Applied Projects</h1>
+    {% endif %}
+
+    <script src="{{url_for('static', filename='./js/script.js')}}"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</body>
+</html>

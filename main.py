@@ -1342,6 +1342,23 @@ def applied_apt():
     else:
         return redirect(url_for('login'))
 
+
+@app.route("/applied_project/", methods=['GET', 'POST'])
+def applied_project():
+    if 'loggedin' in session and session['username'] != 'admin':
+      cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+      cursor.execute('SELECT P_ID,username,fullname,Pname,Flattype,Address,Features,City,Pincode,State,Country,Availability,Facilities,Descr,image,rating FROM projectdetail INNER JOIN accounts on projectdetail.id=accounts.id where P_ID in (select P_ID from Buy_project where id=%s) ',[session['id']])
+      result = cursor.fetchall()
+      mysql.connection.commit()
+      cursor.close()
+      return render_template('applied_project.html',details=result,username=session['username'],email1=session['email1'])
+    elif 'loggedin' in session and session['username'] == 'admin':
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
+
+
+
 @app.route("/Buy_propertyapt/<string:id>", methods=['GET', 'POST'])
 def Buy_propertyapt(id):
     if 'loggedin' in session and session['username'] != 'admin':
@@ -1390,6 +1407,57 @@ def Buy_propertyapt(id):
         return redirect(url_for('home'))
     else:
         return redirect(url_for('login'))
+
+
+@app.route("/Buy_project/<string:id>", methods=['GET', 'POST'])
+def Buy_project(id):
+    if 'loggedin' in session and session['username'] != 'admin':
+        msg = ''
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * from Buy_project where P_ID=%s and id=%s', ([id], [session['id']]))
+        res = cursor.fetchall()
+        cursor.execute('SELECT * from projectdetail where P_ID=%s and id=%s', ([id], [session['id']]))
+        res1 = cursor.fetchall()
+        # 1-------
+        if res:
+            msg = 'You have already applied for this project!'
+            return render_template('search.html', detail="", deatail1="", detail2="", username=session['username'],
+                                   msg=msg, email1=session['email1'])
+        elif res1:
+            msg = 'You are the owner of this project, you cannot apply for this project!'
+            return render_template('search.html', detail="", deatail1="", detail2="", username=session['username'],
+                                   msg=msg, email1=session['email1'])
+        elif request.method == 'POST':
+                Age = request.form['Age']
+                Occupation = request.form['Occupation']
+                Address = request.form['Address']
+                Landmark = request.form['Landmark']
+                City = request.form['City']
+                Pincode = request.form['Pincode']
+                State = request.form['State']
+                Status = 'Not Approved'
+                if len(City) > 0 and len(Age) > 0 and len(Occupation) > 0 and len(Address) > 0 and len(Landmark) > 0 and len(Pincode) > 0 and len(State) > 0:
+                    cursor.execute('INSERT INTO Buy_project VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',(id,session['id'],Age,Address,Landmark,City,Pincode,State,Occupation,Status))
+                    mysql.connection.commit()
+                    cursor.close()
+                    msg = 'Your application for this project is registered successfully :)'
+                    return redirect(url_for('applied_project'))
+                else:
+                    msg = 'Please fill out the form !'
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT Pname from projectdetail where P_ID=%s', [id, ])
+        data = cur.fetchall()
+        cur.execute('SELECT fullname,email,mobile from accounts where id=%s', [session['id'], ])
+        data1 = cur.fetchall()
+        data = data + data1
+        cur.close()
+        return render_template("buy_project.html", datas=data, msg=msg, id=id, username=session['username'],
+                               email1=session['email1'])
+    elif 'loggedin' in session and session['username'] == 'admin':
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
+
 
 @app.route('/complaintsapartment/<string:id>', methods=['GET', 'POST'])
 def complaintsapartment(id):

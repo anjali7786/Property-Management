@@ -88,6 +88,7 @@ CREATE TABLE Buy_propertyapt(
 	foreign key(A_ID) references apartmentdetail(A_ID) ON DELETE CASCADE ON UPDATE CASCADE,
 	foreign key(id) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 CREATE TABLE book_meet_apt(
 	A_ID int NOT NULL,
 	id int NOT NULL,
@@ -270,6 +271,21 @@ CREATE TABLE follow2(
     foreign key(id2) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE Buy_project(
+	P_ID int(110) NOT NULL,
+	id int not null,
+	Age int NOT NULL,
+	Address varchar(100) NOT NULL,
+	Landmark varchar(100) NOT NULL,
+	City varchar(50) NOT NULL,
+	Pincode decimal(6, 0) NOT NULL,
+	State varchar(50) NOT NULL,
+	Occupation varchar(50) NOT NULL,
+	Status varchar(50) NOT NULL,
+	primary key(P_ID, id),
+	foreign key(P_ID) references projectdetail(P_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+	foreign key(id) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 Select * from accounts;
 Select * from apartmentdetail;
@@ -280,4 +296,4 @@ select * from book_meet_room;
 select * from book_meet_apt;
 select * from accept_meet_apt;
 select * from contactus;
-
+select * from Buy_project;

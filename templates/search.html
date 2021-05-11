@@ -362,7 +362,7 @@
                     </div>
                     {%if username!="admin" and username!=u['username']%}
                     <div class="btn">
-                        <a href="#"><button id="bt1">Apply</button></a>
+                        <a href="{{url_for('Buy_project',id=u['P_ID'])}}"><button id="bt1">Apply</button></a>
                         <a href="{{url_for('complaintsbuilder',id=u['P_ID'])}}"><button id="bt1">Complaint</button></a>
                     </div>
                     <div class="btn">
