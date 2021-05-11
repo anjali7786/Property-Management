@@ -83,61 +83,62 @@
     <br>
     <br>
     <br>
-  <div class = "container" >
-         <div class="table-responsive">
-                <table class="table table-hover">
-                  {% if details %}
-                    <h1>Applied Rooms</h1>
-                    <thead >
-                    <tr class="table-warning">
-                      <th scope="col">Image</th>
-                      <th scope="col">Owner</th>
-                      <th scope="col">Building Name</th>
-                      <th scope="col">Address</th>
-                      <th scope="col">City</th>
-                      <th scope="col">Pincode</th>
-                      <th scope="col">State</th>
-                      <th scope="col">Country</th>
-                      <th scope="col">Landmark</th>
-                      <th scope="col">Room_no</th>
-                      <th scope="col">Rent</th>
-                      <th scope="col">Availability</th>
-                      <th scope="col">Facilities</th>
-                      <th scope="col">Description</th>
-                      <th scope="col">Area</th>
-                      <th scope="col">Rating</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {% for u in details %}
-                  <tr>
-                  <td> <img src="{{url_for('static', filename='./Uploads/'+u.image)}}" alt="" style="height:55px; width:55px"> </td>
-                  <td>{{u['username']}}</td>
-                  <td>{{u['Bname']}}</td>
-                  <td>{{u['Address']}}</td>
-                  <td>{{u['City']}}</td>
-                  <td>{{u['Pincode']}}</td>
-                  <td>{{u['State']}}</td>
-                  <td>{{u['Country']}}</td>
-                  <td>{{u['Landmark']}}</td>
-                  <td>{{u['Room_no']}}</td>
-                  <td>{{u['Rent']}}</td>
-                  <td>{{u['Availability']}}</td>
-                  <td>{{u['Facilities']}}</td>
-                  <td>{{u['Descr']}}</td>
-                  <td>{{u['Area']}}</td>
-                  <td>{{u['rating']}}</td>
-                  </tr>
-                  {% endfor %}
 
-                  </tbody>
-                {%else%}
-                    <h1>No Applied Rooms</h1>
 
-                {%endif%}
-                </table>
+    {% if details %}
+        <h1>Applied Rooms</h1>
+    <br>
+  <div class="container-fluid p-0 m-0 align-items-center justify-content-center d-flex" style="min-height: 100vh;">
+        <div class="row w-100 p-0 w-0" >
+          {% for u in details %}
+            <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
+                <div class="card h-100 k" style="max-width: 24rem; margin: auto; margin-bottom: 1rem;">
+                    <img class="card-img-top" src="{{url_for('static', filename='./Uploads/'+u.image)}}" alt="Card image cap" style = "width:100%; height:24rem; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title" ><strong style="color:#880085;">Name of building:</strong> {{u['Bname']}}</h5>
+                        <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <p class="card-text" style="color: black;"><strong>Owner:</strong> {{u['username']}}</p>
+                            <p class="card-text" style="color: black;"><strong>City:</strong> {{u['City']}}</p>
+                            <p class="card-text" style="color: black;"><strong>State:</strong> {{u['State']}} </p>
+                            <p class="card-text" style="color: black;"><strong>Address:</strong> {{u['Address']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Pincode:</strong> {{u['Pincode']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Country:</strong> {{u['Country']}}</p>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+
+                            <p class="card-text" style="color: black;"><strong>Rent Price:</strong> {{u['Rent']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Area:</strong> {{u['Area']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Room no.:</strong> {{u['Room_no']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Available:</strong> {{u['Availability']}}</p>
+                            <p class="card-text" style="color: black;"><strong>Rating:</strong> {{u['rating']}}</p>
+                        </div>
+                            <div class="col">
+
+                                <p class="card-text" style="color: black;"><strong>Facilities:</strong> {{u['Facilities']}}</p>
+                                <p class="card-text" style="color: black;"><strong>Description:</strong> {{u['Descr']}}</p>
+                            </div>
+                    </div>
+                      {%if username!="admin" and username!=u['username']%}
+                    <div class="btn">
+                        <a href="{{url_for('saveproject',id=u['P_ID'])}}"><button type="button" class="btn " id="bt1">Save for later</button></a>
+                        <a href="{{url_for('complaintsbuilder',id=u['P_ID'])}}"><button type="button" class="btn" id="bt1">Complaint</button></a>
+                    </div>
+                    <div class="btn">
+                        <a href="{{url_for('book_project',id=u['P_ID'])}}"><button type="button" class="btn" id="bt1">Book A Meeting</button></a>
+                    </div>
+                    {%endif%}
+                    </div>
+                </div>
             </div>
+            {%endfor%}
+        </div>
     </div>
+    {% else %}
+        <h1>No Applied Rooms</h1>
+    {% endif %}
+
+
 
 
     <script src="{{url_for('static', filename='./js/script.js')}}"></script>

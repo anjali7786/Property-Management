@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, user-scalable=no"
     />
-    <title>Register</title>
+    <title>Register Room</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -66,7 +66,7 @@
                         <a class="nav-link" href="/search/"><h6>Search</h6></a>
                     </li>
 
-                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                    <li class="nav-item pl-4 pl-md  -0 ml-0 ml-md-4">
                         <a class="nav-link" href="/dashboard"><h6>Dashboard</h6></a>
                      </li>
 
@@ -79,297 +79,233 @@
       </div>
     </div>
 
+
+
 <div class="content">
-    <div class="container">
-        <div class="row py-5 mt-4 align-items-center">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 order-md-2 ">
+              <br><br><br><img src="{{url_for('static', filename='./images/bgroom.png')}}" alt="Image" class="img-fluid">
+            </div>
 
-        <div class="col-md-6 order-md-2">
-          <img
-            src="{{url_for('static', filename='./images/bgroom.png')}}"
-            alt="Img"
-            class="img-fluid"
-          />
-          <h1>Room Registration</h1>
-        </div>
-
-        <!-- Registration Form -->
-        <div class="col-md-7 col-lg-6 ml-auto">
-            {% if msg %}
-              <div class="alert alert-info alert-dismissible">
-                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                 <strong>{{msg}}</strong>
-              </div>
-            {%endif%}
-
-          <form action="{{ url_for('roomreg') }}" method="post"  enctype="multipart/form-data">
-            <div class="row">
-              <!-- Building name -->
-              <div class="input-group col-lg-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-building text-muted"></i>
-                  </span>
+            <div class="col-md-6 contents">
+              <div class="row justify-content-center">
+                <div class="col-md-8">
+                  <div class="mb-4">
+                  <h3><strong>Room Registration</strong></h3>
+                  <p class="mb-4">{{msg}}</p>
                 </div>
-                <input
+
+
+              <form action="{{ url_for('roomreg') }}" method="post"  enctype="multipart/form-data">
+
+
+                <!--Name of the Building-->
+
+                <div class="form-group first">
+                <label for="name">Building name</label>
+                      <input
                   id="name"
                   type="text"
                   name="name"
-                  placeholder="Building Name"
                   required
-                  class="form-control bg-white border-left-0 border-md"
+                  class="form-control"
                 />
-              </div>
+                  </div>
 
-              <!-- Room Number  -->
-              <div class="input-group col-lg-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0">
-                    <i class="fa fa-building text-muted"></i>
-                  </span>
-                </div>
-                <input
-                  id="room"
-                  type="number"
-                  name="room"
-                  placeholder="Room number"
-                  required
-                  class="form-control bg-white border-left-0 border-md"
-                />
-              </div>
-
-                <!-- Address  -->
-              <div class="input-group col-lg-12 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-address-book text-muted"></i>
-                  </span>
-                </div>
-                <input
+                <!-- Address-->
+                <div class="form-group first">
+                   <label for="Address">Address</label>
+                    <input
                   id="Address"
                   type="text"
                   name="Address"
-                  placeholder="Address"
                   required
-                  class="form-control bg-white border-left-0 border-md"
+                  class="form-control"
                 />
-              </div>
+                  </div>
 
-              <!-- Landmark  -->
-              <div class="input-group col-lg-12 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-address-book text-muted"></i>
-                  </span>
-                </div>
-                <input
+              <div class="row">
+            <!-- Landmark-->
+                <div class="form-group first col-md-6 col-sm-12">
+                <label for="Landmark">Landmark</label>
+                      <input
                   id="Landmark"
                   type="text"
                   name="Landmark"
-                  placeholder="Landmark"
                   required
-                  class="form-control bg-white border-left-0 border-md"
+                  class="form-control"
                 />
-              </div>
+                  </div>
 
-              <!-- City -->
-              <div class="input-group col-lg-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-building text-muted"></i>
-                  </span>
+            <!-- Room number-->
+               <div class="form-group first col-md-6 col-sm-12">
+                <label for="room">Room number</label>
+
+                 <input
+                  id="room"
+                  type="number"
+                  name="room"
+                  required
+                  class="form-control"
+                />
                 </div>
-                <input
+                </div>
+
+                <div class="row">
+                <!-- city -->
+
+                  <div class="form-group first col-md-6 col-sm-12">
+                    <label for="City">City</label>
+
+                  <input
                   id="City"
                   type="text"
                   name="City"
-                  placeholder="City"
                   required
-                  class="form-control bg-white border-left-0 border-md"
+                  class="form-control"
                 />
-              </div>
+                  </div>
 
+                  <!-- Pincode -->
+                  <div class="form-group first col-md-6 col-sm-12">
+                 <label for="Pincode">Pincode</label>
 
-              <!-- Pincode -->
-              <div class="input-group col-lg-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-map-pin text-muted"></i>
-                  </span>
-                </div>
-                <input
+                    <input
                   id="Pincode"
                   type="number"
                   name="Pincode"
-                  placeholder="Pincode"
                   required
-                  class="form-control bg-white border-left-0 border-md"
+                  class="form-control"
                 />
-              </div>
 
-              <!-- State -->
-              <div class="input-group col-lg-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-map-pin text-muted"></i>
-                  </span>
+                  </div>
                 </div>
-                <input
+
+                <!-- State -->
+               <div class="row">
+                  <div class="form-group first col-md-6 col-sm-12">
+                    <label for="State">State</label>
+
+                    <input
                   id="State"
                   type="text"
                   name="State"
-                  placeholder="State"
                   required
-                  class="form-control bg-white border-left-0 border-md"
+                  class="form-control"
                 />
-              </div>
+                  </div>
 
+                 <!-- Country -->
+                 <div class="form-group first col-md-6 col-sm-12">
+                     <label for="Country">Country</label>
 
-              <!-- Country -->
-              <div class="input-group col-lg-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-flag text-muted"></i>
-                  </span>
-                </div>
-                <input
+                    <input
                   id="Country"
                   type="text"
                   name="Country"
-                  placeholder="Country"
                   required
-                  class="form-control bg-white border-left-0 border-md"
+                  class="form-control"
                 />
-              </div>
+                  </div>
+               </div>
 
-              <!-- Area -->
-              <div class="input-group col-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-square text-muted"></i>
-                  </span>
-                </div>
-                <input
+                <!-- Availability -->
+                  <div class="form-group first">
+                      <h4 style="color: #000; font-size: 12px;display: block; margin-bottom: 0;">Availability</h4>
+                    <div class="form-check form-check-inline">
+
+
+                        <input class="form-check-input" type="radio" name="Availability" id="vacant" value="Vacant">
+
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Vacant</h4>
+                    </div>
+                    <div class="form-check form-check-inline">
+
+                      <input class="form-check-input" type="radio" name="Availability" id="occupied" value="Occupied">
+
+                        <h4 style="font-size: 12px;display: block; margin-bottom: 0;">Occupied</h4>
+                    </div>
+                  </div>
+
+                <!-- Area -->
+                <div class="row">
+                  <div class="form-group first col-md-6 col-sm-12">
+                    <label for="Area">Area(in sqft)</label>
+
+                    <input
                   id="Area"
                   type="number"
                   name="Area"
-                  placeholder="Area(in sqft)"
                   required
-                  class="form-control bg-white border-left-0 border-md"
+                  class="form-control"
                 />
-              </div>
+                  </div>
 
-              <!-- Price -->
-              <div class="input-group col-6 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-tag text-muted"></i>
-                  </span>
-                </div>
-                <input
+                  <!-- Rent -->
+                  <div class="form-group first col-md-6 col-sm-12">
+                      <label for="Price">Rent/Month</label>
+
+                    <input
                   id="Price"
                   type="number"
                   name="Price"
-                  placeholder="Rent/month"
                   required
-                  class="form-control bg-white border-left-0 border-md"
+                  class="form-control"
                 />
-              </div>
+                  </div>
+                </div>
 
+                <!-- Facilities -->
+              <div class="form-group first">
+                  <label for="Facilities">Facilities</label>
 
-                <!-- Availability -->
-               <div class="input-group col-12 mb-4">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="Availability" id="vacant" value="Vacant">
-                    <label class="form-check-label" for="vacant">Vacant</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="Availability" id="occupied" value="Occupied">
-                  <label class="form-check-label" for="occupied">Occupied</label>
-                </div>
-               </div>
-               <!-- Facilities  -->
-              <div class="input-group col-lg-12 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0"
-                  >
-                    <i class="fa fa-sticky-note text-muted"></i>
-                  </span>
-                </div>
                 <input
                   id="Facilities"
                   type="text"
                   name="Facilities"
-                  placeholder="Facilities"
                   required
-                  class="form-control bg-white border-left-0 border-md"
+                  class="form-control"
                 />
-              </div>
+                  </div>
 
-               <!-- Description  -->
-              <div class="input-group col-lg-12 mb-4">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-white px-4 border-md border-right-0">
-                    <i class="fa fa-comments text-muted"></i>
-                  </span>
-                </div>
-                <input
+                <!-- Description -->
+                  <div class="form-group first">
+                    <label for="Description">Description</label>
+
+                    <input
                   id="Description"
                   type="text"
                   name="Description"
-                  placeholder="Description"
                   required
-                  class="form-control bg-white border-left-0 border-md"
+                  class="form-control"
                 />
-              </div>
+                  </div>
 
-                <!-- Image  -->
-              <div class="input-group col-lg-6 mb-4">
-
-                <input
+                <!-- Image -->
+                <div class="form-group">
+                    <input style="border-bottom: none;"
                   id="file"
                   type="file"
                   name="file"
-                  required
+                 required
                 />
-              </div>
+                </div>
 
-              <!-- Register Button -->
-              <div class="form-group col-lg-12 mx-auto mb-0">
-                <button type="submit" class="btn btn-primary btn-block py-2">
-                  <span class="font-weight-bold">Register</span>
-                </button>
+
+                  <input type="submit" value="Register Room" class="btn text-white btn-block btn-success">
+
+                </form>
+                </div>
               </div>
 
             </div>
-          </form>
+
+          </div>
         </div>
       </div>
 
 
-     </div>
-
-</div>
 
     <script src="{{url_for('static', filename='./js/script.js')}}"></script>
     <script src="{{url_for('static', filename='./js/login.js')}}"></script>
