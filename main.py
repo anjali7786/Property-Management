@@ -2905,5 +2905,91 @@ def registered_apartment():
             return render_template('registered_apartments.html', msg=msg, username=session['username'], email1=session['email1'])
     else:
         return render_template('login.html')
+@app.route("/delete1/<string:id>")
+def delete1(id):
+    msg = ''
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM apartmentdetail where A_ID=%s", [id, ])
+    mysql.connection.commit()
+    cursor.close()
+    cur1 = mysql.connection.cursor()
+    if session['username'] != "admin":
+        resultValue = cur1.execute("SELECT * FROM apartmentdetail where id=%s", (id))
+        apartDetails = cur1.fetchall()
+        cur1.close()
+        if resultValue > 0:
+            return render_template('ownerapartments.html', msg=msg, apartDetails=apartDetails,
+                                   username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'There are no Apartments registered as of now'
+            return render_template('ownerapartments.html', msg=msg, username=session['username'],
+                                    email1=session['email1'])
+    else:
+        resultValue = cur1.execute("SELECT * FROM apartmentdetail")
+        apartDetails = cur1.fetchall()
+        if resultValue > 0:
+            return render_template('apartments.html', msg=msg, apartDetails=apartDetails, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'There are no Apartments registered as of now'
+            return render_template('apartments.html', msg=msg, username=session['username'], email1=session['email1'])
+
+@app.route("/delete2/<string:id>")
+def delete2(id):
+    msg = ''
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM roomdetail where R_ID=%s", [id, ])
+    mysql.connection.commit()
+    cursor.close()
+    cur1 = mysql.connection.cursor()
+    if session['username'] != "admin":
+        resultValue = cur1.execute("SELECT * FROM roomdetail where id=%s", (id))
+        roomDetails = cur1.fetchall()
+        cur1.close()
+        if resultValue > 0:
+            return render_template('ownerrooms.html', msg=msg, roomDetails=roomDetails,
+                                   username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'There are no Rooms for rent as of now'
+            return render_template('ownerrooms.html', msg=msg, username=session['username'],
+                                   email1=session['email1'])
+    else:
+        resultValue = cur1.execute("SELECT * FROM roomdetail")
+        roomDetails = cur1.fetchall()
+        if resultValue > 0:
+            return render_template('rooms.html', msg=msg, roomDetails=roomDetails, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'There are no Rooms registered as of now'
+            return render_template('rooms.html', msg=msg, username=session['username'], email1=session['email1'])  
+@app.route("/rooms/")
+def rooms():
+    msg = ''
+    if 'loggedin' in session:
+        cur = mysql.connection.cursor()
+        resultValue = cur.execute("SELECT * FROM roomdetail where id=%s", (session['id'],))
+        if resultValue > 0:
+            roomDetails = cur.fetchall()
+            return render_template('rooms.html', msg=msg, roomDetails=roomDetails, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'No Room Registered as of now'
+            return render_template('rooms.html', msg=msg, username=session['username'], email1=session['email1'])
+
+@app.route("/apartments/")
+def apartments():
+    msg = ''
+    if 'loggedin' in session:
+        cur = mysql.connection.cursor()
+        resultValue = cur.execute("SELECT * FROM apartmentdetail where id=%s", (session['id'],))
+        if resultValue > 0:
+            apartDetails = cur.fetchall()
+            return render_template('apartments.html', msg=msg, apartDetails=apartDetails, username=session['username'],
+                                   email1=session['email1'])
+        else:
+            msg = 'No Apartment registered as of now'
+            return render_template('apartments.html', msg=msg, username=session['username'], email1=session['email1'])
 
 app.run(debug=True)

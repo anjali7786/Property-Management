@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, user-scalable=no"
     />
-    <title>Room Details</title>
+    <title>Apartment Details</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -96,54 +96,55 @@
      </div>
     {%endif%}
 
-    {% if roomDetails %}
-        <h1>Rooms</h1>
+    {% if apartDetails %}
+        <h1>Apartments</h1>
     <br>
-
     <div class="card-deck">
-        {% for u in roomDetails %}
-        <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
+        {% for u in apartDetails %}
         <div class="card" style = "min-width : 24rem; max-width: 24rem; margin: auto; margin-bottom: 1rem;">
-            <img class= "card-img-top " src="{{url_for('static', filename='./Uploads/'+u[15])}}" alt="" style = "width:100%; height:24rem; object-fit: cover;">
-            <div class = "card-body" style="overflow:auto;">
-                <h5 class="card-title">Name of building: <strong style="color: #8a2a90;">{{u[2]}}</strong></h5>
+            <img class= "card-img-top " src="{{url_for('static', filename='./Uploads/'+u[17])}}" alt="" style = "width:100%; height:24rem; object-fit: cover;">
+            <div class = "card-body">
+                <h5 class="card-title">Name of apartment: {{u[2]}}</h5>
                     <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">Address: </strong> {{u[5]}}</p>
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">Landmark: </strong> {{u[6]}}</p>
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">City: </strong> {{u[7]}}</p>
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">Pincode: </strong> {{u[8]}}</p>
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">Country: </strong> {{u[10]}}</p>
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">State: </strong> {{u[9]}}</p>
+                        <div class = "col-12">
+                            <p class="d-flex align-items-stretch">Apartment type: {{u[11]}}</p>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">Room_no: </strong> {{u[3]}}</p>
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">Availability: </strong> {{u[11]}}</p>
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">Rent: </strong> {{u[12]}}</p>
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">Area: </strong> {{u[4]}}</p>
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">Rating: </strong> {{u[16]}}</p>
+                            <p class="d-flex align-items-stretch" >Address: {{u[5]}}</p>
+                            <p class="d-flex align-items-stretch">Landmark: {{u[6]}}</p>
+                            <p class="d-flex align-items-stretch">City: {{u[7]}}</p>
+                            <p class="d-flex align-items-stretch">Pincode: {{u[8]}}</p>
+                            <p class="d-flex align-items-stretch">State: {{u[9]}} </p>
+                            <p class="d-flex align-items-stretch">Country: {{u[10]}}</p>
+
+                         </div>
+                        <div class="col-md-6 col-sm-12">
+                            <p class="d-flex align-items-stretch">Plot_no: {{u[3]}}</p>
+                            <p class="d-flex align-items-stretch">Availability: {{u[13]}}</p>
+                            <p class="d-flex align-items-stretch">RS: {{u[12]}}</p>
+                            <p class="d-flex align-items-stretch">Price: {{u[14]}}</p>
+                            <p class="d-flex align-items-stretch">Area: {{u[4]}}</p>
+                            <p class="d-flex align-items-stretch">Rating: {{u[18]}}</p>
                         </div>
                         <div class="col">
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">Facilities: </strong> {{u[13]}}</p>
-                            <p class="d-flex align-items-stretch" style="color: black;"><strong style="font-weight: bold">Description: </strong> {{u[14]}}</p>
+                            <p class="d-flex align-items-stretch">Facilities: {{u[15]}}</p>
+                            <p class="d-flex align-items-stretch">Description: {{u[16]}}</p>
                         </div>
                     </div>
             </div>
 
             <div class="card-footer">
                 <div class="btn">
-                    <a href="{{url_for('editroom',id=u[0])}}"><button type="button" class="btn" id="bt1">Edit</button></a>
-                    <a href="{{url_for('delete2',id=u[0])}}"><button type="button" class="btn" id="bt1">Delete</button></a>
+                    <a href="{{url_for('editapart',id=u[0])}}"><button>Edit</button></a>
+                    <a href="{{url_for('delete1',id=u[0])}}"><button >Delete</button></a>
                 </div>
             </div>
 
         </div>
-        </div>
         {%endfor%}
 
     </div>
-{% endif %}
-
+    {% endif %}
 <br>
 <br>
     <script src="{{url_for('static', filename='./js/script.js')}}"></script>
