@@ -362,6 +362,21 @@ rating decimal(10,2) NOT NULL,
 FOREIGN KEY (P_ID) REFERENCES projectdetail(P_ID) ON DELETE CASCADE ON UPDATE CASCADE,
 PRIMARY KEY (X_ID)
 );
+CREATE TABLE Buy_propertyroom(
+    R_ID int(110) NOT NULL,
+    id int not null,
+    Age int NOT NULL,
+    Address varchar(100) NOT NULL,
+    Landmark varchar(100) NOT NULL,
+    City varchar(50) NOT NULL,
+    Pincode decimal(6,0) NOT NULL,
+    State varchar(50) NOT NULL,
+    Occupation varchar(50) NOT NULL,
+    Status varchar(50) NOT NULL,
+    primary key(R_ID,id),
+    foreign key(R_ID) references roomdetail(R_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+    foreign key(id) references accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 Select * from accounts;
 Select * from apartmentdetail;

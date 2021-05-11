@@ -2803,7 +2803,7 @@ def viewfriendsapt(id):
         return render_template('login.html')
 
 
-'''
+
 @app.route("/viewfriendsroom/<string:id>", methods=['GET', 'POST'])
 def viewfriendsroom(id):
     if 'loggedin' in session:
@@ -2814,6 +2814,7 @@ def viewfriendsroom(id):
             if r:
               cur.execute('select Buy_propertyroom.R_ID,username,Bname,Room_no,Area,roomdetail.Address,roomdetail.Landmark,roomdetail.City,roomdetail.Pincode,roomdetail.State,roomdetail.Country,roomdetail.Availability,Facilities,Descr,image,Rent,rating,fullname from Buy_propertyroom INNER JOIN roomdetail on Buy_propertyroom.R_ID=roomdetail.R_ID INNER JOIN accounts on accounts.id = roomdetail.id where Buy_propertyroom.id=%s', [id])
               res=cur.fetchall()
+              print(res)
               return render_template("friends_rooms.html", details=res,
                                      username=session['username'],
                                      email1=session['email1'])
@@ -2833,7 +2834,7 @@ def viewfriendsproject(id):
             cur.execute('select * from follow2 where id1=%s and id2=%s', ([session['id']], [id]))
             r = cur.fetchall()
             if r:
-              cur.execute('select username,Pname,Flattype,Features,projectdetail.Address,projectdetail.City,projectdetail.Pincode,projectdetail.State,projectdetail.Country,Availability,Facilities,Descr,image,rating,fullname,Buy_propertyproject.P_ID from Buy_propertyproject INNER JOIN projectdetail on Buy_propertyproject.P_ID=projectdetail.P_ID INNER JOIN accounts on accounts.id = projectdetail.id where Buy_propertyproject.id=%s', [id])
+              cur.execute('select username,Pname,Flattype,Features,projectdetail.Address,projectdetail.City,projectdetail.Pincode,projectdetail.State,projectdetail.Country,Availability,Facilities,Descr,image,rating,fullname,Buy_project.P_ID from Buy_project INNER JOIN projectdetail on Buy_project.P_ID=projectdetail.P_ID INNER JOIN accounts on accounts.id = projectdetail.id where Buy_project.id=%s', [id])
               res=cur.fetchall()
               return render_template("friends_projects.html", details=res,
                                      username=session['username'],
@@ -2845,5 +2846,5 @@ def viewfriendsproject(id):
             return render_template('home.html')
     else:
         return render_template('login.html')
-'''
+
 app.run(debug=True)
