@@ -161,6 +161,33 @@
                               </li>
                 {% endfor %}
                   </ul>
+                  <ul>
+                    {% for a in approveda %}
+                                  <li>
+                                    <p>
+                                      Your application for Apartment {{a[0]}} has been approved ! <a href="{{url_for('approvedproperty')}}">View</a>
+                                    </p>
+                                  </li>
+                    {% endfor %}
+                  </ul>
+                  <ul>
+                    {% for a in approvedr %}
+                                  <li>
+                                    <p>
+                                      Your application for Room Number {{a[0]}} has been approved ! <a href="{{url_for('approvedproperty')}}">View</a>
+                                    </p>
+                                  </li>
+                    {% endfor %}
+                  </ul>
+                  <ul>
+                    {% for a in approvedp %}
+                                  <li>
+                                    <p>
+                                      Your application for Project {{a[0]}} has been approved ! <a href="{{url_for('approvedproperty')}}">View</a>
+                                    </p>
+                                  </li>
+                    {% endfor %}
+                  </ul>
               </div>
             </div>
 
@@ -258,15 +285,15 @@
            <h2>APPROVE APPLICANT</h2>
           <div class="sidebar__link">
             <i class="fa fa-building"></i>
-            <a href="#">Apartments</a>
+            <a href="{{ url_for('approve_apart') }}">Apartments</a>
           </div>
           <div class="sidebar__link">
             <i class="fas fa-house-user"></i>
-            <a href="#">Rooms</a>
+            <a href="{{ url_for('approve_room') }}">Rooms</a>
           </div>
           <div class="sidebar__link">
             <i class="fas fa-laptop-house"></i>
-            <a href="#">Projects</a>
+            <a href="{{ url_for('approve_project') }}">Projects</a>
           </div>
 
           <h2>APPLIED PROPERTY</h2>
