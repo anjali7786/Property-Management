@@ -3228,7 +3228,7 @@ def reject2(id,P_ID):
     msg = ''
     Status = 'Rejected'
     cur1 = mysql.connection.cursor()
-    cur1.execute("DELETE FROM Buy_propertyapt where id=%s and P_ID = %s", [id,P_ID ])
+    cur1.execute("DELETE FROM Buy_project where id=%s and P_ID = %s", [id,P_ID ])
     mysql.connection.commit()
     cur1.close()
     cur = mysql.connection.cursor()
