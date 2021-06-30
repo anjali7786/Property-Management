@@ -3045,7 +3045,7 @@ def approve_apart():
         if resultValue > 0:
             apply = cur.fetchall()
             cursor = mysql.connection.cursor()
-            result = cursor.execute("SELECT A_ID FROM Buy_propertyapt GROUP BY A_ID")
+            result = cursor.execute("SELECT A_ID FROM Buy_propertyapt where A_ID in (SELECT A_ID FROM apartmentdetail WHERE id =%s) GROUP BY A_ID", [session['id']])
             apply2 = cursor.fetchall()
             cursor.close()
             cur.close()  
@@ -3065,7 +3065,7 @@ def approve_room():
         if resultValue > 0:
             apply = cur.fetchall()
             cursor = mysql.connection.cursor()
-            result = cursor.execute("SELECT R_ID FROM Buy_propertyroom GROUP BY R_ID")
+            result = cursor.execute("SELECT R_ID FROM Buy_propertyroom where R_ID in (SELECT R_ID FROM roomdetail WHERE id =%s) GROUP BY R_ID", [session['id']])
             apply2 = cursor.fetchall()
             cursor.close()
             cur.close()  
@@ -3085,7 +3085,7 @@ def approve_project():
         if resultValue > 0:
             apply = cur.fetchall()
             cursor = mysql.connection.cursor()
-            result = cursor.execute("SELECT P_ID FROM Buy_project GROUP BY P_ID")
+            result = cursor.execute("SELECT P_ID FROM Buy_project where P_ID in (SELECT P_ID FROM projectdetail WHERE id =%s) GROUP BY P_ID", [session['id']])
             apply2 = cursor.fetchall()
             cursor.close()
             cur.close()  
